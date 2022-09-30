@@ -17,10 +17,13 @@ const router = createRouter({
       path: "/journal",
       name: "journal-list",
       component: JournalList,
-      children: [
-        { path: "new", name: "new-entry", component: NewEntry },
-        { path: ":id", name: "journal-details", component: JournalDetails, props: true },
-      ],
+      children: [{ path: "new", name: "new-entry", component: NewEntry }],
+    },
+    {
+      path: "/journal/:id",
+      name: "journal-details",
+      component: JournalDetails,
+      props: true,
     },
     { path: "/:notFound(.*)", component: NotFound },
   ],
