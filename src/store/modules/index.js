@@ -19,15 +19,15 @@ export default {
   mutations: {},
   actions: {},
   getters: {
+    journals(state) {
+      return state.journals;
+    },
     trimmedJournals(state) {
       for (let journal of state.journals) {
         if (journal.text.length > 100) {
           journal.text = journal.text.substring(0, 100) + "...";
         }
       }
-      return state.journals;
-    },
-    journals(state) {
       return state.journals;
     },
   },
