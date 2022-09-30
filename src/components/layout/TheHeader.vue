@@ -3,6 +3,7 @@
     <h1><RouterLink to="/">Journal</RouterLink></h1>
     <nav>
       <ul>
+        <li><RouterLink to="/journal/">List of Entries</RouterLink></li>
         <li><RouterLink to="/journal/new">+ New Entry</RouterLink></li>
       </ul>
     </nav>

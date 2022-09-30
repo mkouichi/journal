@@ -17,8 +17,8 @@ const router = createRouter({
       path: "/journal",
       name: "journal-list",
       component: JournalList,
-      children: [{ path: "new", name: "new-entry", component: NewEntry }],
     },
+    { path: "/journal/new", name: "new-entry", component: NewEntry },
     {
       path: "/journal/:id",
       name: "journal-details",
