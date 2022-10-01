@@ -10,9 +10,7 @@ export default {
   props: ["id"],
   computed: {
     entry() {
-      const journals = this.$store.getters["journals/journals"];
-      const foundEntry = journals.find((item) => item.id === this.id);
-      return foundEntry;
+      return this.$store.getters.getEntryById(this.id);
     },
   },
 };

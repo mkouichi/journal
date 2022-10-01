@@ -7,8 +7,7 @@
         :id="journal.id"
         :title="journal.title"
         :text="journal.text"
-      >
-      </JournalItems>
+      />
     </ul>
   </section>
   <RouterView />
@@ -21,7 +20,7 @@ export default {
   components: { JournalItems },
   computed: {
     journals() {
-      return this.$store.getters["journals/trimmedJournals"];
+      return this.$store.getters.truncateJournalText(100);
     },
   },
 };

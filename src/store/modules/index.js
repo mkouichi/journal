@@ -1,5 +1,4 @@
 export default {
-  namespaced: true,
   state() {
     return {
       journals: [
@@ -22,13 +21,17 @@ export default {
     journals(state) {
       return state.journals;
     },
-    trimmedJournals(state) {
-      for (let journal of state.journals) {
-        if (journal.text.length > 100) {
-          journal.text = journal.text.substring(0, 100) + "...";
+    truncateJournalText: (state) => (maxLength) => {
+      const journalCopy = JSON.parse(JSON.stringify(state.journals));
+      journalCopy.forEach((entry, index) => {
+        if (entry.text.length > maxLength) {
+          journalCopy[index].text = entry.text.substring(0, maxLength) + "...";
         }
-      }
-      return state.journals;
+      });
+      return journalCopy;
+    },
+    getEntryById: (state) => (id) => {
+      return state.journals.find((item) => item.id === id);
     },
   },
 };
