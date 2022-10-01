@@ -30,14 +30,12 @@
         <textarea name="body" id="body" rows="10" ref="bodyInput"></textarea>
       </div>
       <div class="flex">
-        <BaseButton @click="showDialog" mode="outline"
-          >CANCEL</BaseButton
-        >
+        <BaseButton @click="showDialog" mode="outline">CANCEL</BaseButton>
         <BaseButton type="submit">SAVE</BaseButton>
       </div>
       <BaseModal
-        v-if="discardDialogIsVisible"
-        :open="discardDialogIsVisible"
+        v-if="dialogIsVisible"
+        :open="dialogIsVisible"
         @close="hideDialog"
       >
         <p>dialog text</p>
@@ -54,7 +52,12 @@ import { mapGetters, mapActions } from "vuex";
 
 export default {
   computed: {
-    ...mapGetters(["discardDialogIsVisible", "inputIsInvalid"]),
+    ...mapGetters(["dialogIsVisible"]),
+  },
+  data() {
+    return {
+      inputIsInvalid: false,
+    };
   },
   methods: {
     ...mapActions(["showDialog", "hideDialog"]),
@@ -68,7 +71,7 @@ export default {
 
       // If there's an empty field, stop the process and show the error dialog
       if (enteredTitle === "" || enteredBody === "") {
-        this.$store.dispatch("setInputIsInvalid", true);
+        this.inputIsInvalid = true;
         return;
       }
       this.$store.dispatch("addEntry", payload);
@@ -80,7 +83,7 @@ export default {
       this.$router.push("/journal");
     },
     confirmError() {
-      this.$store.dispatch("setInputIsInvalid", false);
+      this.inputIsInvalid = false;
     },
   },
 };

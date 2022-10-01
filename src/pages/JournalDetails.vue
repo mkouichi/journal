@@ -4,7 +4,7 @@
       <h1>{{ entry.title }}</h1>
       <BaseButton mode="flat">EDIT</BaseButton>
       <BaseButton @click="showDialog" mode="flat">DELETE</BaseButton>
-      <BaseModal @close="hideDialog" :open="discardDialogIsVisible">
+      <BaseModal @close="hideDialog" :open="dialogIsVisible">
         <p>test dialog</p>
         <BaseButton @click="hideDialog" mode="outline">Close it!</BaseButton>
       </BaseModal>
@@ -22,8 +22,8 @@ export default {
     entry() {
       return this.$store.getters.getEntryById(this.id);
     },
-    discardDialogIsVisible() {
-      return this.$store.getters.discardDialogIsVisible;
+    dialogIsVisible() {
+      return this.$store.getters.dialogIsVisible;
     },
   },
   methods: {

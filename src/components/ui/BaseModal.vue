@@ -5,7 +5,7 @@
       <dialog open v-if="open">
         <header>
           <slot name="header">
-            <h2>Header in modal</h2>
+            <h2>Default header in modal</h2>
           </slot>
         </header>
         <section>

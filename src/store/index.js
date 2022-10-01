@@ -6,19 +6,15 @@ const store = createStore({
   modules: { journals: JournalModule },
   state() {
     return {
-      discardDialogIsVisible: false,
-      inputIsInvalid: false,
+      dialogIsVisible: false,
     };
   },
   mutations: {
     showDialog(state) {
-      state.discardDialogIsVisible = true;
+      state.dialogIsVisible = true;
     },
     hideDialog(state) {
-      state.discardDialogIsVisible = false;
-    },
-    setInputIsInvalid(state, payload) {
-      state.inputIsInvalid = payload;
+      state.dialogIsVisible = false;
     },
   },
   actions: {
@@ -28,16 +24,10 @@ const store = createStore({
     hideDialog(context) {
       context.commit("hideDialog");
     },
-    setInputIsInvalid(context, payload) {
-      context.commit("setInputIsInvalid", payload);
-    },
   },
   getters: {
-    discardDialogIsVisible(state) {
-      return state.discardDialogIsVisible;
-    },
-    inputIsInvalid(state) {
-      return state.inputIsInvalid;
+    dialogIsVisible(state) {
+      return state.dialogIsVisible;
     },
   },
 });
