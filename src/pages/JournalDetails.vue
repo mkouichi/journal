@@ -5,8 +5,16 @@
       <BaseButton mode="flat">EDIT</BaseButton>
       <BaseButton @click="showDialog" mode="flat">DELETE</BaseButton>
       <BaseModal @close="hideDialog" :open="dialogIsVisible">
-        <p>test dialog</p>
-        <BaseButton @click="hideDialog" mode="outline">Close it!</BaseButton>
+        <template #header>
+          <h2>Delete</h2>
+        </template>
+        <template #default>
+          <p>Are you sure? Your entry will be parmanently deleted.</p>
+        </template>
+        <template #actions>
+          <BaseButton mode="outline">Delete</BaseButton>
+          <BaseButton @click="hideDialog">Back to entry</BaseButton>
+        </template>
       </BaseModal>
     </div>
     <p>{{ entry.body }}</p>

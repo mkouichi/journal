@@ -30,7 +30,9 @@
         <textarea name="body" id="body" rows="10" ref="bodyInput"></textarea>
       </div>
       <div class="flex">
-        <BaseButton @click="showDialog" mode="outline">CANCEL</BaseButton>
+        <BaseButton type="button" @click="showDialog" mode="outline"
+          >CANCEL</BaseButton
+        >
         <BaseButton type="submit">SAVE</BaseButton>
       </div>
       <BaseModal
@@ -38,9 +40,15 @@
         :open="dialogIsVisible"
         @close="hideDialog"
       >
-        <p>dialog text</p>
+        <template #header>
+          <h2>Cancel</h2>
+        </template>
+        <template #default>
+          <p>Are you sure? Your draft will be lost.</p>
+        </template>
         <template #actions>
-          <BaseButton @click="hideDialog">Close</BaseButton>
+          <BaseButton @click="discardDraft" mode="outline">Discard</BaseButton>
+          <BaseButton @click="hideDialog">Back to edit</BaseButton>
         </template>
       </BaseModal>
     </form>
@@ -74,12 +82,18 @@ export default {
         this.inputIsInvalid = true;
         return;
       }
+
       this.$store.dispatch("addEntry", payload);
 
       // Reset the input fields
       this.$refs.form.reset();
 
-      // Redirect to the list of entries
+      // Redirect to the list of journals
+      this.$router.push("/journal");
+    },
+    discardDraft() {
+      this.$refs.form.reset();
+      this.hideDialog();
       this.$router.push("/journal");
     },
     confirmError() {

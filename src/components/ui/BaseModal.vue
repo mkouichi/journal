@@ -14,7 +14,7 @@
         <div class="flex">
           <slot name="actions">
             <BaseButton @click="$emit('close')" mode="outline"
-              >Close</BaseButton
+              >Default close button in modal</BaseButton
             >
           </slot>
         </div>
