@@ -38,9 +38,6 @@ export default {
 h1 {
   margin-right: auto;
 }
-button {
-  margin-right: 0.5rem;
-}
 .flex {
   display: flex;
   justify-content: end;
