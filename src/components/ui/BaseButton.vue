@@ -34,6 +34,7 @@ button,
 a {
   text-decoration: none;
   padding: 0.75rem 1.5rem;
+  margin-right: 0.5rem;
   font: inherit;
   background-color: #3d008d;
   border: 1px solid #3d008d;
