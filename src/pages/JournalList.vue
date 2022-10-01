@@ -6,7 +6,7 @@
         :key="journal.id"
         :id="journal.id"
         :title="journal.title"
-        :text="journal.text"
+        :body="journal.body"
       />
     </ul>
   </section>
@@ -20,7 +20,7 @@ export default {
   components: { JournalItems },
   computed: {
     journals() {
-      return this.$store.getters.truncateJournalText(100);
+      return this.$store.getters.truncateJournalBody(100);
     },
   },
 };

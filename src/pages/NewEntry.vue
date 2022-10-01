@@ -1,39 +1,87 @@
 <template>
+  <BaseModal v-if="inputIsInvalid" :open="inputIsInvalid" @close="confirmError">
+    <template #header>
+      <h2>Invalid input</h2>
+    </template>
+    <template #default>
+      <p>
+        At least one input is invalid. Make sure you have a title and body for
+        your journal.
+      </p>
+    </template>
+    <template #actions>
+      <BaseButton @click="confirmError">Okay</BaseButton>
+    </template>
+  </BaseModal>
   <BaseCard>
-    <form @submit.prevent="submitData" ref="form">
+    <form @submit.prevent="submitEntryData" ref="form">
       <div class="form-control">
         <label for="title">Title</label>
-        <input type="text" id="title" name="title" ref="titleInput" />
+        <input
+          type="text"
+          id="title"
+          name="title"
+          ref="titleInput"
+          @keydown.enter.prevent
+        />
       </div>
       <div class="form-control">
-        <label for="text">Text</label>
-        <textarea name="text" id="text" rows="10" ref="textInput"></textarea>
+        <label for="body">Body</label>
+        <textarea name="body" id="body" rows="10" ref="bodyInput"></textarea>
       </div>
       <div class="flex">
-        <BaseButton @click="showDialog" mode="outline">CANCEL</BaseButton>
+        <BaseButton @click="showDialog" mode="outline"
+          >CANCEL</BaseButton
+        >
         <BaseButton type="submit">SAVE</BaseButton>
       </div>
-      <teleport to="body">
-        <BaseModal @close="hideDialog" :open="dialogIsVisible">
-          <p>dialog text</p>
-          <BaseButton @click="hideDialog" mode="outline">Close</BaseButton>
-        </BaseModal>
-      </teleport>
+      <BaseModal
+        v-if="discardDialogIsVisible"
+        :open="discardDialogIsVisible"
+        @close="hideDialog"
+      >
+        <p>dialog text</p>
+        <template #actions>
+          <BaseButton @click="hideDialog">Close</BaseButton>
+        </template>
+      </BaseModal>
     </form>
   </BaseCard>
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   computed: {
-    dialogIsVisible() {
-      return this.$store.getters.dialogIsVisible;
-    },
+    ...mapGetters(["discardDialogIsVisible", "inputIsInvalid"]),
   },
   methods: {
     ...mapActions(["showDialog", "hideDialog"]),
+    submitEntryData() {
+      const enteredTitle = this.$refs.titleInput.value.trim();
+      const enteredBody = this.$refs.bodyInput.value.trim();
+      const payload = {
+        title: enteredTitle,
+        body: enteredBody,
+      };
+
+      // If there's an empty field, stop the process and show the error dialog
+      if (enteredTitle === "" || enteredBody === "") {
+        this.$store.dispatch("setInputIsInvalid", true);
+        return;
+      }
+      this.$store.dispatch("addEntry", payload);
+
+      // Reset the input fields
+      this.$refs.form.reset();
+
+      // Redirect to the list of entries
+      this.$router.push("/journal");
+    },
+    confirmError() {
+      this.$store.dispatch("setInputIsInvalid", false);
+    },
   },
 };
 </script>

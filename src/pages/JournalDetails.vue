@@ -4,14 +4,12 @@
       <h1>{{ entry.title }}</h1>
       <BaseButton mode="flat">EDIT</BaseButton>
       <BaseButton @click="showDialog" mode="flat">DELETE</BaseButton>
-      <teleport to="body">
-        <BaseModal @close="hideDialog" :open="dialogIsVisible">
-          <p>test dialog</p>
-          <BaseButton @click="hideDialog" mode="outline">Close it!</BaseButton>
-        </BaseModal>
-      </teleport>
+      <BaseModal @close="hideDialog" :open="discardDialogIsVisible">
+        <p>test dialog</p>
+        <BaseButton @click="hideDialog" mode="outline">Close it!</BaseButton>
+      </BaseModal>
     </div>
-    <p>{{ entry.text }}</p>
+    <p>{{ entry.body }}</p>
   </BaseCard>
 </template>
 
@@ -24,8 +22,8 @@ export default {
     entry() {
       return this.$store.getters.getEntryById(this.id);
     },
-    dialogIsVisible() {
-      return this.$store.getters.dialogIsVisible;
+    discardDialogIsVisible() {
+      return this.$store.getters.discardDialogIsVisible;
     },
   },
   methods: {

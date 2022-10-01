@@ -1,7 +1,7 @@
 <template>
   <li>
     <h2>{{ title }}</h2>
-    <p>{{ text }}</p>
+    <p>{{ body }}</p>
     <div>
       <BaseButton link :to="detailsLink" mode="outline">View More</BaseButton>
     </div>
@@ -10,7 +10,7 @@
 
 <script>
 export default {
-  props: ["id", "title", "text"],
+  props: ["id", "title", "body"],
   computed: {
     detailsLink() {
       return this.$route.path + "/" + this.id;

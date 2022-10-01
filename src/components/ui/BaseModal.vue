@@ -1,10 +1,26 @@
 <template>
-  <div v-if="open" class="backdrop" @click="$emit('close')"></div>
-  <transition name="modal">
-    <dialog open v-if="open">
-      <slot></slot>
-    </dialog>
-  </transition>
+  <teleport to="body">
+    <div v-if="open" class="backdrop" @click="$emit('close')"></div>
+    <transition name="modal">
+      <dialog open v-if="open">
+        <header>
+          <slot name="header">
+            <h2>Header in modal</h2>
+          </slot>
+        </header>
+        <section>
+          <slot></slot>
+        </section>
+        <div class="flex">
+          <slot name="actions">
+            <BaseButton @click="$emit('close')" mode="outline"
+              >Close</BaseButton
+            >
+          </slot>
+        </div>
+      </dialog>
+    </transition>
+  </teleport>
 </template>
 
 <script>
@@ -15,16 +31,6 @@ export default {
 </script>
 
 <style scoped>
-.backdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;
-  z-index: 10;
-  background-color: rgba(0, 0, 0, 0.75);
-}
-
 dialog {
   position: fixed;
   top: 30vh;
@@ -38,7 +44,20 @@ dialog {
   z-index: 100;
   border: none;
 }
-
+.backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: 10;
+  background-color: rgba(0, 0, 0, 0.75);
+}
+.flex {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+}
 .modal-enter-active {
   animation: modal 0.3s ease-out;
 }

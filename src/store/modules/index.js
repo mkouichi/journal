@@ -5,27 +5,40 @@ export default {
         {
           id: "j1",
           title: "Beautiful day",
-          text: "Today I woke up early and had some cereal for breakfast. I went for a walk with a coffee and saw a lot of squirrels!",
+          body: "Today I woke up early and had some cereal for breakfast. I went for a walk with a coffee and saw a lot of squirrels!",
         },
         {
           id: "j2",
           title: "Sad day",
-          text: "I had a good espresso in the house. I went for a walk afternoon and saw a squirrel run over.",
+          body: "I had a good espresso in the house. I went for a walk afternoon and saw a squirrel run over.",
         },
       ],
     };
   },
-  mutations: {},
-  actions: {},
+  mutations: {
+    addEntry(state, payload) {
+      const newEntry = {
+        id: new Date().toISOString(),
+        title: payload.title,
+        body: payload.body,
+      };
+      state.journals.unshift(newEntry);
+    },
+  },
+  actions: {
+    addEntry(context, payload) {
+      context.commit("addEntry", payload);
+    },
+  },
   getters: {
     journals(state) {
       return state.journals;
     },
-    truncateJournalText: (state) => (maxLength) => {
+    truncateJournalBody: (state) => (maxLength) => {
       const journalCopy = JSON.parse(JSON.stringify(state.journals));
       journalCopy.forEach((entry, index) => {
-        if (entry.text.length > maxLength) {
-          journalCopy[index].text = entry.text.substring(0, maxLength) + "...";
+        if (entry.body.length > maxLength) {
+          journalCopy[index].body = entry.body.substring(0, maxLength) + "...";
         }
       });
       return journalCopy;
