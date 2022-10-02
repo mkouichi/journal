@@ -80,14 +80,14 @@ export default {
   },
   computed: {
     entry() {
-      return this.$store.getters.getEntryById(this.id);
+      return this.$store.getters["journal/getEntryById"](this.id);
     },
     dialogIsVisible() {
       return this.$store.getters.dialogIsVisible;
     },
   },
   methods: {
-    ...mapActions(["showDialog", "hideDialog", "modifyEntry"]),
+    ...mapActions(["showDialog", "hideDialog"]),
     editEntry() {
       this.isEditing = true;
     },
@@ -106,7 +106,7 @@ export default {
         return;
       }
 
-      this.$store.dispatch("modifyEntry", modifiedData);
+      this.$store.dispatch("journal/modifyEntry", modifiedData);
 
       // Reset the input fields
       this.$refs.form.reset();
@@ -120,7 +120,7 @@ export default {
       this.$router.push("/journal");
     },
     deleteEntry() {
-      this.$store.dispatch("deleteEntry", this.id);
+      this.$store.dispatch("journal/deleteEntry", this.id);
       this.$router.push("/journal");
     },
   },

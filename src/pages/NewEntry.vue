@@ -83,7 +83,7 @@ export default {
         return;
       }
 
-      this.$store.dispatch("addEntry", entryData);
+      this.$store.dispatch("journal/addEntry", entryData);
 
       // Reset the input fields
       this.$refs.form.reset();

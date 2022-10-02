@@ -1,6 +1,6 @@
 import { createStore } from "vuex";
 
-import JournalModule from "./modules/index.js";
+import JournalModule from "./modules/journal/index.js";
 
 const store = createStore({
   modules: { journal: JournalModule },

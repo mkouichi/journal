@@ -19,7 +19,7 @@ export default {
   components: { JournalEntry },
   computed: {
     entries() {
-      return this.$store.getters.truncateEntryBody(100);
+      return this.$store.getters["journal/truncateEntryBody"](100);
     },
   },
 };
