@@ -1,7 +1,9 @@
+import { v4 as uuidv4 } from "uuid";
+
 export default {
   addEntry(state, payload) {
     const newEntry = {
-      id: new Date().toISOString(),
+      id: uuidv4(),
       title: payload.title,
       body: payload.body,
     };
