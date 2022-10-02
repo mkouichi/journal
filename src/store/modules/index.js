@@ -27,6 +27,13 @@ export default {
     deleteEntry(state, payload) {
       state.journals = state.journals.filter((entry) => entry.id !== payload);
     },
+    modifyEntry(state, payload) {
+      let originalEntry = state.journals.find(
+        (entry) => entry.id === payload.id
+      );
+      originalEntry.title = payload.title;
+      originalEntry.body = payload.body;
+    },
   },
   actions: {
     addEntry(context, payload) {
@@ -34,6 +41,9 @@ export default {
     },
     deleteEntry(context, payload) {
       context.commit("deleteEntry", payload);
+    },
+    modifyEntry(context, payload) {
+      context.commit("modifyEntry", payload);
     },
   },
   getters: {
@@ -50,7 +60,7 @@ export default {
       return journalCopy;
     },
     getEntryById: (state) => (id) => {
-      return state.journals.find((item) => item.id === id);
+      return state.journals.find((entry) => entry.id === id);
     },
   },
 };

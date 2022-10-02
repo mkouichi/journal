@@ -10,7 +10,6 @@
       />
     </ul>
   </section>
-  <RouterView />
 </template>
 
 <script>

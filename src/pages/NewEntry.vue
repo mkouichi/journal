@@ -72,7 +72,7 @@ export default {
     submitEntryData() {
       const enteredTitle = this.$refs.titleInput.value.trim();
       const enteredBody = this.$refs.bodyInput.value.trim();
-      const payload = {
+      const entryData = {
         title: enteredTitle,
         body: enteredBody,
       };
@@ -83,7 +83,7 @@ export default {
         return;
       }
 
-      this.$store.dispatch("addEntry", payload);
+      this.$store.dispatch("addEntry", entryData);
 
       // Reset the input fields
       this.$refs.form.reset();
