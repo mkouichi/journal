@@ -1,7 +1,7 @@
 export default {
   state() {
     return {
-      journals: [
+      entries: [
         {
           id: "j1",
           title: "Beautiful day",
@@ -22,13 +22,13 @@ export default {
         title: payload.title,
         body: payload.body,
       };
-      state.journals.unshift(newEntry);
+      state.entries.unshift(newEntry);
     },
     deleteEntry(state, payload) {
-      state.journals = state.journals.filter((entry) => entry.id !== payload);
+      state.entries = state.entries.filter((entry) => entry.id !== payload);
     },
     modifyEntry(state, payload) {
-      let originalEntry = state.journals.find(
+      let originalEntry = state.entries.find(
         (entry) => entry.id === payload.id
       );
       originalEntry.title = payload.title;
@@ -47,11 +47,11 @@ export default {
     },
   },
   getters: {
-    journals(state) {
-      return state.journals;
+    entries(state) {
+      return state.entries;
     },
-    truncateJournalBody: (state) => (maxLength) => {
-      const journalCopy = JSON.parse(JSON.stringify(state.journals));
+    truncateEntryBody: (state) => (maxLength) => {
+      const journalCopy = JSON.parse(JSON.stringify(state.entries));
       journalCopy.forEach((entry, index) => {
         if (entry.body.length > maxLength) {
           journalCopy[index].body = entry.body.substring(0, maxLength) + "...";
@@ -60,7 +60,7 @@ export default {
       return journalCopy;
     },
     getEntryById: (state) => (id) => {
-      return state.journals.find((entry) => entry.id === id);
+      return state.entries.find((entry) => entry.id === id);
     },
   },
 };

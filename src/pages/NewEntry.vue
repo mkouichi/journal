@@ -88,7 +88,7 @@ export default {
       // Reset the input fields
       this.$refs.form.reset();
 
-      // Redirect to the list of journals
+      // Redirect to the list of entries
       this.$router.push("/journal");
     },
     discardDraft() {

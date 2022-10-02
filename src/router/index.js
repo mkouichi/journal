@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 
-import JournalList from "../pages/JournalList.vue";
-import JournalDetails from "../pages/JournalDetails.vue";
+import EntryList from "../pages/EntryList.vue";
+import EntryDetails from "../pages/EntryDetails.vue";
 import NewEntry from "../pages/NewEntry.vue";
 import NotFound from "../pages/NotFound.vue";
 
@@ -15,14 +15,14 @@ const router = createRouter({
     },
     {
       path: "/journal",
-      name: "journal-list",
-      component: JournalList,
+      name: "entry-list",
+      component: EntryList,
     },
     { path: "/journal/new", name: "new-entry", component: NewEntry },
     {
       path: "/journal/:id",
       name: "journal-details",
-      component: JournalDetails,
+      component: EntryDetails,
       props: true,
     },
     { path: "/:notFound(.*)", component: NotFound },

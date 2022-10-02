@@ -3,7 +3,7 @@ import { createStore } from "vuex";
 import JournalModule from "./modules/index.js";
 
 const store = createStore({
-  modules: { journals: JournalModule },
+  modules: { journal: JournalModule },
   state() {
     return {
       dialogIsVisible: false,
