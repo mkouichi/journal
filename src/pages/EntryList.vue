@@ -4,6 +4,7 @@
       <JournalEntry
         v-for="entry in entries"
         :key="entry.id"
+        :date="entry.date"
         :id="entry.id"
         :title="entry.title"
         :body="entry.body"

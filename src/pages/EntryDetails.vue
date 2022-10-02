@@ -5,7 +5,10 @@
       <BaseButton @click="showDialog" mode="outline">Delete</BaseButton>
       <BaseButton @click="editEntry" mode="outline">Edit</BaseButton>
     </div>
-    <h1>{{ entry.title }}</h1>
+    <div class="flex">
+      <h1>{{ entry.title }}</h1>
+      <p id="date">{{ entry.date }}</p>
+    </div>
     <BaseModal @close="hideDialog" :open="dialogIsVisible">
       <template #header>
         <h2>Delete</h2>
@@ -172,5 +175,8 @@ textarea:focus {
 }
 .left {
   margin-right: auto;
+}
+#date {
+  color: #656565;
 }
 </style>
