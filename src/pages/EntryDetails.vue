@@ -1,22 +1,23 @@
 <template>
   <BaseCard v-if="entry && !isEditing">
     <div class="flex">
-      <h1>{{ entry.title }}</h1>
-      <BaseButton @click="editEntry" mode="flat">EDIT</BaseButton>
-      <BaseButton @click="showDialog" mode="flat">DELETE</BaseButton>
-      <BaseModal @close="hideDialog" :open="dialogIsVisible">
-        <template #header>
-          <h2>Delete</h2>
-        </template>
-        <template #default>
-          <p>Are you sure? Your entry will be parmanently deleted.</p>
-        </template>
-        <template #actions>
-          <BaseButton @click="deleteEntry" mode="outline">Delete</BaseButton>
-          <BaseButton @click="hideDialog">Back to entry</BaseButton>
-        </template>
-      </BaseModal>
+      <BaseButton @click="goBack" class="left">Go Back</BaseButton>
+      <BaseButton @click="showDialog" mode="outline">Delete</BaseButton>
+      <BaseButton @click="editEntry" mode="outline">Edit</BaseButton>
     </div>
+    <h1>{{ entry.title }}</h1>
+    <BaseModal @close="hideDialog" :open="dialogIsVisible">
+      <template #header>
+        <h2>Delete</h2>
+      </template>
+      <template #default>
+        <p>Are you sure? Your entry will be parmanently deleted.</p>
+      </template>
+      <template #actions>
+        <BaseButton @click="deleteEntry" mode="outline">Delete</BaseButton>
+        <BaseButton @click="hideDialog">Back to entry</BaseButton>
+      </template>
+    </BaseModal>
     <p>{{ entry.body }}</p>
   </BaseCard>
   <BaseCard v-if="entry && isEditing">
@@ -101,6 +102,9 @@ export default {
     editEntry() {
       this.isEditing = true;
     },
+    goBack() {
+      this.$router.push("/journal");
+    },
     submitModifiedData() {
       const enteredTitle = this.$refs.titleInput.value.trim();
       const enteredBody = this.$refs.bodyInput.value.trim();
@@ -127,7 +131,9 @@ export default {
     discardDraft() {
       this.$refs.form.reset();
       this.hideDialog();
-      this.$router.push("/journal");
+
+      // Force reload
+      this.$router.go();
     },
     deleteEntry() {
       this.$store.dispatch("journal/deleteEntry", this.id);
@@ -162,5 +168,9 @@ textarea:focus {
   display: flex;
   justify-content: end;
   align-items: center;
+  margin-bottom: 2rem;
+}
+.left {
+  margin-right: auto;
 }
 </style>

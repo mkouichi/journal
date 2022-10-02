@@ -1,25 +1,23 @@
 <template>
   <teleport to="body">
     <div v-if="open" class="backdrop" @click="$emit('close')"></div>
-    <transition name="modal">
-      <dialog open v-if="open">
-        <header>
-          <slot name="header">
-            <h2>Default header in modal</h2>
-          </slot>
-        </header>
-        <section>
-          <slot></slot>
-        </section>
-        <div class="flex">
-          <slot name="actions">
-            <BaseButton @click="$emit('close')" mode="outline"
-              >Default close button in modal</BaseButton
-            >
-          </slot>
-        </div>
-      </dialog>
-    </transition>
+    <dialog open v-if="open">
+      <header>
+        <slot name="header">
+          <h2>Default header in modal</h2>
+        </slot>
+      </header>
+      <section>
+        <slot></slot>
+      </section>
+      <div class="flex">
+        <slot name="actions">
+          <BaseButton @click="$emit('close')" mode="outline"
+            >Default close button in modal</BaseButton
+          >
+        </slot>
+      </div>
+    </dialog>
   </teleport>
 </template>
 
@@ -38,7 +36,7 @@ dialog {
   left: calc(50% - 15rem);
   margin: 0;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
-  border-radius: 12px;
+  border-radius: 8px;
   padding: 1rem;
   background-color: white;
   z-index: 100;
@@ -57,22 +55,5 @@ dialog {
   display: flex;
   justify-content: end;
   align-items: center;
-}
-.modal-enter-active {
-  animation: modal 0.3s ease-out;
-}
-.modal-leave-active {
-  animation: modal 0.3s ease-in reverse;
-}
-
-@keyframes modal {
-  from {
-    opacity: 0;
-    transform: translateY(-50px) scale(0.9);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
 }
 </style>
