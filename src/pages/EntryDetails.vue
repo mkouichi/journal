@@ -29,7 +29,7 @@
           name="title"
           ref="titleInput"
           @keydown.enter.prevent
-          :value="entry.title"
+          v-model="entryTitle"
         />
       </div>
       <div class="form-control">
@@ -39,7 +39,7 @@
           id="body"
           rows="10"
           ref="bodyInput"
-          :value="entry.body"
+          v-model="entryBody"
         ></textarea>
       </div>
       <div class="flex">
@@ -76,11 +76,21 @@ export default {
   data() {
     return {
       isEditing: false,
+      // Initial value for editing
+      entryTitle: "",
+      entryBody: "",
     };
   },
   computed: {
     entry() {
-      return this.$store.getters["journal/getEntryById"](this.id);
+      // Get the entry's contents using its id
+      const foundEntry = this.$store.getters["journal/getEntryById"](this.id);
+
+      // Set the contents for editing
+      this.entryTitle = foundEntry.title;
+      this.entryBody = foundEntry.body;
+
+      return foundEntry;
     },
     dialogIsVisible() {
       return this.$store.getters.dialogIsVisible;
