@@ -24,10 +24,16 @@ export default {
       };
       state.journals.unshift(newEntry);
     },
+    deleteEntry(state, payload) {
+      state.journals = state.journals.filter((entry) => entry.id !== payload);
+    },
   },
   actions: {
     addEntry(context, payload) {
       context.commit("addEntry", payload);
+    },
+    deleteEntry(context, payload) {
+      context.commit("deleteEntry", payload);
     },
   },
   getters: {

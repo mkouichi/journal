@@ -1,5 +1,5 @@
 <template>
-  <BaseCard>
+  <BaseCard v-if="entry">
     <div class="flex">
       <h1>{{ entry.title }}</h1>
       <BaseButton mode="flat">EDIT</BaseButton>
@@ -12,7 +12,7 @@
           <p>Are you sure? Your entry will be parmanently deleted.</p>
         </template>
         <template #actions>
-          <BaseButton mode="outline">Delete</BaseButton>
+          <BaseButton @click="deleteEntry" mode="outline">Delete</BaseButton>
           <BaseButton @click="hideDialog">Back to entry</BaseButton>
         </template>
       </BaseModal>
@@ -36,6 +36,10 @@ export default {
   },
   methods: {
     ...mapActions(["showDialog", "hideDialog"]),
+    deleteEntry() {
+      this.$store.dispatch("deleteEntry", this.id);
+      this.$router.push("/journal");
+    },
   },
 };
 </script>
