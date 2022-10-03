@@ -90,6 +90,10 @@ export default {
       // Get the entry's contents using its id
       const foundEntry = this.$store.getters["journal/getEntryById"](this.id);
 
+      // If the entry doesn't exist, stop the process
+      // Need this for when deleting an entry
+      if (foundEntry === undefined) return;
+
       // Set the contents for editing
       this.entryTitle = foundEntry.title;
       this.entryBody = foundEntry.body;
@@ -135,8 +139,9 @@ export default {
       this.$refs.form.reset();
       this.hideDialog();
 
+      // TODO: Uncomment below after adding a database; when reloading, the page loses all the newly created entries
       // Force reload
-      this.$router.go();
+      // this.$router.go();
     },
     deleteEntry() {
       this.$store.dispatch("journal/deleteEntry", this.id);
