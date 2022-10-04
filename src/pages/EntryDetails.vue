@@ -79,7 +79,11 @@ export default {
   props: ["id"],
   data() {
     return {
+      // results: [],
+      // isLoading: false,
+      // error: false,
       isEditing: false,
+      // foundEntry: {},
       // Initial value for editing
       entryTitle: "",
       entryBody: "",
@@ -87,11 +91,11 @@ export default {
   },
   computed: {
     entry() {
-      // Get the entry's contents using its id
+      // Get the entry's contents using its id from Vuex
       const foundEntry = this.$store.getters["journal/getEntryById"](this.id);
 
       // If the entry doesn't exist, stop the process
-      // Need this for when deleting an entry
+      // Need this also for when deleting an entry
       if (foundEntry === undefined) return;
 
       // Set the contents for editing
@@ -105,7 +109,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["showDialog", "hideDialog"]),
+    ...mapActions(["showDialog", "hideDialog", "journal/fetchEntryById"]),
     editEntry() {
       this.isEditing = true;
     },
@@ -139,14 +143,14 @@ export default {
       this.$refs.form.reset();
       this.hideDialog();
 
-      // TODO: Uncomment below after adding a database; when reloading, the page loses all the newly created entries
       // Force reload
       // this.$router.go();
-    },
-    deleteEntry() {
-      this.$store.dispatch("journal/deleteEntry", this.id);
       this.$router.push("/journal");
     },
+    // deleteEntry() {
+    //   this.$store.dispatch("journal/deleteEntry", this.id);
+    //   this.$router.push("/journal");
+    // },
   },
 };
 </script>

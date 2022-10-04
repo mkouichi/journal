@@ -13,6 +13,17 @@
       <BaseButton @click="confirmError">Okay</BaseButton>
     </template>
   </BaseModal>
+  <BaseModal v-else-if="error" :open="error" @close="confirmError">
+    <template #header>
+      <h2>Error</h2>
+    </template>
+    <template #default>
+      <p>{{ error }}</p>
+    </template>
+    <template #actions>
+      <BaseButton @click="confirmError">Okay</BaseButton>
+    </template>
+  </BaseModal>
   <BaseCard>
     <form @submit.prevent="submitEntryData" ref="form">
       <div class="form-control">
@@ -57,6 +68,8 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
+import { v4 as uuidv4 } from "uuid";
+import moment from "moment";
 
 export default {
   computed: {
@@ -65,6 +78,7 @@ export default {
   data() {
     return {
       inputIsInvalid: false,
+      // error: null,
     };
   },
   methods: {
@@ -73,6 +87,8 @@ export default {
       const enteredTitle = this.$refs.titleInput.value.trim();
       const enteredBody = this.$refs.bodyInput.value.trim();
       const entryData = {
+        date: moment().format("ddd, MMM D, YYYY, kk:mm"),
+        id: uuidv4(),
         title: enteredTitle,
         body: enteredBody,
       };
@@ -83,13 +99,38 @@ export default {
         return;
       }
 
-      this.$store.dispatch("journal/addEntry", entryData);
+      this.error = null;
 
-      // Reset the input fields
-      this.$refs.form.reset();
+      // Send data to Vuex
+      // this.$store.dispatch("journal/addEntry", entryData);
 
-      // Redirect to the list of entries
-      this.$router.push("/journal");
+      // Send data to Firebase
+      fetch(
+        "https://vue-journal-7a97c-default-rtdb.firebaseio.com/journal.json",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(entryData),
+        }
+      )
+        .then((response) => {
+          if (response.ok) {
+            // Reset the input fields
+            this.$refs.form.reset();
+
+            // Redirect to the list of entries
+            this.$router.push("/journal");
+          } else {
+            // throw new Error('Could not save data');
+            throw new Error(response.statusText);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          this.error = "Something went wrong - please try again later.";
+        });
     },
     discardDraft() {
       this.$refs.form.reset();
@@ -98,6 +139,7 @@ export default {
     },
     confirmError() {
       this.inputIsInvalid = false;
+      this.$store.dispatch("journal/confirmError");
     },
   },
 };
