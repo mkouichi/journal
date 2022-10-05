@@ -27,29 +27,59 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "@/firebase";
+import { mapActions, mapGetters } from "vuex";
 import JournalEntry from "../components/layout/JournalEntry.vue";
 
 export default {
   components: { JournalEntry },
   data() {
     return {
-      loading: this.$store.getters["journal/getLoadingState"]("journal"),
-      error: this.$store.getters["journal/getErrorState"]("journal"),
+      loading: this.getLoadingState,
+      error: this.getErrorState,
     };
   },
-  created() {
+  async mounted() {
     // Get initial data from Firebase
-    this.$store.dispatch("journal/fetchEntries");
+    const querySnapshot = await getDocs(collection(db, "journal"));
+    const entries = [];
+
+    // Set loading to true
+    this["setLoading"]({ dataName: "journal", status: true });
+
+    querySnapshot.forEach((doc) => {
+      const entry = {
+        ...doc.data(),
+        id: doc.id,
+      };
+      entries.unshift(entry);
+    });
+
+    // Set loading to false
+    this["setLoading"]({ dataName: "journal", status: false });
+
+    // Set data to Vuex
+    this.setEntryData(entries);
   },
   computed: {
+    ...mapGetters("journal", [
+      "getLoadingState",
+      "getErrorState",
+      "truncateEntryBody",
+    ]),
     entries() {
       // Get data from Vuex and show the first 100 characters
-      return this.$store.getters["journal/truncateEntryBody"](100);
+      return this["truncateEntryBody"](100);
     },
   },
   methods: {
-    ...mapActions(["confirmError"]),
+    ...mapActions("journal", [
+      "setEntryData",
+      "setLoading",
+      "serError",
+      "confirmError",
+    ]),
   },
 };
 </script>
