@@ -68,8 +68,9 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-import { v4 as uuidv4 } from "uuid";
 import moment from "moment";
+import { collection, addDoc } from "firebase/firestore";
+import { db } from "@/firebase";
 
 export default {
   computed: {
@@ -78,17 +79,16 @@ export default {
   data() {
     return {
       inputIsInvalid: false,
-      // error: null,
+      error: this.$store.getters["journal/getErrorState"]("journal"),
     };
   },
   methods: {
-    ...mapActions(["showDialog", "hideDialog"]),
+    ...mapActions(["showDialog", "hideDialog", "journal/setError"]),
     submitEntryData() {
       const enteredTitle = this.$refs.titleInput.value.trim();
       const enteredBody = this.$refs.bodyInput.value.trim();
       const entryData = {
         date: moment().format("ddd, MMM D, YYYY, kk:mm"),
-        id: uuidv4(),
         title: enteredTitle,
         body: enteredBody,
       };
@@ -99,38 +99,18 @@ export default {
         return;
       }
 
-      this.error = null;
-
-      // Send data to Vuex
-      // this.$store.dispatch("journal/addEntry", entryData);
+      // Set error to null
+      this["journal/setError"]({ dataName: "journal", status: null });
 
       // Send data to Firebase
-      fetch(
-        "https://vue-journal-7a97c-default-rtdb.firebaseio.com/journal.json",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(entryData),
-        }
-      )
-        .then((response) => {
-          if (response.ok) {
-            // Reset the input fields
-            this.$refs.form.reset();
+      // Add a new document with a generated id
+      addDoc(collection(db, "journal"), entryData);
 
-            // Redirect to the list of entries
-            this.$router.push("/journal");
-          } else {
-            // throw new Error('Could not save data');
-            throw new Error(response.statusText);
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-          this.error = "Something went wrong - please try again later.";
-        });
+      // Reset the input fields
+      this.$refs.form.reset();
+
+      // Redirect to the list of entries
+      this.$router.push("/journal");
     },
     discardDraft() {
       this.$refs.form.reset();
