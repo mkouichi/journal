@@ -1,4 +1,5 @@
 <template>
+  <!-- TODO: Validation -->
   <BaseModal v-if="inputIsInvalid" :open="inputIsInvalid" @close="confirmError">
     <template #header>
       <h2>Invalid input</h2>
@@ -73,6 +74,17 @@ import { collection, addDoc } from "firebase/firestore";
 import { db } from "@/firebase";
 
 export default {
+  // TODO: Only show this when there are unsaved changes
+  // TODO: Show a better deagram
+  beforeRouteLeave(to, from) {
+    console.log("EditEntry component beforeRouteLeave");
+    console.log(to, from);
+
+    const answer = window.confirm(
+      "Do you really want to leave? you have unsaved changes!"
+    );
+    if (!answer) return false;
+  },
   computed: {
     ...mapGetters(["dialogIsVisible"]),
   },
@@ -112,6 +124,8 @@ export default {
       // Redirect to the list of entries
       this.$router.push("/journal");
     },
+
+    // TODO: Only show this when there are unsaved changes
     discardDraft() {
       this.$refs.form.reset();
       this.hideDialog();

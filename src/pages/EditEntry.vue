@@ -55,6 +55,21 @@ import { doc, updateDoc } from "firebase/firestore";
 import { db } from "@/firebase";
 
 export default {
+  // TODO: Only show this when there are unsaved changes
+  // TODO: Show a better deagram
+  beforeRouteLeave(to, from) {
+    console.log("EditEntry component beforeRouteLeave");
+    console.log(to, from);
+
+    const answer = window.confirm(
+      "Do you really want to leave? you have unsaved changes!"
+    );
+    if (!answer) {
+      return false;
+    } else {
+      this.setEditingToFalse();
+    }
+  },
   props: ["id"],
   data() {
     return {
@@ -86,6 +101,8 @@ export default {
     setEditingToFalse() {
       this["journal/setEditing"]({ dataName: "journal", status: false });
     },
+
+    // TODO: Only show this when there are unsaved changes
     discardDraft() {
       this.$refs.form.reset();
       this.hideDialog();
