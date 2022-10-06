@@ -42,7 +42,6 @@
         <template #actions>
           <BaseButton @click="discardDraft" mode="outline">Discard</BaseButton>
           <BaseButton @click="hideDialog">Back to edit</BaseButton>
-          <BaseButton @click="log">log</BaseButton>
         </template>
       </BaseModal>
     </form>
@@ -56,7 +55,7 @@ import { doc, updateDoc } from "firebase/firestore";
 import { db } from "@/firebase";
 
 export default {
-  props: ["entry"],
+  props: ["id"],
   data() {
     return {
       entryTitle: "",
@@ -76,9 +75,10 @@ export default {
       return this.$store.getters.dialogIsVisible;
     },
     setEntryValue() {
+      const entry = this.$store.getters["journal/getTargetEntry"];
       // Set the original contents for editing
-      this.entryTitle = this.entry.title;
-      this.entryBody = this.entry.body;
+      this.entryTitle = entry.title;
+      this.entryBody = entry.body;
     },
   },
   methods: {
@@ -90,13 +90,14 @@ export default {
       this.$refs.form.reset();
       this.hideDialog();
       this.setEditingToFalse();
+      this.$router.push("/journal/" + this.id);
     },
     async submitModifiedData() {
       const enteredTitle = this.$refs.titleInput.value.trim();
       const enteredBody = this.$refs.bodyInput.value.trim();
       const modifiedData = {
         lastUpdated: moment().format("ddd, MMM D, YYYY, kk:mm"),
-        id: this.entry.id,
+        id: this.id,
         title: enteredTitle,
         body: enteredBody,
       };
@@ -108,7 +109,7 @@ export default {
       }
 
       // Grab the original record from database
-      const originalRef = doc(db, "journal", this.entry.id);
+      const originalRef = doc(db, "journal", this.id);
 
       // Send data to Firebase
       await updateDoc(originalRef, modifiedData);

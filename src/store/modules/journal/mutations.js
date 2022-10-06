@@ -18,4 +18,7 @@ export default {
       };
     });
   },
+  setTargetEntry(state, payload) {
+    state.targetEntry = payload;
+  },
 };

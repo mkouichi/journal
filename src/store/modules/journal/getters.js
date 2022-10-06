@@ -26,4 +26,7 @@ export default {
   getEntryById: (state) => (id) => {
     return state.entries.find((entry) => entry.id === id);
   },
+  getTargetEntry(state) {
+    return state.targetEntry;
+  },
 };

@@ -1,13 +1,16 @@
 <template>
-  <BaseCard v-if="foundEntry && !isEditing">
+  <BaseCard v-if="targetEntry && !isEditing">
     <div class="flex">
       <BaseButton @click="goBack" class="left">Go Back</BaseButton>
       <BaseButton @click="showDialog" mode="outline">Delete</BaseButton>
-      <BaseButton @click="setEditingToTrue" mode="outline">Edit </BaseButton>
+      <!-- <BaseButton @click="setEditingToTrue" mode="outline">Edit </BaseButton> -->
+      <BaseButton link :to="editLink" @click="setEditingToTrue" mode="outline"
+        >Edit
+      </BaseButton>
     </div>
     <div class="flex">
-      <h1>{{ foundEntry.title }}</h1>
-      <p id="date">{{ foundEntry.date }}</p>
+      <h1>{{ targetEntry.title }}</h1>
+      <p id="date">{{ targetEntry.date }}</p>
     </div>
     <BaseModal @close="hideDialog" :open="dialogIsVisible">
       <template #header>
@@ -21,60 +24,94 @@
         <BaseButton @click="hideDialog">Back to entry</BaseButton>
       </template>
     </BaseModal>
-    <p>{{ foundEntry.body }}</p>
+    <p>{{ targetEntry.body }}</p>
   </BaseCard>
-  <EditEntry v-if="foundEntry && isEditing" :entry="foundEntry" />
+
+  <!-- <EditEntry v-if="foundEntry && isEditing" :entry="foundEntry" /> -->
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 import { doc, getDoc, deleteDoc } from "firebase/firestore";
 import { db } from "@/firebase";
-import EditEntry from "../components/journal/EditEntry.vue";
+// import EditEntry from "./EditEntry.vue";
 
 export default {
-  components: { EditEntry },
+  // components: { EditEntry },
   props: ["id"],
   data() {
     return {
-      foundEntry: {},
+      // foundEntry: {},
     };
   },
   async beforeMount() {
-    // Try getting the entry's contents using its id from Vuex
-    this.foundEntry = this.$store.getters["journal/getEntryById"](this.id);
+    let entry;
+
+    // Try getting the entry's contents from Vuex using its id
+    entry = this.$store.getters["journal/getEntryById"](this.id);
+    console.log(entry);
 
     // If the entry doesn't exist in Vuex, try finding it in Firebase
-    if (this.foundEntry === undefined) {
+    if (entry === undefined) {
       const docRef = doc(db, "journal", this.id);
       const docSnap = await getDoc(docRef);
 
       if (docSnap.exists()) {
-        this.foundEntry = docSnap.data();
+        entry = docSnap.data();
       } else {
         console.log("No such document!");
       }
     }
-    console.table(this.foundEntry);
+    console.log(entry);
+
+    // Set found entry to Vuex
+    this["journal/setTargetEntry"](entry);
+    // this.setTargetEntry(entry);
   },
   computed: {
+    ...mapGetters([
+      "dialogIsVisible",
+      // { getEditingState: "journal/getEditingState" },
+      // { getEntryById: "journal/getEntryById" },
+      // { foundEntry: "journal/getTargetEntry" },
+      "journal/getEditingState",
+      "journal/getEntryById",
+      "journal/getTargetEntry",
+    ]),
+    targetEntry() {
+      return this.$store.getters["journal/getTargetEntry"];
+    },
     isEditing() {
       return this.$store.getters["journal/getEditingState"]("journal");
+      // return this.getEditingState["journal"];
+    },
+    editLink() {
+      return this.$route.path + "/edit";
     },
     dialogIsVisible() {
       return this.$store.getters.dialogIsVisible;
+      // return this.dialogIsVisible;
     },
   },
   methods: {
-    ...mapActions(["showDialog", "hideDialog", "journal/setEditing"]),
+    ...mapActions([
+      "showDialog",
+      "hideDialog",
+      "journal/setEditing",
+      "journal/setTargetEntry",
+      // { setEditing: "journal/setEditing" },
+      // { setTargetEntry: "journal/setTargetEntry" },
+    ]),
     setEditingToTrue() {
       this["journal/setEditing"]({ dataName: "journal", status: true });
+      // this.setEditing({ dataName: "journal", status: true });
     },
     goBack() {
       this.$router.push("/journal");
     },
     async deleteEntry() {
       await deleteDoc(doc(db, "journal", this.id));
+      this.hideDialog();
       this.$router.push("/journal");
     },
   },

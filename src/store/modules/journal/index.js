@@ -14,6 +14,7 @@ export default {
         },
       },
       entries: [],
+      targetEntry: {},
     };
   },
   mutations,
