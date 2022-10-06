@@ -5,6 +5,9 @@ export default {
   getErrorState: (state) => (dataName) => {
     return state.status[dataName].error;
   },
+  getEditingState: (state) => (dataName) => {
+    return state.status[dataName].isEditing;
+  },
   entries(state) {
     return state.entries;
   },

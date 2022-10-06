@@ -5,19 +5,13 @@ export default {
   setError(context, payload) {
     context.commit("setError", payload);
   },
+  setEditing(context, payload) {
+    context.commit("setEditing", payload);
+  },
   confirmError(context) {
     context.commit("setError", { dataName: "journal", status: null });
   },
   setEntryData(context, payload) {
     context.commit("setEntryData", payload);
   },
-  // addEntry(context, payload) {
-  //   context.commit("addEntry", payload);
-  // },
-  // deleteEntry(context, payload) {
-  //   context.commit("deleteEntry", payload);
-  // },
-  // modifyEntry(context, payload) {
-  //   context.commit("modifyEntry", payload);
-  // },
 };
