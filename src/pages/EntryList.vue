@@ -27,10 +27,10 @@
 </template>
 
 <script>
-import { collection, getDocs } from "firebase/firestore";
+import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "@/firebase";
 import { mapActions, mapGetters } from "vuex";
-import JournalEntry from "../components/layout/JournalEntry.vue";
+import JournalEntry from "../components/journal/JournalEntry.vue";
 
 export default {
   components: { JournalEntry },
@@ -40,27 +40,31 @@ export default {
       error: this.getErrorState,
     };
   },
-  async mounted() {
-    // Get initial data from Firebase
-    const querySnapshot = await getDocs(collection(db, "journal"));
+  mounted() {
     const entries = [];
 
     // Set loading to true
-    this["setLoading"]({ dataName: "journal", status: true });
+    this.setLoading({ dataName: "journal", status: true });
 
-    querySnapshot.forEach((doc) => {
-      const entry = {
-        ...doc.data(),
-        id: doc.id,
-      };
-      entries.unshift(entry);
+    // Get initial data from Firebase
+    // Keep on listening to changes in the collection
+    onSnapshot(collection(db, "journal"), (querySnapshot) => {
+      // Loop through each entry in the collection
+      querySnapshot.forEach((doc) => {
+        const entry = {
+          ...doc.data(),
+          // Use the generated id
+          id: doc.id,
+        };
+        entries.unshift(entry);
+      });
+
+      // Set loading to false
+      this.setLoading({ dataName: "journal", status: false });
+
+      // Set data to Vuex
+      this.setEntryData(entries);
     });
-
-    // Set loading to false
-    this["setLoading"]({ dataName: "journal", status: false });
-
-    // Set data to Vuex
-    this.setEntryData(entries);
   },
   computed: {
     ...mapGetters("journal", [
@@ -74,12 +78,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions("journal", [
-      "setEntryData",
-      "setLoading",
-      "serError",
-      "confirmError",
-    ]),
+    ...mapActions("journal", ["setEntryData", "setLoading", "confirmError"]),
   },
 };
 </script>
