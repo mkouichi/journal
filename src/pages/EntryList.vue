@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <!-- <section>
     <p v-if="loading">Loading...</p>
     <BaseModal v-else-if="error" :open="error" @close="confirmError">
       <template #header>
@@ -23,17 +23,21 @@
         :body="entry.body"
       />
     </ul>
-  </section>
+  </section> -->
+  <Calendar :entries="entries" />
 </template>
 
 <script>
 import { collection, onSnapshot } from "firebase/firestore";
+import "vue-cal/dist/vuecal.css";
 import { db } from "@/firebase";
 import { mapActions, mapGetters } from "vuex";
+
 import JournalEntry from "../components/journal/JournalEntry.vue";
+import Calendar from "../components/journal/Calendar.vue";
 
 export default {
-  components: { JournalEntry },
+  components: { JournalEntry, Calendar },
   data() {
     return {
       loading: this.getLoadingState,
