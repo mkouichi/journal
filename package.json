@@ -10,8 +10,10 @@
     "firebase": "^9.10.0",
     "moment": "^2.29.4",
     "vue": "^3.2.38",
+    "vue-cal": "^4.8.0",
     "vue-router": "^4.1.5",
-    "vuex": "^4.0.2"
+    "vuex": "^4.0.2",
+    "wave-ui": "^2.42.2"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^3.0.3",

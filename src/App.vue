@@ -1,6 +1,8 @@
 <template>
-  <TheHeader />
-  <RouterView />
+  <w-app>
+    <TheHeader />
+    <RouterView />
+  </w-app>
 </template>
 
 <script>
