@@ -1,12 +1,17 @@
 <template>
-  <TheHeader />
-  <RouterView />
+  <v-app>
+    <TheHeader />
+    <v-main>
+      <RouterView />
+    </v-main>
+  </v-app>
 </template>
 
 <script>
 import TheHeader from "./components/layout/TheHeader.vue";
 
 export default {
+  name: "App",
   components: { TheHeader },
 };
 </script>
