@@ -24,6 +24,7 @@
       />
     </ul>
   </section>
+  <Calendar />
 </template>
 
 <script>
@@ -31,9 +32,10 @@ import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "@/firebase";
 import { mapActions, mapGetters } from "vuex";
 import JournalEntry from "../components/journal/JournalEntry.vue";
+import Calendar from "../components/journal/Calendar.vue";
 
 export default {
-  components: { JournalEntry },
+  components: { JournalEntry, Calendar },
   data() {
     return {
       loading: this.getLoadingState,
