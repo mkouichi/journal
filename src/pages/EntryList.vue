@@ -1,5 +1,5 @@
 <template>
-  <!-- <section>
+  <section v-if="entries">
     <p v-if="loading">Loading...</p>
     <BaseModal v-else-if="error" :open="error" @close="confirmError">
       <template #header>
@@ -23,21 +23,20 @@
         :body="entry.body"
       />
     </ul>
-  </section> -->
-  <Calendar :entries="entries" />
+  </section>
 </template>
 
 <script>
-import { collection, onSnapshot } from "firebase/firestore";
-import "vue-cal/dist/vuecal.css";
-import { db } from "@/firebase";
 import { mapActions, mapGetters } from "vuex";
+// import { collection, onSnapshot } from "firebase/firestore";
+// import { db } from "@/firebase";
+import "vue-cal/dist/vuecal.css";
 
+import { getDataFromDBAndListenToChanges } from "../helper-functions";
 import JournalEntry from "../components/journal/JournalEntry.vue";
-import Calendar from "../components/journal/Calendar.vue";
 
 export default {
-  components: { JournalEntry, Calendar },
+  components: { JournalEntry },
   data() {
     return {
       loading: this.getLoadingState,
@@ -45,30 +44,31 @@ export default {
     };
   },
   mounted() {
-    const entries = [];
+    // const entries = [];
 
     // Set loading to true
     this.setLoading({ dataName: "journal", status: true });
 
     // Get initial data from Firebase
+    const entries = getDataFromDBAndListenToChanges();
     // Keep on listening to changes in the collection
-    onSnapshot(collection(db, "journal"), (querySnapshot) => {
-      // Loop through each entry in the collection
-      querySnapshot.forEach((doc) => {
-        const entry = {
-          ...doc.data(),
-          // Use the generated id
-          id: doc.id,
-        };
-        entries.unshift(entry);
-      });
+    // onSnapshot(collection(db, "journal"), (querySnapshot) => {
+    //   // Loop through each entry in the collection
+    //   querySnapshot.forEach((doc) => {
+    //     const entry = {
+    //       ...doc.data(),
+    //       // Use the generated id
+    //       id: doc.id,
+    //     };
+    //     entries.unshift(entry);
+    //   });
 
-      // Set loading to false
-      this.setLoading({ dataName: "journal", status: false });
+    // Set loading to false
+    this.setLoading({ dataName: "journal", status: false });
 
-      // Set data to Vuex
-      this.setEntryData(entries);
-    });
+    // Set data to Vuex
+    this.setEntryData(entries);
+    // });
   },
   computed: {
     ...mapGetters("journal", [
@@ -76,6 +76,7 @@ export default {
       "getErrorState",
       "truncateEntryBody",
     ]),
+    ...mapGetters(["getView"]),
     entries() {
       // Get data from Vuex and show the first 100 characters
       return this["truncateEntryBody"](100);
