@@ -3,12 +3,31 @@
     <h1><RouterLink to="/">Journal</RouterLink></h1>
     <nav>
       <ul>
-        <li><RouterLink to="/journal">List of Entries</RouterLink></li>
+        <li>
+          <RouterLink to="/journal/calendar" @click="setView('calendar')">
+            Calendar View
+          </RouterLink>
+        </li>
+        <li>
+          <RouterLink to="/journal/list" @click="setView('list')">
+            List View
+          </RouterLink>
+        </li>
         <li><RouterLink to="/journal/new">+ New Entry</RouterLink></li>
       </ul>
     </nav>
   </header>
 </template>
+
+<script>
+import { mapActions } from "vuex";
+
+export default {
+  methods: {
+    ...mapActions(["setView"]),
+  },
+};
+</script>
 
 <style scoped>
 header {

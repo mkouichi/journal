@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 
+import Calendar from "../pages/Calendar.vue";
 import EntryList from "../pages/EntryList.vue";
 import EntryDetails from "../pages/EntryDetails.vue";
 import NewEntry from "../pages/NewEntry.vue";
@@ -12,10 +13,15 @@ const router = createRouter({
     {
       path: "/",
       name: "home",
-      redirect: "/journal",
+      redirect: "/journal/calendar",
     },
     {
-      path: "/journal",
+      path: "/journal/calendar",
+      name: "calendar",
+      component: Calendar,
+    },
+    {
+      path: "/journal/list",
       name: "entry-list",
       component: EntryList,
     },

@@ -7,6 +7,7 @@ const store = createStore({
   state() {
     return {
       dialogIsVisible: false,
+      view: "calendar",
     };
   },
   mutations: {
@@ -16,6 +17,9 @@ const store = createStore({
     hideDialog(state) {
       state.dialogIsVisible = false;
     },
+    setView(state, payload) {
+      state.view = payload;
+    },
   },
   actions: {
     showDialog(context) {
@@ -24,10 +28,16 @@ const store = createStore({
     hideDialog(context) {
       context.commit("hideDialog");
     },
+    setView(context, payload) {
+      context.commit("setView", payload);
+    },
   },
   getters: {
     dialogIsVisible(state) {
       return state.dialogIsVisible;
+    },
+    getView(state) {
+      return state.view;
     },
   },
 });
