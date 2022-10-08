@@ -28,11 +28,9 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-// import { collection, onSnapshot } from "firebase/firestore";
-// import { db } from "@/firebase";
 import "vue-cal/dist/vuecal.css";
 
-import { getDataFromDBAndListenToChanges } from "../helper-functions";
+import { getDataFromDB } from "../helper-functions";
 import JournalEntry from "../components/journal/JournalEntry.vue";
 
 export default {
@@ -43,32 +41,19 @@ export default {
       error: this.getErrorState,
     };
   },
-  mounted() {
-    // const entries = [];
-
+  async mounted() {
     // Set loading to true
     this.setLoading({ dataName: "journal", status: true });
 
-    // Get initial data from Firebase
-    const entries = getDataFromDBAndListenToChanges();
-    // Keep on listening to changes in the collection
-    // onSnapshot(collection(db, "journal"), (querySnapshot) => {
-    //   // Loop through each entry in the collection
-    //   querySnapshot.forEach((doc) => {
-    //     const entry = {
-    //       ...doc.data(),
-    //       // Use the generated id
-    //       id: doc.id,
-    //     };
-    //     entries.unshift(entry);
-    //   });
+    // Get initial data once from Firebase
+    const entries = await getDataFromDB();
 
     // Set loading to false
     this.setLoading({ dataName: "journal", status: false });
 
+    console.log(entries);
     // Set data to Vuex
     this.setEntryData(entries);
-    // });
   },
   computed: {
     ...mapGetters("journal", [
@@ -76,7 +61,6 @@ export default {
       "getErrorState",
       "truncateEntryBody",
     ]),
-    ...mapGetters(["getView"]),
     entries() {
       // Get data from Vuex and show the first 100 characters
       return this["truncateEntryBody"](100);

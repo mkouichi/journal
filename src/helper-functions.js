@@ -1,25 +1,46 @@
-import { collection, onSnapshot } from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/firebase";
-import { isArray } from "@vue/shared";
 
-// Keep on listening to changes in the collection
-const getDataFromDBAndListenToChanges = () => {
+// Get data once
+const getDataFromDB = async () => {
   const entries = [];
+  const querySnapshot = await getDocs(collection(db, "journal"));
 
-  onSnapshot(collection(db, "journal"), (querySnapshot) => {
-    // Loop through each entry in the collection
-    querySnapshot.forEach((doc) => {
-      const entry = {
-        ...doc.data(),
-        // Use the generated id
-        id: doc.id,
-      };
-      console.log(entry);
-      entries.unshift(entry);
-    });
+  querySnapshot.forEach((doc) => {
+    const entry = {
+      ...doc.data(),
+      // Use the generated id
+      id: doc.id,
+    };
+    entries.unshift(entry);
   });
 
   return entries;
 };
 
-export { getDataFromDBAndListenToChanges };
+// Update data
+
+
+// Delete data
+
+
+// Keep on listening to changes in the collection
+// const getDataFromDBAndListenToChanges = () => {
+//   const entries = [];
+
+//   onSnapshot(collection(db, "journal"), (querySnapshot) => {
+//     // Loop through each entry in the collection
+//     querySnapshot.forEach((doc) => {
+//       const entry = {
+//         ...doc.data(),
+//         // Use the generated id
+//         id: doc.id,
+//       };
+//       entries.unshift(entry);
+//     });
+//   });
+
+//   return entries;
+// };
+
+export { getDataFromDB };

@@ -8,7 +8,7 @@ export default {
   getEditingState: (state) => (dataName) => {
     return state.status[dataName].isEditing;
   },
-  entries(state) {
+  getEntries(state) {
     return state.entries;
   },
   truncateEntryBody: (state) => (maxLength) => {

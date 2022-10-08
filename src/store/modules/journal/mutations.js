@@ -15,6 +15,8 @@ export default {
         id: entry.id,
         title: entry.title,
         body: entry.body,
+        start: entry.start,
+        end: entry.end,
       };
     });
   },
