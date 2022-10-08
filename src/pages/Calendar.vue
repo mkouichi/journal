@@ -36,12 +36,6 @@ import "vue-cal/dist/vuecal.css";
 
 export default {
   components: { VueCal },
-  // props: ["entries"],
-  data() {
-    return {
-      // entryData: [],
-    };
-  },
   async mounted() {
     // Set loading to true
     this.setLoading({ dataName: "journal", status: true });
@@ -61,17 +55,6 @@ export default {
       "getErrorState",
       "getEntries",
     ]),
-    // setModifiedEntries() {
-    //   const modifiedEntries = [];
-    //   this.entries.forEach((entry) => {
-    //     modifiedEntries.push({
-    //       ...entry,
-    //       start: entry.date,
-    //       end: entry.date,
-    //     });
-    //   });
-    //   this.modifiedEntries = modifiedEntries;
-    // },
   },
   methods: {
     ...mapActions("journal", ["setEntryData", "setLoading"]),

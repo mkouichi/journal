@@ -77,7 +77,6 @@ export default {
   // TODO: Only show this when there are unsaved changes
   // TODO: Show a better deagram
   beforeRouteLeave(to, from) {
-    console.log("EditEntry component beforeRouteLeave");
     console.log(to, from);
 
     const answer = window.confirm(
