@@ -15,6 +15,7 @@ export default {
       },
       entries: [],
       targetEntry: {},
+      selectedDate: null,
     };
   },
   mutations,

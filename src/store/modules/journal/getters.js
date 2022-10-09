@@ -29,4 +29,7 @@ export default {
   getTargetEntry(state) {
     return state.targetEntry;
   },
+  getSelectedDate(state) {
+    return state.selectedDate;
+  },
 };

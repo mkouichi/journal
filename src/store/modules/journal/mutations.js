@@ -23,4 +23,7 @@ export default {
   setTargetEntry(state, payload) {
     state.targetEntry = payload;
   },
+  setSelectedDate(state, payload) {
+    state.selectedDate = payload;
+  },
 };

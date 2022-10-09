@@ -11,17 +11,13 @@
       :disable-views="['years', 'year', 'week', 'day']"
       active-view="month"
       :on-event-click="onEventClick"
+      @cell-dblclick="createNewEntry"
       events-on-month-view="short"
       style="height: 600px"
       class="vuecal--blue-theme"
     >
     </vue-cal>
-    <w-button
-      route="/journal/new"
-      xl
-      class="ma1"
-      bg-color="info"
-    >
+    <w-button route="/journal/new" xl class="ma1" bg-color="info">
       + New Entry
     </w-button>
   </section>
@@ -35,11 +31,6 @@ import "vue-cal/dist/vuecal.css";
 
 export default {
   components: { VueCal },
-  // data() {
-  //   return {
-  //     selectedEvent: {},
-  //   };
-  // },
   async mounted() {
     // Set loading to true
     this.setLoading({ dataName: "journal", status: true });
@@ -61,7 +52,7 @@ export default {
     ]),
   },
   methods: {
-    ...mapActions("journal", ["setEntryData", "setLoading"]),
+    ...mapActions("journal", ["setEntryData", "setLoading", "setSelectedDate"]),
     onEventClick(event, e) {
       // this.selectedEvent = event;
       this.$router.push("/journal/" + event.id);
@@ -69,11 +60,10 @@ export default {
       // Prevent navigating to narrower view (default vue-cal behavior).
       e.stopPropagation();
     },
-    // createNewEntry() {
-    //   this.$refs.vuecal.createEvent(
-    //     // TODO: Double click to also create an entry?
-    //   );
-    // },
+    createNewEntry(event) {
+      this.setSelectedDate(event.format());
+      this.$router.push("/journal/new");
+    },
   },
 };
 </script>

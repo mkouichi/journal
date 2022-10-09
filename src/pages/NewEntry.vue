@@ -28,6 +28,18 @@
   <BaseCard>
     <form @submit.prevent="submitEntryData" ref="form">
       <div class="form-control">
+        <label for="date">Date</label>
+        <input
+          type="date"
+          id="date"
+          name="date"
+          ref="dateInput"
+          :value="setInitialDate"
+          @keydown.enter.prevent
+        />
+      </div>
+      <button @click="setInitialDate" type="button">log date</button>
+      <div class="form-control">
         <label for="title">Title</label>
         <input
           type="text"
@@ -76,16 +88,26 @@ import { db } from "@/firebase";
 export default {
   // TODO: Only show this when there are unsaved changes
   // TODO: Show a better deagram
-  beforeRouteLeave(to, from) {
-    console.log(to, from);
+  beforeRouteLeave() {
+    this.setSelectedDate(null);
 
-    const answer = window.confirm(
-      "Do you really want to leave? you have unsaved changes!"
-    );
-    if (!answer) return false;
+    // const answer = window.confirm(
+    //   "Do you really want to leave? you have unsaved changes!"
+    // );
+    // if (!answer) return false;
   },
   computed: {
     ...mapGetters(["dialogIsVisible"]),
+    ...mapGetters("journal", ["getSelectedDate"]),
+    setInitialDate() {
+      const selectedDate = this.getSelectedDate;
+
+      if (selectedDate) return selectedDate;
+      else {
+        const today = moment().format("YYYY-MM-DD");
+        return today;
+      }
+    },
   },
   data() {
     return {
@@ -94,26 +116,29 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["showDialog", "hideDialog", "journal/setError"]),
+    ...mapActions(["showDialog", "hideDialog"]),
+    ...mapActions("journal", ["setError", "setSelectedDate"]),
     submitEntryData() {
       const enteredTitle = this.$refs.titleInput.value.trim();
       const enteredBody = this.$refs.bodyInput.value.trim();
+      const enteredDate = this.$refs.dateInput.value;
       const entryData = {
         date: moment().format("ddd, MMM D, YYYY, kk:mm"),
-        start: moment().format("ddd, MMM D, YYYY"),
-        end: moment().format("ddd, MMM D, YYYY"),
+        start: enteredDate,
+        end: enteredDate,
         title: enteredTitle,
         body: enteredBody,
       };
 
       // If there's an empty field, stop the process and show the error dialog
-      if (enteredTitle === "" || enteredBody === "") {
+      if (enteredTitle === "" || enteredBody === "" || enteredDate === "") {
         this.inputIsInvalid = true;
         return;
       }
 
       // Set error to null
-      this["journal/setError"]({ dataName: "journal", status: null });
+      this.setError({ dataName: "journal", status: null });
+      // this["journal/setError"]({ dataName: "journal", status: null });
 
       // Send data to Firebase
       // Add a new document with a generated id
@@ -130,7 +155,7 @@ export default {
     discardDraft() {
       this.$refs.form.reset();
       this.hideDialog();
-      this.$router.push("/journal");
+      this.$router.push("/");
     },
     confirmError() {
       this.inputIsInvalid = false;
