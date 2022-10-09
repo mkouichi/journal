@@ -17,4 +17,7 @@ export default {
   setTargetEntry(context, payload) {
     context.commit("setTargetEntry", payload);
   },
+  setSelectedDate(context, payload) {
+    context.commit("setSelectedDate", payload);
+  },
 };

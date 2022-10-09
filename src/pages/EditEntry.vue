@@ -61,14 +61,14 @@ export default {
     console.log("EditEntry component beforeRouteLeave");
     console.log(to, from);
 
-    const answer = window.confirm(
-      "Do you really want to leave? you have unsaved changes!"
-    );
-    if (!answer) {
-      return false;
-    } else {
-      this.setEditingToFalse();
-    }
+    // const answer = window.confirm(
+    //   "Do you really want to leave? you have unsaved changes!"
+    // );
+    // if (!answer) {
+    //   return false;
+    // } else {
+    //   this.setEditingToFalse();
+    // }
   },
   props: ["id"],
   data() {
