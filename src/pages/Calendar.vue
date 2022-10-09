@@ -18,7 +18,6 @@
     </vue-cal>
     <w-button
       route="/journal/new"
-      @click="createNewEntry"
       xl
       class="ma1"
       bg-color="info"
@@ -36,6 +35,11 @@ import "vue-cal/dist/vuecal.css";
 
 export default {
   components: { VueCal },
+  // data() {
+  //   return {
+  //     selectedEvent: {},
+  //   };
+  // },
   async mounted() {
     // Set loading to true
     this.setLoading({ dataName: "journal", status: true });
@@ -59,16 +63,13 @@ export default {
   methods: {
     ...mapActions("journal", ["setEntryData", "setLoading"]),
     onEventClick(event, e) {
-      this.selectedEvent = event;
-      this.showDialog = true;
+      // this.selectedEvent = event;
+      this.$router.push("/journal/" + event.id);
 
       // Prevent navigating to narrower view (default vue-cal behavior).
       e.stopPropagation();
     },
-    createNewEntry() {
-      console.log("+");
-    },
-    // createEvent() {
+    // createNewEntry() {
     //   this.$refs.vuecal.createEvent(
     //     // TODO: Double click to also create an entry?
     //   );
