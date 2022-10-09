@@ -100,6 +100,8 @@ export default {
       const enteredBody = this.$refs.bodyInput.value.trim();
       const entryData = {
         date: moment().format("ddd, MMM D, YYYY, kk:mm"),
+        start: moment().format("ddd, MMM D, YYYY"),
+        end: moment().format("ddd, MMM D, YYYY"),
         title: enteredTitle,
         body: enteredBody,
       };
@@ -121,7 +123,7 @@ export default {
       this.$refs.form.reset();
 
       // Redirect to the list of entries
-      this.$router.push("/journal");
+      this.$router.push("/");
     },
 
     // TODO: Only show this when there are unsaved changes
