@@ -1,10 +1,13 @@
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/firebase";
 
+// Collection ref
+const colRef = collection(db, "journal");
+
 // Get data once
 const getDataFromDB = async () => {
   const entries = [];
-  const querySnapshot = await getDocs(collection(db, "journal"));
+  const querySnapshot = await getDocs(colRef);
 
   querySnapshot.forEach((doc) => {
     const entry = {
@@ -17,12 +20,6 @@ const getDataFromDB = async () => {
 
   return entries;
 };
-
-// Update data
-
-
-// Delete data
-
 
 // Keep on listening to changes in the collection
 // const getDataFromDBAndListenToChanges = () => {

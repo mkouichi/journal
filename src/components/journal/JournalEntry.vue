@@ -1,24 +1,24 @@
 <template>
   <li>
     <div class="flex">
-      <h2 id="title">{{ title }}</h2>
-      <p id="date">{{ date }}</p>
+      <h2 id="title">{{ entry.title }}</h2>
+      <p id="date">{{ entry.date }}</p>
     </div>
-    <p>{{ body }}</p>
+    <p>{{ entry.body }}</p>
     <div>
-      <BaseButton link :to="detailsLink" mode="outline">View More</BaseButton>
+      <BaseButton link :to="entry.id" mode="outline">View More</BaseButton>
     </div>
   </li>
 </template>
 
 <script>
 export default {
-  props: ["date", "id", "title", "body"],
-  computed: {
-    detailsLink() {
-      return this.$route.path + "/" + this.id;
-    },
-  },
+  props: ["entry"],
+  // computed: {
+  //   detailsLink() {
+  //     return this.$route.path + "/" + this.entry.id;
+  //   },
+  // },
 };
 </script>
 
@@ -34,6 +34,9 @@ li {
 }
 li a {
   margin-right: 0;
+}
+p {
+  margin: inherit;
 }
 .flex {
   display: flex;

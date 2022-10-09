@@ -14,14 +14,7 @@
     </BaseModal>
     <p v-else-if="!entries || entries.length === 0">No entry found</p>
     <ul v-else>
-      <JournalEntry
-        v-for="entry in entries"
-        :key="entry.id"
-        :date="entry.date"
-        :id="entry.id"
-        :title="entry.title"
-        :body="entry.body"
-      />
+      <JournalEntry v-for="entry in entries" :key="entry.id" :entry="entry" />
     </ul>
   </section>
 </template>
@@ -51,7 +44,6 @@ export default {
     // Set loading to false
     this.setLoading({ dataName: "journal", status: false });
 
-    console.log(entries);
     // Set data to Vuex
     this.setEntryData(entries);
   },

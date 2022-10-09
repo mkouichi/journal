@@ -26,24 +26,15 @@
     </BaseModal>
     <p>{{ targetEntry.body }}</p>
   </BaseCard>
-
-  <!-- <EditEntry v-if="foundEntry && isEditing" :entry="foundEntry" /> -->
 </template>
 
 <script>
 import { mapGetters, mapActions } from "vuex";
 import { doc, getDoc, deleteDoc } from "firebase/firestore";
 import { db } from "@/firebase";
-// import EditEntry from "./EditEntry.vue";
 
 export default {
-  // components: { EditEntry },
   props: ["id"],
-  data() {
-    return {
-      // foundEntry: {},
-    };
-  },
   async beforeMount() {
     let entry;
 
@@ -112,7 +103,7 @@ export default {
     async deleteEntry() {
       await deleteDoc(doc(db, "journal", this.id));
       this.hideDialog();
-      this.$router.push("/journal");
+      this.$router.push("/");
     },
   },
 };
