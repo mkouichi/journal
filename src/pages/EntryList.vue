@@ -1,6 +1,8 @@
 <template>
   <section>
-    <p v-if="loading">Loading...</p>
+    <w-flex v-if="loading" justify-center>
+      <w-spinner lg />
+    </w-flex>
     <BaseModal v-else-if="error" :open="error" @close="confirmError">
       <template #header>
         <h2>Error</h2>
@@ -13,9 +15,32 @@
       </template>
     </BaseModal>
     <p v-else-if="!entries || entries.length === 0">No entry found</p>
-    <ul v-else>
+    <w-card
+      v-else
+      tile
+      shadow
+      v-for="entry in entries"
+      :key="entry.id"
+      class="mb7 mt3"
+    >
+      <template #title>
+        <w-toolbar class="toolbar">
+          <div class="title1">{{ entry.title }}</div>
+          <div class="spacer"></div>
+          <span class="ml2 date">{{ entry.date }}</span>
+        </w-toolbar>
+      </template>
+      <p>{{ entry.body }}</p>
+      <w-flex justify-end>
+        <w-button class="ma1 m" bg-color="primary" :route="entry.id">
+          View more
+          <w-icon class="ml1">wi-chevron-right</w-icon>
+        </w-button>
+      </w-flex>
+    </w-card>
+    <!-- <ul v-else>
       <JournalEntry v-for="entry in entries" :key="entry.id" :entry="entry" />
-    </ul>
+    </ul> -->
   </section>
 </template>
 
@@ -60,10 +85,17 @@ export default {
 </script>
 
 <style scoped>
-ul {
+/* ul {
   list-style: none;
   margin: 2rem auto;
   padding: 0;
   max-width: 45rem;
+} */
+.toolbar {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+.date {
+  font-size: 1rem;
 }
 </style>

@@ -1,14 +1,14 @@
 <template>
   <w-app>
     <TheHeader />
-    <RouterView />
-    <!-- <w-flex grow>
+    <!-- <RouterView /> -->
+    <w-flex grow>
       <aside>Nav menu</aside>
       <main class="grow">
         <RouterView />
       </main>
     </w-flex>
-    <footer>Footer</footer> -->
+    <footer>Footer</footer>
   </w-app>
 </template>
 
@@ -46,9 +46,7 @@ aside,
 main {
   margin: 4px;
   padding: 12px;
-  text-transform: uppercase;
   color: #666;
-  border: 1px solid rgba(0, 0, 0, 0.07);
 }
 header,
 footer {
@@ -56,9 +54,11 @@ footer {
   min-height: 60px;
 }
 aside {
+  width: 15vw;
   background-color: #fef2ff;
 }
-/* main {
-  background-color: #efffed;
-} */
+main {
+  max-width: 50vw;
+  margin: auto;
+}
 </style>
