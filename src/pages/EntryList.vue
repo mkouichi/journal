@@ -28,29 +28,8 @@ import JournalEntry from "../components/journal/JournalEntry.vue";
 
 export default {
   components: { JournalEntry },
-  // data() {
-  //   return {
-  //     loading: this.$store.getters["journal/getLoadingState"]("journal"),
-  //     error: this.$store.getters["journal/getErrorState"]("journal"),
-  //     // error: this["getErrorState"]("journal"),
-  //   };
-  // },
-  // mounted() {
-  //   console.log("entrylist mounted")
-  //   this.subscribeToDB();
-  // },
   mounted() {
-    // // Set loading to true
-    // this.setLoading({ dataName: "journal", status: true });
-
-    // Get initial data once from Firebase
     getDataFromDB();
-
-    // // Set loading to false
-    // this.setLoading({ dataName: "journal", status: false });
-
-    // // Set data to Vuex
-    // this.setEntryData(entries);
   },
   computed: {
     ...mapGetters("journal", [

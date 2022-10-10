@@ -55,22 +55,6 @@ import { doc, updateDoc } from "firebase/firestore";
 import { db } from "@/firebase";
 
 export default {
-  // TODO: Only show this when there are unsaved changes
-  // TODO: Show a better deagram
-  // beforeRouteLeave(to, from) {
-  //   console.log("EditEntry beforeRouteLeave");
-  //   console.log(to);
-  //   console.log(from);
-
-  //   // const answer = window.confirm(
-  //   //   "Do you really want to leave? you have unsaved changes!"
-  //   // );
-  //   // if (!answer) {
-  //   //   return false;
-  //   // } else {
-  //   //   this.setEditingToFalse();
-  //   // }
-  // },
   props: ["id"],
   data() {
     return {
@@ -83,11 +67,6 @@ export default {
   },
   computed: {
     ...mapGetters(["getView"]),
-    ...mapGetters("journal", { isEditing: "getEditingState" }),
-    // ...mapGetters({ isEditing: "journal/getEditingState('journal')" }),
-    isEditing() {
-      return this.$store.getters["journal/getEditingState"]("journal");
-    },
     dialogIsVisible() {
       return this.$store.getters.dialogIsVisible;
     },

@@ -14,11 +14,6 @@
 <script>
 export default {
   props: ["entry"],
-  // computed: {
-  //   detailsLink() {
-  //     return this.$route.path + "/" + this.entry.id;
-  //   },
-  // },
 };
 </script>
 

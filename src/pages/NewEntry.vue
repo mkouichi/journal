@@ -155,7 +155,8 @@ export default {
     discardDraft() {
       this.$refs.form.reset();
       this.hideDialog();
-      this.$router.push("/");
+      // Redirect to current view
+      this.$router.push("/journal/" + this.getView);
     },
     confirmError() {
       this.inputIsInvalid = false;
