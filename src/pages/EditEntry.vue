@@ -57,19 +57,20 @@ import { db } from "@/firebase";
 export default {
   // TODO: Only show this when there are unsaved changes
   // TODO: Show a better deagram
-  beforeRouteLeave(to, from) {
-    console.log("EditEntry component beforeRouteLeave");
-    console.log(to, from);
+  // beforeRouteLeave(to, from) {
+  //   console.log("EditEntry beforeRouteLeave");
+  //   console.log(to);
+  //   console.log(from);
 
-    // const answer = window.confirm(
-    //   "Do you really want to leave? you have unsaved changes!"
-    // );
-    // if (!answer) {
-    //   return false;
-    // } else {
-    //   this.setEditingToFalse();
-    // }
-  },
+  //   // const answer = window.confirm(
+  //   //   "Do you really want to leave? you have unsaved changes!"
+  //   // );
+  //   // if (!answer) {
+  //   //   return false;
+  //   // } else {
+  //   //   this.setEditingToFalse();
+  //   // }
+  // },
   props: ["id"],
   data() {
     return {
@@ -81,7 +82,8 @@ export default {
     this.setEntryValue;
   },
   computed: {
-    // ...mapGetters("journal", { isEditing: "getEditingState" }),
+    ...mapGetters(["getView"]),
+    ...mapGetters("journal", { isEditing: "getEditingState" }),
     // ...mapGetters({ isEditing: "journal/getEditingState('journal')" }),
     isEditing() {
       return this.$store.getters["journal/getEditingState"]("journal");
@@ -138,8 +140,8 @@ export default {
       this.hideDialog();
       this.setEditingToFalse();
 
-      // Redirect to the list of entries
-      this.$router.push("/journal");
+      // Redirect to current view
+      this.$router.push("/journal/" + this.getView);
     },
   },
 };

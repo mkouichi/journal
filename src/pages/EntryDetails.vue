@@ -3,7 +3,6 @@
     <div class="flex">
       <BaseButton @click="goBack" class="left">Go Back</BaseButton>
       <BaseButton @click="showDialog" mode="outline">Delete</BaseButton>
-      <!-- <BaseButton @click="setEditingToTrue" mode="outline">Edit </BaseButton> -->
       <BaseButton link :to="editLink" @click="setEditingToTrue" mode="outline"
         >Edit
       </BaseButton>
@@ -34,13 +33,11 @@ import { doc, getDoc, deleteDoc } from "firebase/firestore";
 import { db } from "@/firebase";
 
 export default {
-  props: ["id"],
   async beforeMount() {
     let entry;
 
     // Try getting the entry's contents from Vuex using its id
-    entry = this.$store.getters["journal/getEntryById"](this.id);
-    console.log(entry);
+    entry = this.getEntryById[this.id];
 
     // If the entry doesn't exist in Vuex, try finding it in Firebase
     if (entry === undefined) {
@@ -53,57 +50,42 @@ export default {
         console.log("No such document!");
       }
     }
-    console.log(entry);
 
     // Set found entry to Vuex
-    this["journal/setTargetEntry"](entry);
-    // this.setTargetEntry(entry);
+    this.setTargetEntry(entry);
   },
+  props: ["id"],
   computed: {
-    ...mapGetters([
-      "dialogIsVisible",
-      // { getEditingState: "journal/getEditingState" },
-      // { getEntryById: "journal/getEntryById" },
-      // { foundEntry: "journal/getTargetEntry" },
-      "journal/getEditingState",
-      "journal/getEntryById",
-      "journal/getTargetEntry",
+    ...mapGetters(["dialogIsVisible", "getView"]),
+    ...mapGetters("journal", [
+      "getEditingState",
+      "getEntryById",
+      "getTargetEntry",
     ]),
     targetEntry() {
-      return this.$store.getters["journal/getTargetEntry"];
+      return this.getTargetEntry;
     },
     isEditing() {
-      return this.$store.getters["journal/getEditingState"]("journal");
-      // return this.getEditingState["journal"];
+      return this.getEditingState["journal"];
     },
     editLink() {
       return this.$route.path + "/edit";
     },
-    dialogIsVisible() {
-      return this.$store.getters.dialogIsVisible;
-      // return this.dialogIsVisible;
-    },
   },
   methods: {
-    ...mapActions([
-      "showDialog",
-      "hideDialog",
-      "journal/setEditing",
-      "journal/setTargetEntry",
-      // { setEditing: "journal/setEditing" },
-      // { setTargetEntry: "journal/setTargetEntry" },
-    ]),
+    ...mapActions(["showDialog", "hideDialog"]),
+    ...mapActions("journal", ["setEditing", "setTargetEntry"]),
     setEditingToTrue() {
-      this["journal/setEditing"]({ dataName: "journal", status: true });
-      // this.setEditing({ dataName: "journal", status: true });
+      this.setEditing({ dataName: "journal", status: true });
     },
     goBack() {
-      this.$router.push("/journal");
+      // Redirect to current view
+      this.$router.push("/journal/" + this.getView);
     },
     async deleteEntry() {
       await deleteDoc(doc(db, "journal", this.id));
       this.hideDialog();
-      this.$router.push("/");
+      this.$router.push("/journal/" + this.getView);
     },
   },
 };

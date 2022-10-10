@@ -97,7 +97,7 @@ export default {
     // if (!answer) return false;
   },
   computed: {
-    ...mapGetters(["dialogIsVisible"]),
+    ...mapGetters(["dialogIsVisible", "getView"]),
     ...mapGetters("journal", ["getSelectedDate"]),
     setInitialDate() {
       const selectedDate = this.getSelectedDate;
@@ -147,8 +147,8 @@ export default {
       // Reset the input fields
       this.$refs.form.reset();
 
-      // Redirect to the list of entries
-      this.$router.push("/");
+      // Redirect to current view
+      this.$router.push("/journal/" + this.getView);
     },
 
     // TODO: Only show this when there are unsaved changes
