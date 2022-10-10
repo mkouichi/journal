@@ -31,18 +31,18 @@ import "vue-cal/dist/vuecal.css";
 
 export default {
   components: { VueCal },
-  async mounted() {
-    // Set loading to true
-    this.setLoading({ dataName: "journal", status: true });
+  mounted() {
+    // // Set loading to true
+    // this.setLoading({ dataName: "journal", status: true });
 
     // Get initial data once from Firebase
-    const entries = await getDataFromDB();
+    getDataFromDB();
 
-    // Set loading to false
-    this.setLoading({ dataName: "journal", status: false });
+    // // Set loading to false
+    // this.setLoading({ dataName: "journal", status: false });
 
-    // Set data to Vuex
-    this.setEntryData(entries);
+    // // Set data to Vuex
+    // this.setEntryData(entries);
   },
   computed: {
     ...mapGetters("journal", [
@@ -50,6 +50,10 @@ export default {
       "getErrorState",
       "getEntries",
     ]),
+    // entries() {
+    //   console.log(this.getEntries);
+    //   return this.getEntries;
+    // },
   },
   methods: {
     ...mapActions("journal", ["setEntryData", "setLoading", "setSelectedDate"]),

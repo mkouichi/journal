@@ -1,5 +1,5 @@
 <template>
-  <section v-if="entries">
+  <section>
     <p v-if="loading">Loading...</p>
     <BaseModal v-else-if="error" :open="error" @close="confirmError">
       <template #header>
@@ -28,24 +28,29 @@ import JournalEntry from "../components/journal/JournalEntry.vue";
 
 export default {
   components: { JournalEntry },
-  data() {
-    return {
-      loading: this.getLoadingState,
-      error: this.getErrorState,
-    };
-  },
-  async mounted() {
-    // Set loading to true
-    this.setLoading({ dataName: "journal", status: true });
+  // data() {
+  //   return {
+  //     loading: this.$store.getters["journal/getLoadingState"]("journal"),
+  //     error: this.$store.getters["journal/getErrorState"]("journal"),
+  //     // error: this["getErrorState"]("journal"),
+  //   };
+  // },
+  // mounted() {
+  //   console.log("entrylist mounted")
+  //   this.subscribeToDB();
+  // },
+  mounted() {
+    // // Set loading to true
+    // this.setLoading({ dataName: "journal", status: true });
 
     // Get initial data once from Firebase
-    const entries = await getDataFromDB();
+    getDataFromDB();
 
-    // Set loading to false
-    this.setLoading({ dataName: "journal", status: false });
+    // // Set loading to false
+    // this.setLoading({ dataName: "journal", status: false });
 
-    // Set data to Vuex
-    this.setEntryData(entries);
+    // // Set data to Vuex
+    // this.setEntryData(entries);
   },
   computed: {
     ...mapGetters("journal", [
@@ -57,9 +62,20 @@ export default {
       // Get data from Vuex and show the first 100 characters
       return this["truncateEntryBody"](100);
     },
+    loading() {
+      return this.$store.getters["journal/getLoadingState"]("journal");
+    },
+    error() {
+      this.$store.getters["journal/getErrorState"]("journal");
+    },
   },
   methods: {
-    ...mapActions("journal", ["setEntryData", "setLoading", "confirmError"]),
+    ...mapActions("journal", [
+      "setEntryData",
+      "subscribeToDB",
+      "setLoading",
+      "confirmError",
+    ]),
   },
 };
 </script>
