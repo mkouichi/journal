@@ -31,12 +31,19 @@
         </w-toolbar>
       </template>
       <p>{{ entry.body }}</p>
-      <w-flex justify-end>
+      <template #actions>
+        <div class="spacer"></div>
+        <w-button lg class="ma1 m" bg-color="primary" :route="entry.id">
+          View more
+          <w-icon class="ml1">wi-chevron-right</w-icon>
+        </w-button>
+      </template>
+      <!-- <w-flex justify-end>
         <w-button class="ma1 m" bg-color="primary" :route="entry.id">
           View more
           <w-icon class="ml1">wi-chevron-right</w-icon>
         </w-button>
-      </w-flex>
+      </w-flex> -->
     </w-card>
     <!-- <ul v-else>
       <JournalEntry v-for="entry in entries" :key="entry.id" :entry="entry" />
@@ -94,6 +101,7 @@ export default {
 .toolbar {
   padding-top: 1rem;
   padding-bottom: 1rem;
+  border: none;
 }
 .date {
   font-size: 1rem;
