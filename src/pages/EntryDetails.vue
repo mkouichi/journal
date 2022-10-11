@@ -1,5 +1,21 @@
 <template>
-  <BaseCard v-if="targetEntry && !isEditing">
+  <w-card shadow class="pa5">
+    <w-flex class="mt3 mb10">
+      <w-button xl @click="goBack" class="teal-dark3--bg">Go Back</w-button>
+      <div class="spacer"></div>
+      <w-button xl outline @click="showDialog" class="mr5">Delete</w-button>
+      <w-button xl outline @click="setEditingToTrue" :route="editLink">
+        Edit
+      </w-button>
+    </w-flex>
+    <w-flex align-center class="mb7">
+      <h1>{{ targetEntry.title }}</h1>
+      <p id="date">{{ targetEntry.date }}</p>
+    </w-flex>
+    <p id="body" class="lh5">{{ targetEntry.body }}</p>
+  </w-card>
+
+  <!-- <BaseCard v-if="targetEntry && !isEditing">
     <div class="flex">
       <BaseButton @click="goBack" class="left">Go Back</BaseButton>
       <BaseButton @click="showDialog" mode="outline">Delete</BaseButton>
@@ -7,10 +23,7 @@
         >Edit
       </BaseButton>
     </div>
-    <div class="flex">
-      <h1>{{ targetEntry.title }}</h1>
-      <p id="date">{{ targetEntry.date }}</p>
-    </div>
+    
     <BaseModal @close="hideDialog" :open="dialogIsVisible">
       <template #header>
         <h2>Delete</h2>
@@ -23,8 +36,7 @@
         <BaseButton @click="hideDialog">Back to entry</BaseButton>
       </template>
     </BaseModal>
-    <p>{{ targetEntry.body }}</p>
-  </BaseCard>
+  </BaseCard> -->
 </template>
 
 <script>
@@ -109,16 +121,23 @@ textarea:focus {
   border-color: #3a0061;
   background-color: #f7ebff;
 }
-.flex {
+.teal-dark3--bg:hover {
+  background-color: #1db3a8;
+}
+#body {
+  font-size: 1.3rem;
+}
+
+/* .flex {
   display: flex;
   justify-content: end;
   align-items: center;
   margin-bottom: 2rem;
-}
-.left {
+} */
+/* .left {
   margin-right: auto;
-}
-#date {
+} */
+/* #date {
   color: #656565;
-}
+} */
 </style>

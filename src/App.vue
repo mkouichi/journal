@@ -48,9 +48,9 @@ main {
   padding: 1rem;
   color: #666;
 }
-section {
+/* section {
   padding: 1rem;
-}
+} */
 footer {
   background-color: #e9f8fe;
   min-height: 60px;
@@ -60,7 +60,12 @@ aside {
   background-color: #fef2ff;
 }
 main {
-  max-width: 80vw;
-  margin: auto;
+  max-width: 800px;
+  margin: 2rem auto;
+}
+.toolbar {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  border: none;
 }
 </style>

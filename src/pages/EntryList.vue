@@ -17,20 +17,19 @@
     <p v-else-if="!entries || entries.length === 0">No entry found</p>
     <w-card
       v-else
-      tile
       shadow
       v-for="entry in entries"
       :key="entry.id"
-      class="mb7 mt3"
+      class="mb7 pa3"
     >
       <template #title>
         <w-toolbar class="toolbar">
-          <div class="title1">{{ entry.title }}</div>
+          <h2>{{ entry.title }}</h2>
           <div class="spacer"></div>
           <span class="ml2 caption">{{ entry.date }}</span>
         </w-toolbar>
       </template>
-      <p>{{ entry.body }}</p>
+      <p class="body-text">{{ entry.body }}</p>
       <template #actions>
         <div class="spacer"></div>
         <w-button xl class="ma1 teal-dark1--bg" :route="entry.id">
@@ -101,12 +100,7 @@ export default {
 a:hover {
   background-color: #1db3a8;
 }
-.toolbar {
-  padding-top: 1rem;
-  padding-bottom: 1rem;
-  border: none;
-}
-.date {
-  font-size: 1rem;
+.body-text {
+  font-size: 1.1rem;
 }
 </style>
