@@ -6,9 +6,10 @@ export default {
   namespaced: true,
   state() {
     return {
-      entries: [],
-      targetEntry: {},
-      selectedDate: null,
+      loading: false,
+      error: null,
+      isEditing: false,
+      dialogIsVisible: false,
     };
   },
   mutations,

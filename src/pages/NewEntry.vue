@@ -38,7 +38,6 @@
           @keydown.enter.prevent
         />
       </div>
-      <button @click="setInitialDate" type="button">log date</button>
       <div class="form-control">
         <label for="title">Title</label>
         <input
@@ -97,7 +96,12 @@ export default {
     // if (!answer) return false;
   },
   computed: {
-    ...mapGetters(["dialogIsVisible", "getView"]),
+    ...mapGetters(["getView"]),
+    ...mapGetters({
+      error: "dialog/getErrorState",
+      dialogIsVisible: "dialog/getDialogVisibility",
+    }),
+    // ...mapGetters("dialog", ["getErrorState", "getDialogVisibility"]),
     ...mapGetters("journal", ["getSelectedDate"]),
     setInitialDate() {
       const selectedDate = this.getSelectedDate;
@@ -112,12 +116,13 @@ export default {
   data() {
     return {
       inputIsInvalid: false,
-      error: this.$store.getters["journal/getErrorState"]("journal"),
+      // error: this.$store.getters["journal/getErrorState"]("journal"),
+      // error: this.getErrorState,
     };
   },
   methods: {
-    ...mapActions(["showDialog", "hideDialog"]),
-    ...mapActions("journal", ["setError", "setSelectedDate"]),
+    ...mapActions("dialog", ["showDialog", "hideDialog", "setError"]),
+    ...mapActions("journal", ["setSelectedDate"]),
     submitEntryData() {
       const enteredTitle = this.$refs.titleInput.value.trim();
       const enteredBody = this.$refs.bodyInput.value.trim();
@@ -137,7 +142,7 @@ export default {
       }
 
       // Set error to null
-      this.setError({ dataName: "journal", status: null });
+      this.setError(null);
       // this["journal/setError"]({ dataName: "journal", status: null });
 
       // Send data to Firebase
@@ -160,7 +165,8 @@ export default {
     },
     confirmError() {
       this.inputIsInvalid = false;
-      this.$store.dispatch("journal/confirmError");
+      // this.$store.dispatch("journal/confirmError");
+      this.setError(null);
     },
   },
 };

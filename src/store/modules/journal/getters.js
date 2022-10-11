@@ -1,13 +1,4 @@
 export default {
-  getLoadingState: (state) => (dataName) => {
-    return state.status[dataName].loading;
-  },
-  getErrorState: (state) => (dataName) => {
-    return state.status[dataName].error;
-  },
-  getEditingState: (state) => (dataName) => {
-    return state.status[dataName].isEditing;
-  },
   getEntries(state) {
     return state.entries;
   },

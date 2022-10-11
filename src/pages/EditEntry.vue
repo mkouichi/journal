@@ -55,6 +55,18 @@ import { doc, updateDoc } from "firebase/firestore";
 import { db } from "@/firebase";
 
 export default {
+  beforeRouteLeave() {
+    console.log("EditEntry beforeRouteLeave");
+    this.setEditingToFalse();
+    // const answer = window.confirm(
+    //   "Do you really want to leave? you have unsaved changes!"
+    // );
+    // if (!answer) {
+    //   return false;
+    // } else {
+    //   this.setEditingToFalse();
+    // }
+  },
   props: ["id"],
   data() {
     return {
@@ -67,20 +79,25 @@ export default {
   },
   computed: {
     ...mapGetters(["getView"]),
-    dialogIsVisible() {
-      return this.$store.getters.dialogIsVisible;
-    },
+    ...mapGetters({ dialogIsVisible: "dialog/getDialogVisibility" }),
+    ...mapGetters("journal", ["getTargetEntry"]),
+    // dialogIsVisible() {
+    //   // return this.$store.getters.dialogIsVisible;
+    //   return this.dialogIsVisible;
+    // },
     setEntryValue() {
-      const entry = this.$store.getters["journal/getTargetEntry"];
+      // const entry = this.$store.getters["journal/getTargetEntry"];
+      const entry = this.getTargetEntry;
       // Set the original contents for editing
       this.entryTitle = entry.title;
       this.entryBody = entry.body;
     },
   },
   methods: {
-    ...mapActions(["showDialog", "hideDialog", "journal/setEditing"]),
+    ...mapActions("dialog", ["showDialog", "hideDialog", "setEditing"]),
     setEditingToFalse() {
-      this["journal/setEditing"]({ dataName: "journal", status: false });
+      // this["journal/setEditing"]({ dataName: "journal", status: false });
+      this.setEditing(false);
     },
 
     // TODO: Only show this when there are unsaved changes

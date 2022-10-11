@@ -1,6 +1,6 @@
 <template>
   <section>
-    <w-flex v-if="loading" justify-center>
+    <w-flex id="spinner" v-if="loading" justify-center align-center>
       <w-spinner lg />
     </w-flex>
     <BaseModal v-else-if="error" :open="error" @close="confirmError">
@@ -63,29 +63,29 @@ export default {
     getDataFromDB();
   },
   computed: {
-    ...mapGetters("journal", [
-      "getLoadingState",
-      "getErrorState",
-      "truncateEntryBody",
-    ]),
+    ...mapGetters({
+      loading: "dialog/getLoadingState",
+      error: "dialog/getErrorState",
+    }),
+    ...mapGetters("journal", ["truncateEntryBody"]),
     entries() {
       // Get data from Vuex and show the first 100 characters
       return this["truncateEntryBody"](100);
     },
-    loading() {
-      return this.$store.getters["journal/getLoadingState"]("journal");
-    },
-    error() {
-      this.$store.getters["journal/getErrorState"]("journal");
-    },
+    // loading() {
+    //   // return this.$store.getters["journal/getLoadingState"]("journal");
+    //   return this.getLoadingState;
+    // },
+    // error() {
+    //   // this.$store.getters["journal/getErrorState"]("journal");
+    //   this.getErrorState;
+    // },
   },
   methods: {
-    ...mapActions("journal", [
-      "setEntryData",
-      "subscribeToDB",
-      "setLoading",
-      "confirmError",
-    ]),
+    ...mapActions("dialog", ["setError"]),
+    confirmError() {
+      this.setError(null);
+    },
   },
 };
 </script>
@@ -102,5 +102,8 @@ a:hover {
 }
 .body-text {
   font-size: 1.1rem;
+}
+#spinner {
+  height: 65vh;
 }
 </style>

@@ -11,7 +11,7 @@ const getDataFromDB = async () => {
   const entries = [];
 
   // Set loading to true
-  store.dispatch("journal/setLoading", { dataName: "journal", status: true });
+  store.dispatch("dialog/setLoading", true);
 
   const querySnapshot = await getDocs(colRef);
 
@@ -25,10 +25,7 @@ const getDataFromDB = async () => {
   });
 
   // Set loading to false
-  store.dispatch("journal/setLoading", {
-    dataName: "journal",
-    status: false,
-  });
+  store.dispatch("dialog/setLoading", false);
 
   // Set data to Vuex
   store.dispatch("journal/setEntryData", entries);

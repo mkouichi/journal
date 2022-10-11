@@ -6,7 +6,7 @@
       today-button
       start-week-on-sunday
       small
-      :events="getEntries"
+      :events="entries"
       :time="false"
       :disable-views="['years', 'year', 'week', 'day']"
       active-view="month"
@@ -37,14 +37,13 @@ export default {
     getDataFromDB();
   },
   computed: {
-    ...mapGetters("journal", [
-      "getLoadingState",
-      "getErrorState",
-      "getEntries",
-    ]),
+    // ...mapGetters("dialog", ["getLoadingState", "getErrorState"]),
+    ...mapGetters({ entries: "journal/getEntries" }),
   },
   methods: {
-    ...mapActions("journal", ["setEntryData", "setLoading", "setSelectedDate"]),
+    // ...mapActions("dialog", ["setLoading"]),
+    // ...mapActions("journal", ["setEntryData", "setSelectedDate"]),
+    ...mapActions("journal", ["setSelectedDate"]),
     onEventClick(event, e) {
       this.$router.push("/journal/" + event.id);
 

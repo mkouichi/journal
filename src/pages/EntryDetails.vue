@@ -1,5 +1,5 @@
 <template>
-  <w-card shadow class="pa5">
+  <w-card v-if="targetEntry && !isEditing" shadow class="pa5">
     <w-flex class="mt3 mb10">
       <w-button xl @click="goBack" class="teal-dark3--bg">Go Back</w-button>
       <div class="spacer"></div>
@@ -16,15 +16,7 @@
   </w-card>
 
   <!-- <BaseCard v-if="targetEntry && !isEditing">
-    <div class="flex">
-      <BaseButton @click="goBack" class="left">Go Back</BaseButton>
-      <BaseButton @click="showDialog" mode="outline">Delete</BaseButton>
-      <BaseButton link :to="editLink" @click="setEditingToTrue" mode="outline"
-        >Edit
-      </BaseButton>
-    </div>
-    
-    <BaseModal @close="hideDialog" :open="dialogIsVisible">
+    <BaseModal @close="hideDialog" :open="getDialogVisibility">
       <template #header>
         <h2>Delete</h2>
       </template>
@@ -68,27 +60,30 @@ export default {
   },
   props: ["id"],
   computed: {
-    ...mapGetters(["dialogIsVisible", "getView"]),
-    ...mapGetters("journal", [
-      "getEditingState",
-      "getEntryById",
-      "getTargetEntry",
-    ]),
-    targetEntry() {
-      return this.getTargetEntry;
-    },
-    isEditing() {
-      return this.getEditingState["journal"];
-    },
+    ...mapGetters(["getView"]),
+    ...mapGetters({
+      dialogIsVisible: "dialog/getDialogVisibility",
+      isEditing: "dialog/getEditingState",
+    }),
+    // ...mapGetters("dialog", ["getDialogVisibility", "getEditingState"]),
+    // ...mapGetters("journal", ["getEntryById", "getTargetEntry"]),
+    ...mapGetters("journal", ["getEntryById"]),
+    ...mapGetters({ targetEntry: "journal/getTargetEntry" }),
+    // targetEntry() {
+    //   return this.getTargetEntry;
+    // },
+    // isEditing() {
+    //   return this.getEditingState;
+    // },
     editLink() {
       return this.$route.path + "/edit";
     },
   },
   methods: {
-    ...mapActions(["showDialog", "hideDialog"]),
-    ...mapActions("journal", ["setEditing", "setTargetEntry"]),
+    ...mapActions("dialog", ["showDialog", "hideDialog", "setEditing"]),
+    ...mapActions("journal", ["setTargetEntry"]),
     setEditingToTrue() {
-      this.setEditing({ dataName: "journal", status: true });
+      this.setEditing(true);
     },
     goBack() {
       // Redirect to current view
