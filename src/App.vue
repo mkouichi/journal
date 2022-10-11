@@ -45,10 +45,12 @@ footer,
 aside,
 main {
   margin: 4px;
-  padding: 12px;
+  padding: 1rem;
   color: #666;
 }
-
+section {
+  padding: 1rem;
+}
 footer {
   background-color: #e9f8fe;
   min-height: 60px;
@@ -58,7 +60,7 @@ aside {
   background-color: #fef2ff;
 }
 main {
-  max-width: 50vw;
+  max-width: 80vw;
   margin: auto;
 }
 </style>

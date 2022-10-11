@@ -17,9 +17,11 @@
       class="vuecal--blue-theme"
     >
     </vue-cal>
-    <w-button route="/journal/new" xl class="ma1" bg-color="info">
-      + New Entry
-    </w-button>
+    <w-flex justify-end>
+      <w-button route="/journal/new" xl right class="mt5 teal-dark1--bg">
+        + New Entry
+      </w-button>
+    </w-flex>
   </section>
 </template>
 
