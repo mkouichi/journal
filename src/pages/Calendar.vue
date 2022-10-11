@@ -37,12 +37,9 @@ export default {
     getDataFromDB();
   },
   computed: {
-    // ...mapGetters("dialog", ["getLoadingState", "getErrorState"]),
     ...mapGetters({ entries: "journal/getEntries" }),
   },
   methods: {
-    // ...mapActions("dialog", ["setLoading"]),
-    // ...mapActions("journal", ["setEntryData", "setSelectedDate"]),
     ...mapActions("journal", ["setSelectedDate"]),
     onEventClick(event, e) {
       this.$router.push("/journal/" + event.id);

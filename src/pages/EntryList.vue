@@ -37,16 +37,7 @@
           <w-icon class="ml1">wi-chevron-right</w-icon>
         </w-button>
       </template>
-      <!-- <w-flex justify-end>
-        <w-button class="ma1 m" bg-color="primary" :route="entry.id">
-          View more
-          <w-icon class="ml1">wi-chevron-right</w-icon>
-        </w-button>
-      </w-flex> -->
     </w-card>
-    <!-- <ul v-else>
-      <JournalEntry v-for="entry in entries" :key="entry.id" :entry="entry" />
-    </ul> -->
   </section>
 </template>
 
@@ -72,14 +63,6 @@ export default {
       // Get data from Vuex and show the first 100 characters
       return this["truncateEntryBody"](100);
     },
-    // loading() {
-    //   // return this.$store.getters["journal/getLoadingState"]("journal");
-    //   return this.getLoadingState;
-    // },
-    // error() {
-    //   // this.$store.getters["journal/getErrorState"]("journal");
-    //   this.getErrorState;
-    // },
   },
   methods: {
     ...mapActions("dialog", ["setError"]),
@@ -91,12 +74,6 @@ export default {
 </script>
 
 <style scoped>
-/* ul {
-  list-style: none;
-  margin: 2rem auto;
-  padding: 0;
-  max-width: 45rem;
-} */
 a:hover {
   background-color: #1db3a8;
 }

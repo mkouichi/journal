@@ -8,9 +8,6 @@ export default {
   setEditing(context, payload) {
     context.commit("setEditing", payload);
   },
-  // confirmError(context) {
-  //   context.commit("setError", payload);
-  // },
   showDialog(context) {
     context.commit("showDialog");
   },

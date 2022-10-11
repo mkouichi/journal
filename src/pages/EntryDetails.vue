@@ -65,16 +65,8 @@ export default {
       dialogIsVisible: "dialog/getDialogVisibility",
       isEditing: "dialog/getEditingState",
     }),
-    // ...mapGetters("dialog", ["getDialogVisibility", "getEditingState"]),
-    // ...mapGetters("journal", ["getEntryById", "getTargetEntry"]),
     ...mapGetters("journal", ["getEntryById"]),
     ...mapGetters({ targetEntry: "journal/getTargetEntry" }),
-    // targetEntry() {
-    //   return this.getTargetEntry;
-    // },
-    // isEditing() {
-    //   return this.getEditingState;
-    // },
     editLink() {
       return this.$route.path + "/edit";
     },
@@ -122,17 +114,4 @@ textarea:focus {
 #body {
   font-size: 1.3rem;
 }
-
-/* .flex {
-  display: flex;
-  justify-content: end;
-  align-items: center;
-  margin-bottom: 2rem;
-} */
-/* .left {
-  margin-right: auto;
-} */
-/* #date {
-  color: #656565;
-} */
 </style>

@@ -101,7 +101,6 @@ export default {
       error: "dialog/getErrorState",
       dialogIsVisible: "dialog/getDialogVisibility",
     }),
-    // ...mapGetters("dialog", ["getErrorState", "getDialogVisibility"]),
     ...mapGetters("journal", ["getSelectedDate"]),
     setInitialDate() {
       const selectedDate = this.getSelectedDate;
@@ -116,8 +115,6 @@ export default {
   data() {
     return {
       inputIsInvalid: false,
-      // error: this.$store.getters["journal/getErrorState"]("journal"),
-      // error: this.getErrorState,
     };
   },
   methods: {
@@ -143,7 +140,6 @@ export default {
 
       // Set error to null
       this.setError(null);
-      // this["journal/setError"]({ dataName: "journal", status: null });
 
       // Send data to Firebase
       // Add a new document with a generated id
@@ -165,7 +161,6 @@ export default {
     },
     confirmError() {
       this.inputIsInvalid = false;
-      // this.$store.dispatch("journal/confirmError");
       this.setError(null);
     },
   },

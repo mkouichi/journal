@@ -81,13 +81,9 @@ export default {
     ...mapGetters(["getView"]),
     ...mapGetters({ dialogIsVisible: "dialog/getDialogVisibility" }),
     ...mapGetters("journal", ["getTargetEntry"]),
-    // dialogIsVisible() {
-    //   // return this.$store.getters.dialogIsVisible;
-    //   return this.dialogIsVisible;
-    // },
     setEntryValue() {
-      // const entry = this.$store.getters["journal/getTargetEntry"];
       const entry = this.getTargetEntry;
+
       // Set the original contents for editing
       this.entryTitle = entry.title;
       this.entryBody = entry.body;
@@ -96,7 +92,6 @@ export default {
   methods: {
     ...mapActions("dialog", ["showDialog", "hideDialog", "setEditing"]),
     setEditingToFalse() {
-      // this["journal/setEditing"]({ dataName: "journal", status: false });
       this.setEditing(false);
     },
 
