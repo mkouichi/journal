@@ -1,5 +1,5 @@
 <template>
-  <header>
+  <header class="teal-dark3--bg">
     <h1><RouterLink to="/">Journal</RouterLink></h1>
     <nav>
       <ul>
@@ -34,7 +34,7 @@ header {
   width: 100%;
   height: 5rem;
   padding: 0 2rem;
-  background-color: #3d008d;
+  /* background-color: #3d008d; */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -42,7 +42,7 @@ header {
 
 header a {
   text-decoration: none;
-  color: #f4c7ed;
+  color: #fff;
   display: inline-block;
   padding: 0.75rem 1.5rem;
   border: 1px solid transparent;
@@ -51,7 +51,7 @@ header a {
 a:active,
 a:hover,
 a.router-link-active {
-  border: 1px solid #f4c7ed;
+  border: 1px solid #fff;
 }
 
 h1 {

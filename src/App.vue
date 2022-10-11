@@ -40,7 +40,7 @@ body {
   padding: 4px;
   background-color: #fffeed;
 } */
-header,
+
 footer,
 aside,
 main {
@@ -48,7 +48,7 @@ main {
   padding: 12px;
   color: #666;
 }
-header,
+
 footer {
   background-color: #e9f8fe;
   min-height: 60px;

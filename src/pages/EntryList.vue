@@ -27,13 +27,13 @@
         <w-toolbar class="toolbar">
           <div class="title1">{{ entry.title }}</div>
           <div class="spacer"></div>
-          <span class="ml2 date">{{ entry.date }}</span>
+          <span class="ml2 caption">{{ entry.date }}</span>
         </w-toolbar>
       </template>
       <p>{{ entry.body }}</p>
       <template #actions>
         <div class="spacer"></div>
-        <w-button lg class="ma1 m" bg-color="primary" :route="entry.id">
+        <w-button lg class="ma1 teal-dark1--bg" :route="entry.id">
           View more
           <w-icon class="ml1">wi-chevron-right</w-icon>
         </w-button>
@@ -98,6 +98,9 @@ export default {
   padding: 0;
   max-width: 45rem;
 } */
+a:hover {
+  background-color: #1db3a8;
+}
 .toolbar {
   padding-top: 1rem;
   padding-bottom: 1rem;
