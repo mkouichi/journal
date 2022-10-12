@@ -1,19 +1,24 @@
 <template>
   <section>
-    <w-flex id="spinner" v-if="loading" justify-center align-center>
+    <w-flex v-if="loading" id="spinner" justify-center align-center>
       <w-spinner lg />
     </w-flex>
-    <BaseModal v-else-if="error" :open="error" @close="confirmError">
-      <template #header>
-        <h2>Error</h2>
+    <w-dialog
+      v-else-if="error"
+      width="50vw"
+      title-class="error-dark1--bg white"
+      @close="confirmError"
+    >
+      <template #title>
+        <w-icon class="mr2">mdi mdi-tune</w-icon>
+        <span class="title1">Error</span>
       </template>
-      <template #default>
-        <p>{{ error }}</p>
-      </template>
+      <p>{{ error }}</p>
       <template #actions>
-        <BaseButton @click="confirmError">Okay</BaseButton>
+        <div class="spacer" />
+        <w-button xl outline @click="confirmError">Okay</w-button>
       </template>
-    </BaseModal>
+    </w-dialog>
     <p v-else-if="!entries || entries.length === 0">No entry found</p>
     <w-card
       v-else
@@ -57,6 +62,7 @@ export default {
     ...mapGetters({
       loading: "dialog/getLoadingState",
       error: "dialog/getErrorState",
+      dialogIsVisible: "dialog/getDialogVisibility",
     }),
     ...mapGetters("journal", ["truncateEntryBody"]),
     entries() {

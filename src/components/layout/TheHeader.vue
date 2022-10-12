@@ -47,7 +47,6 @@ header a {
   padding: 0.75rem 1.5rem;
   border: 1px solid transparent;
 }
-
 a:active,
 a:hover,
 a.router-link-active {
@@ -88,5 +87,6 @@ header ul {
 
 li {
   margin: 0 0.5rem;
+  font-size: 1.2rem;
 }
 </style>

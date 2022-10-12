@@ -15,20 +15,32 @@
     <p id="body" class="lh5">{{ targetEntry.body }}</p>
   </w-card>
 
-  <!-- <BaseCard v-if="targetEntry && !isEditing">
-    <BaseModal @close="hideDialog" :open="getDialogVisibility">
-      <template #header>
-        <h2>Delete</h2>
-      </template>
-      <template #default>
-        <p>Are you sure? Your entry will be parmanently deleted.</p>
-      </template>
-      <template #actions>
-        <BaseButton @click="deleteEntry" mode="outline">Delete</BaseButton>
-        <BaseButton @click="hideDialog">Back to entry</BaseButton>
-      </template>
-    </BaseModal>
-  </BaseCard> -->
+  <w-dialog
+    v-if="dialogIsVisible"
+    width="50vw"
+    title-class="error-dark1--bg white"
+    @close="hideDialog"
+  >
+    <template #title>
+      <w-icon class="mr2 title1">mdi mdi-tune</w-icon>
+      <span class="title1">Delete</span>
+    </template>
+    <p>Are you sure you want to delete this entry?</p>
+    <template #actions>
+      <div class="spacer" />
+      <w-button
+        xl
+        @click="deleteEntry"
+        class="mr5 white"
+        bg-color="error-dark1"
+      >
+        Delete
+      </w-button>
+      <w-button xl @click="hideDialog" class="white" bg-color="success-dark1">
+        Back to entry
+      </w-button>
+    </template>
+  </w-dialog>
 </template>
 
 <script>

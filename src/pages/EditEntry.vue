@@ -1,5 +1,87 @@
 <template>
-  <BaseCard>
+  <w-card class="white--bg" content-class="pa0">
+    <w-form
+      v-model="form.valid"
+      @submit="submitModifiedData"
+      ref="form"
+      class="px8 py10"
+    >
+      <w-input
+        required
+        label="Title"
+        id="title"
+        class="py10 title2 lh2"
+        :validators="[validators.required]"
+        ref="titleInput"
+        v-model="entryTitle"
+        @keydown.enter.prevent
+      >
+      </w-input>
+      <w-textarea
+        required
+        label="Body"
+        id="body"
+        class="mt3 title2 lh2"
+        :validators="[validators.required]"
+        ref="bodyInput"
+        v-model="entryBody"
+      >
+      </w-textarea>
+      <w-flex wrap align-center justify-end class="mt4">
+        <div class="spacer" />
+        <w-button xl bg-color="warning" type="reset" class="my3 mr5">
+          Reset
+        </w-button>
+        <w-button xl @click="showDialog" bg-color="warning" class="my3 mr5">
+          Cancel
+        </w-button>
+        <w-button xl type="submit" :disabled="form.valid !== true" class="my3">
+          Save
+        </w-button>
+      </w-flex>
+    </w-form>
+    <!-- <w-notification
+      v-model="form.sent"
+      success
+      transition="bounce"
+      absolute
+      plain
+      round
+      bottom
+      lg
+    >
+      The entry was sent successfully!
+    </w-notification> -->
+  </w-card>
+
+  <w-dialog
+    v-if="dialogIsVisible"
+    width="50vw"
+    title-class="warning-dark1--bg white"
+    @close="hideDialog"
+  >
+    <template #title>
+      <w-icon class="mr2 title1">mdi mdi-tune</w-icon>
+      <span class="title1">Discard</span>
+    </template>
+    <p>Are you sure you want to discard the draft?</p>
+    <template #actions>
+      <div class="spacer" />
+      <w-button
+        xl
+        @click="discardDraft"
+        class="mr5 white"
+        bg-color="warning-dark1"
+      >
+        Discard
+      </w-button>
+      <w-button xl @click="hideDialog" class="white" bg-color="success-dark1">
+        Back to entry
+      </w-button>
+    </template>
+  </w-dialog>
+
+  <!-- <BaseCard>
     <form @submit.prevent="submitModifiedData" ref="form">
       <div class="form-control">
         <label for="title">Title</label>
@@ -28,6 +110,7 @@
         >
         <BaseButton type="submit">SAVE</BaseButton>
       </div>
+
       <BaseModal
         v-if="dialogIsVisible"
         :open="dialogIsVisible"
@@ -45,7 +128,7 @@
         </template>
       </BaseModal>
     </form>
-  </BaseCard>
+  </BaseCard> -->
 </template>
 
 <script>
@@ -72,6 +155,13 @@ export default {
     return {
       entryTitle: "",
       entryBody: "",
+      form: {
+        valid: null,
+        sent: false,
+      },
+      validators: {
+        required: (value) => !!value || "This field is required",
+      },
     };
   },
   mounted() {
@@ -94,10 +184,9 @@ export default {
     setEditingToFalse() {
       this.setEditing(false);
     },
-
     // TODO: Only show this when there are unsaved changes
     discardDraft() {
-      this.$refs.form.reset();
+      // this.$refs.form.reset();
       this.hideDialog();
       this.setEditingToFalse();
       this.$router.push("/journal/" + this.id);
@@ -125,7 +214,7 @@ export default {
       await updateDoc(originalRef, modifiedData);
 
       // Reset the input fields
-      this.$refs.form.reset();
+      // this.$refs.form.reset();
 
       // Reset states
       this.hideDialog();
@@ -139,21 +228,21 @@ export default {
 </script>
 
 <style scoped>
-input,
+/* input,
 textarea {
   display: block;
   width: 100%;
   font: inherit;
   padding: 1rem;
   border: 1px solid #ccc;
-}
-input:focus,
+} */
+/* input:focus,
 textarea:focus {
   outline: none;
   border-color: #3a0061;
   background-color: #f7ebff;
-}
-.form-control {
+} */
+/* .form-control {
   margin: 1rem 0;
 }
 .flex {
@@ -161,8 +250,8 @@ textarea:focus {
   justify-content: end;
   align-items: center;
   margin-bottom: 2rem;
-}
-#date {
+} */
+/* #date {
   color: #656565;
-}
+} */
 </style>
