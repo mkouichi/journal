@@ -37,7 +37,7 @@
       <p class="body-text">{{ entry.body }}</p>
       <template #actions>
         <div class="spacer"></div>
-        <w-button xl class="ma1 teal-dark1--bg" :route="entry.id">
+        <w-button xl class="ma1 teal-dark3--bg" :route="entry.id">
           View more
           <w-icon class="ml1">wi-chevron-right</w-icon>
         </w-button>
@@ -80,9 +80,9 @@ export default {
 </script>
 
 <style scoped>
-a:hover {
+/* a:hover {
   background-color: #1db3a8;
-}
+} */
 .body-text {
   font-size: 1.1rem;
 }

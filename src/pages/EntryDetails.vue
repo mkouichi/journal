@@ -3,8 +3,8 @@
     <w-flex class="mt3 mb10">
       <w-button xl @click="goBack" class="teal-dark3--bg">Go Back</w-button>
       <div class="spacer"></div>
-      <w-button xl outline @click="showDialog" class="mr5">Delete</w-button>
-      <w-button xl outline @click="setEditingToTrue" :route="editLink">
+      <w-button xl @click="showDialog" class="error--bg mr5">Delete</w-button>
+      <w-button xl @click="setEditingToTrue" class="warning--bg" :route="editLink">
         Edit
       </w-button>
     </w-flex>
@@ -120,9 +120,9 @@ textarea:focus {
   border-color: #3a0061;
   background-color: #f7ebff;
 }
-.teal-dark3--bg:hover {
+/* .teal-dark3--bg:hover {
   background-color: #1db3a8;
-}
+} */
 #body {
   font-size: 1.3rem;
 }

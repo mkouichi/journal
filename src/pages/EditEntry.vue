@@ -1,6 +1,7 @@
 <template>
   <w-card class="white--bg" content-class="pa0">
     <w-form
+      error-placeholders
       v-model="form.valid"
       @submit="submitModifiedData"
       ref="form"
@@ -10,7 +11,7 @@
         required
         label="Title"
         id="title"
-        class="py10 title2 lh2"
+        class="title2 lh2"
         :validators="[validators.required]"
         ref="titleInput"
         v-model="entryTitle"
@@ -192,8 +193,8 @@ export default {
       this.$router.push("/journal/" + this.id);
     },
     async submitModifiedData() {
-      const enteredTitle = this.$refs.titleInput.value.trim();
-      const enteredBody = this.$refs.bodyInput.value.trim();
+      const enteredTitle = this.$refs.titleInput.inputValue.trim();
+      const enteredBody = this.$refs.bodyInput.inputValue.trim();
       const modifiedData = {
         lastUpdated: moment().format("ddd, MMM D, YYYY, kk:mm"),
         id: this.id,
@@ -228,15 +229,14 @@ export default {
 </script>
 
 <style scoped>
-/* input,
-textarea {
+/* textarea {
   display: block;
   width: 100%;
   font: inherit;
   padding: 1rem;
-  border: 1px solid #ccc;
+  font-size: 1.3rem;
 } */
-/* input:focus,
+/* .w-input--focused,
 textarea:focus {
   outline: none;
   border-color: #3a0061;
