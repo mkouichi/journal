@@ -1,11 +1,12 @@
 import { createRouter, createWebHistory } from "vue-router";
 
-import Calendar from "../pages/Calendar.vue";
-import EntryList from "../pages/EntryList.vue";
-import EntryDetails from "../pages/EntryDetails.vue";
-import NewEntry from "../pages/NewEntry.vue";
-import EditEntry from "../pages/EditEntry.vue";
+import Calendar from "../pages/journal/Calendar.vue";
+import EntryList from "../pages/journal/EntryList.vue";
+import EntryDetails from "../pages/journal/EntryDetails.vue";
+import NewEntry from "../pages/journal/NewEntry.vue";
+import EditEntry from "../pages/journal/EditEntry.vue";
 import NotFound from "../pages/NotFound.vue";
+import UserAuth from "../pages/auth/UserAuth.vue"
 
 const router = createRouter({
   history: createWebHistory(),
@@ -14,6 +15,11 @@ const router = createRouter({
       path: "/",
       name: "home",
       redirect: "/journal/calendar",
+    },
+    {
+      path: "/auth",
+      name: "user-auth",
+      component: UserAuth,
     },
     {
       path: "/journal/calendar",

@@ -14,7 +14,7 @@
         class="title2 lh2"
         :validators="[validators.required]"
         ref="titleInput"
-        v-model="entryTitle"
+        v-model.trim="entryTitle"
         @keydown.enter.prevent
       >
       </w-input>
@@ -25,7 +25,7 @@
         class="mt3 title2 lh2"
         :validators="[validators.required]"
         ref="bodyInput"
-        v-model="entryBody"
+        v-model.trim="entryBody"
       >
       </w-textarea>
       <w-flex wrap align-center justify-end class="mt4">
@@ -193,8 +193,8 @@ export default {
       this.$router.push("/journal/" + this.id);
     },
     async submitModifiedData() {
-      const enteredTitle = this.$refs.titleInput.inputValue.trim();
-      const enteredBody = this.$refs.bodyInput.inputValue.trim();
+      const enteredTitle = this.$refs.titleInput.inputValue;
+      const enteredBody = this.$refs.bodyInput.inputValue;
       const modifiedData = {
         lastUpdated: moment().format("ddd, MMM D, YYYY, kk:mm"),
         id: this.id,
