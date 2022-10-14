@@ -6,7 +6,8 @@ import EntryDetails from "../pages/journal/EntryDetails.vue";
 import NewEntry from "../pages/journal/NewEntry.vue";
 import EditEntry from "../pages/journal/EditEntry.vue";
 import NotFound from "../pages/NotFound.vue";
-import UserAuth from "../pages/auth/UserAuth.vue"
+import Signup from "../pages/auth/Signup.vue"
+import Login from "../pages/auth/Login.vue"
 
 const router = createRouter({
   history: createWebHistory(),
@@ -17,9 +18,14 @@ const router = createRouter({
       redirect: "/journal/calendar",
     },
     {
-      path: "/auth",
-      name: "user-auth",
-      component: UserAuth,
+      path: "/signup",
+      name: "sign-up",
+      component: Signup,
+    },
+    {
+      path: "/login",
+      name: "log-in",
+      component: Login,
     },
     {
       path: "/journal/calendar",
