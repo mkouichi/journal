@@ -12,10 +12,25 @@
 </template>
 
 <script>
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "@/firebase";
 import TheHeader from "./components/layout/TheHeader.vue";
 
 export default {
   components: { TheHeader },
+  mounted() {
+    onAuthStateChanged(auth, (user) => {
+      console.log("user status changed:", user);
+      if (user) {
+        // User is signed in
+        // const uid = user.uid;
+        // Set login state to true
+      } else {
+        // User is signed out
+        // Set login state to false
+      }
+    });
+  },
 };
 </script>
 

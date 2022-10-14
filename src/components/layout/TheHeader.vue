@@ -20,6 +20,7 @@
       </ul>
     </nav>
   </header>
+  <!-- TODO: Show a better error -->
   <div v-if="error">
     {{ error.errorMessage }}
   </div>
@@ -41,7 +42,8 @@ export default {
     signOut() {
       signOut(auth)
         .then(() => {
-          console.log("The user signed out");
+          // Redirect to the login page
+          this.$router.push("/login");
         })
         .catch((error) => {
           this.form.error = {
