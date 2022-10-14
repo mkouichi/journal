@@ -3,6 +3,7 @@
     <w-form
       error-placeholders
       v-model="form.valid"
+      @keydown.enter.prevent
       @submit="submitModifiedData"
       ref="form"
       class="px8 py10"
@@ -11,18 +12,17 @@
         required
         label="Title"
         id="title"
-        class="title2 lh2"
+        class="mt5 title3 lh2"
         :validators="[validators.required]"
         ref="titleInput"
         v-model.trim="entryTitle"
-        @keydown.enter.prevent
       >
       </w-input>
       <w-textarea
         required
         label="Body"
         id="body"
-        class="mt3 title2 lh2"
+        class="mt5 title3 lh2"
         :validators="[validators.required]"
         ref="bodyInput"
         v-model.trim="entryBody"
@@ -30,13 +30,13 @@
       </w-textarea>
       <w-flex wrap align-center justify-end class="mt4">
         <div class="spacer" />
-        <w-button xl bg-color="warning" type="reset" class="my3 mr5">
+        <w-button lg bg-color="warning" type="reset" class="my3 mr5">
           Reset
         </w-button>
-        <w-button xl @click="showDialog" bg-color="warning" class="my3 mr5">
+        <w-button lg @click="showDialog" bg-color="warning" class="my3 mr5">
           Cancel
         </w-button>
-        <w-button xl type="submit" :disabled="form.valid !== true" class="my3">
+        <w-button lg type="submit" :disabled="form.valid !== true" class="my3">
           Save
         </w-button>
       </w-flex>
@@ -62,21 +62,21 @@
     @close="hideDialog"
   >
     <template #title>
-      <w-icon class="mr2 title1">mdi mdi-tune</w-icon>
-      <span class="title1">Discard</span>
+      <w-icon class="mr2 title2">mdi mdi-tune</w-icon>
+      <span class="title2">Discard</span>
     </template>
     <p>Are you sure you want to discard the draft?</p>
     <template #actions>
       <div class="spacer" />
       <w-button
-        xl
+        lg
         @click="discardDraft"
         class="mr5 white"
         bg-color="warning-dark1"
       >
         Discard
       </w-button>
-      <w-button xl @click="hideDialog" class="white" bg-color="success-dark1">
+      <w-button lg @click="hideDialog" class="white" bg-color="success-dark1">
         Back to entry
       </w-button>
     </template>

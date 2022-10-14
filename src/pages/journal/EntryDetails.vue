@@ -1,10 +1,10 @@
 <template>
   <w-card v-if="targetEntry && !isEditing" shadow class="pa5">
     <w-flex class="mt3 mb10">
-      <w-button xl @click="goBack" class="teal-dark3--bg">Go Back</w-button>
+      <w-button lg @click="goBack" class="teal-dark3--bg">Go Back</w-button>
       <div class="spacer"></div>
-      <w-button xl @click="showDialog" class="error--bg mr5">Delete</w-button>
-      <w-button xl @click="setEditingToTrue" class="warning--bg" :route="editLink">
+      <w-button lg @click="showDialog" class="error--bg mr5">Delete</w-button>
+      <w-button lg @click="setEditingToTrue" class="warning--bg" :route="editLink">
         Edit
       </w-button>
     </w-flex>
@@ -22,21 +22,21 @@
     @close="hideDialog"
   >
     <template #title>
-      <w-icon class="mr2 title1">mdi mdi-tune</w-icon>
-      <span class="title1">Delete</span>
+      <w-icon class="mr2 title2">mdi mdi-tune</w-icon>
+      <span class="title2">Delete</span>
     </template>
     <p>Are you sure you want to delete this entry?</p>
     <template #actions>
       <div class="spacer" />
       <w-button
-        xl
+        lg
         @click="deleteEntry"
         class="mr5 white"
         bg-color="error-dark1"
       >
         Delete
       </w-button>
-      <w-button xl @click="hideDialog" class="white" bg-color="success-dark1">
+      <w-button lg @click="hideDialog" class="white" bg-color="success-dark1">
         Back to entry
       </w-button>
     </template>
@@ -120,9 +120,6 @@ textarea:focus {
   border-color: #3a0061;
   background-color: #f7ebff;
 }
-/* .teal-dark3--bg:hover {
-  background-color: #1db3a8;
-} */
 #body {
   font-size: 1.3rem;
 }

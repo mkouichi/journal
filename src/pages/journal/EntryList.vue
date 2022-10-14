@@ -11,12 +11,12 @@
     >
       <template #title>
         <w-icon class="mr2">mdi mdi-tune</w-icon>
-        <span class="title1">Error</span>
+        <span class="title2">Error</span>
       </template>
       <p>{{ error }}</p>
       <template #actions>
         <div class="spacer" />
-        <w-button xl outline @click="confirmError">Okay</w-button>
+        <w-button lg outline @click="confirmError">Okay</w-button>
       </template>
     </w-dialog>
     <p v-else-if="!entries || entries.length === 0">No entry found</p>
@@ -25,7 +25,7 @@
       shadow
       v-for="entry in entries"
       :key="entry.id"
-      class="mb7 pa3"
+      class="mb8 pa3"
     >
       <template #title>
         <w-toolbar class="toolbar">
@@ -37,7 +37,7 @@
       <p class="body-text">{{ entry.body }}</p>
       <template #actions>
         <div class="spacer"></div>
-        <w-button xl class="ma1 teal-dark3--bg" :route="entry.id">
+        <w-button lg class="ma1 teal-dark3--bg" :route="entry.id">
           View more
           <w-icon class="ml1">wi-chevron-right</w-icon>
         </w-button>
@@ -80,11 +80,13 @@ export default {
 </script>
 
 <style scoped>
-/* a:hover {
-  background-color: #1db3a8;
-} */
 .body-text {
   font-size: 1.1rem;
+}
+.toolbar {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  border: none;
 }
 #spinner {
   height: 65vh;

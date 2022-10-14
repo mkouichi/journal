@@ -1,7 +1,6 @@
 <template>
   <w-app>
     <TheHeader />
-    <!-- <RouterView /> -->
     <w-flex grow>
       <aside>Nav menu</aside>
       <main class="grow">
@@ -62,10 +61,5 @@ aside {
 main {
   max-width: 800px;
   margin: 2rem auto;
-}
-.toolbar {
-  padding-top: 1rem;
-  padding-bottom: 1rem;
-  border: none;
 }
 </style>
