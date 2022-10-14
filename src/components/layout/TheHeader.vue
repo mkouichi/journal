@@ -14,17 +14,42 @@
           </RouterLink>
         </li>
         <li><RouterLink to="/journal/new">+ New Entry</RouterLink></li>
+        <li><RouterLink to="/signup">Sign up</RouterLink></li>
+        <li><RouterLink to="/login">Log in</RouterLink></li>
+        <li @click="signOut">Log out</li>
       </ul>
     </nav>
   </header>
+  <div v-if="error">
+    {{ error.errorMessage }}
+  </div>
 </template>
 
 <script>
 import { mapActions } from "vuex";
+import { signOut } from "firebase/auth";
+import { auth } from "@/firebase";
 
 export default {
+  data() {
+    return {
+      error: null,
+    };
+  },
   methods: {
     ...mapActions(["setView"]),
+    signOut() {
+      signOut(auth)
+        .then(() => {
+          console.log("The user signed out");
+        })
+        .catch((error) => {
+          this.form.error = {
+            errorCode: error.code,
+            errorMessage: error.message,
+          };
+        });
+    },
   },
 };
 </script>

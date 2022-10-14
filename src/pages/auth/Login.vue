@@ -20,7 +20,7 @@
       v-model:errors-count="form.errorsCount"
       class="px8 py10"
       @keydown.enter.prevent
-      @submit="signInUser"
+      @submit="signIn"
     >
       <w-input
         required
@@ -116,7 +116,7 @@ export default {
     resetError() {
       this.form.error = null;
     },
-    signInUser() {
+    signIn() {
       const enteredEmail = this.$refs.emailInput.inputValue;
       const enteredPassword = this.$refs.passwordInput.inputValue;
 
