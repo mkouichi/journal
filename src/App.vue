@@ -2,7 +2,7 @@
   <w-app>
     <TheHeader />
     <w-flex grow>
-      <aside>Nav menu</aside>
+      <aside v-if="loggedIn">Nav menu</aside>
       <main class="grow">
         <RouterView />
       </main>
@@ -33,7 +33,7 @@ export default {
     });
   },
   computed: {
-    ...mapGetters(["getAuthState"]),
+    ...mapGetters({ loggedIn: "getAuthState" }),
   },
   methods: {
     ...mapActions(["login", "logout"]),

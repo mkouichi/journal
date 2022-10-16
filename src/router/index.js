@@ -1,13 +1,14 @@
 import { createRouter, createWebHistory } from "vue-router";
 
+import store from "../store";
 import Calendar from "../pages/journal/Calendar.vue";
 import EntryList from "../pages/journal/EntryList.vue";
 import EntryDetails from "../pages/journal/EntryDetails.vue";
 import NewEntry from "../pages/journal/NewEntry.vue";
 import EditEntry from "../pages/journal/EditEntry.vue";
 import NotFound from "../pages/NotFound.vue";
-import Signup from "../pages/auth/Signup.vue"
-import Login from "../pages/auth/Login.vue"
+import Signup from "../pages/auth/Signup.vue";
+import Login from "../pages/auth/Login.vue";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -56,6 +57,23 @@ const router = createRouter({
     },
     { path: "/:notFound(.*)", component: NotFound },
   ],
+});
+
+router.beforeEach((to) => {
+  const isLoggedIn = store.getters.getAuthState;
+
+  if (!isLoggedIn) {
+    if (to.path === "/login" || to.path === "/signup") {
+      // User is not logged in, trying to log in or sign up
+      return;
+    } else {
+      // User is not logged in, trying to go somewhere
+      return "/login";
+    }
+  } else {
+    // User is logged in
+    return;
+  }
 });
 
 export default router;

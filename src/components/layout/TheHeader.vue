@@ -4,19 +4,19 @@
     <nav>
       <ul>
         <li>
-          <RouterLink to="/journal/calendar" @click="setView('calendar')">
+          <RouterLink v-if="loggedIn" to="/journal/calendar" @click="setView('calendar')">
             Calendar View
           </RouterLink>
         </li>
         <li>
-          <RouterLink to="/journal/list" @click="setView('list')">
+          <RouterLink v-if="loggedIn" to="/journal/list" @click="setView('list')">
             List View
           </RouterLink>
         </li>
-        <li><RouterLink to="/journal/new">+ New Entry</RouterLink></li>
-        <li><RouterLink to="/signup">Sign up</RouterLink></li>
-        <li><RouterLink to="/login">Log in</RouterLink></li>
-        <li @click="signOut">Log out</li>
+        <li><RouterLink v-if="loggedIn" to="/journal/new">+ New Entry</RouterLink></li>
+        <li><RouterLink v-if="!loggedIn" to="/signup">Sign up</RouterLink></li>
+        <li><RouterLink v-if="!loggedIn" to="/login">Log in</RouterLink></li>
+        <li v-if="loggedIn" @click="signOut">Log out</li>
       </ul>
     </nav>
   </header>
@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 import { signOut } from "firebase/auth";
 import { auth } from "@/firebase";
 
@@ -36,6 +36,9 @@ export default {
     return {
       error: null,
     };
+  },
+  computed: {
+    ...mapGetters({ loggedIn: "getAuthState" }),
   },
   methods: {
     ...mapActions(["setView"]),
