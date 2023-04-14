@@ -1,14 +1,12 @@
 <template>
-  <w-app>
-    <TheHeader />
-    <w-flex grow>
-      <aside v-if="loggedIn">Nav menu</aside>
-      <main class="grow">
-        <RouterView />
-      </main>
-    </w-flex>
-    <footer>Footer</footer>
-  </w-app>
+  <TheHeader />
+  <w-flex grow>
+    <aside v-if="loggedIn">Nav menu</aside>
+    <main class="grow">
+      <RouterView />
+    </main>
+  </w-flex>
+  <footer>Footer</footer>
 </template>
 
 <script>
@@ -42,26 +40,17 @@ export default {
 </script>
 
 <style>
-@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Lato&display=swap");
 
 * {
   box-sizing: border-box;
 }
-
 html {
-  font-family: "Roboto", sans-serif;
+  font-family: "Lato", sans-serif;
 }
-
 body {
   margin: 0;
 }
-
-/* Demo styles - can be discarded. */
-/* .w-app {
-  padding: 4px;
-  background-color: #fffeed;
-} */
-
 footer,
 aside,
 main {
@@ -69,9 +58,6 @@ main {
   padding: 1rem;
   color: #666;
 }
-/* section {
-  padding: 1rem;
-} */
 footer {
   background-color: #e9f8fe;
   min-height: 60px;

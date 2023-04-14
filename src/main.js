@@ -11,15 +11,13 @@ import BaseModal from "./components/ui/BaseModal.vue";
 
 const app = createApp(App);
 
-app.use(router);
-app.use(store);
-
-new WaveUI(app, {
-  // Some Wave UI options.
-});
-
-app.component("BaseButton", BaseButton);
-app.component("BaseCard", BaseCard);
-app.component("BaseModal", BaseModal);
-
-app.mount("#app");
+app
+  .use(router)
+  .use(store)
+  .use(WaveUI, {
+    /* Some Wave UI options */
+  })
+  .component("BaseButton", BaseButton)
+  .component("BaseCard", BaseCard)
+  .component("BaseModal", BaseModal)
+  .mount("#app");

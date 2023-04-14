@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 
 import { auth } from "@/firebase";
-import store from "../store";
 import Calendar from "../pages/journal/Calendar.vue";
 import EntryList from "../pages/journal/EntryList.vue";
 import EntryDetails from "../pages/journal/EntryDetails.vue";
@@ -68,20 +67,6 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
-
-  auth.onAuthStateChanged((user) => {
-    if (requiresAuth && !user) {
-      next("/login");
-    } else if ((to.path === "/login" || to.path === "/signup") && user) {
-      next("/");
-    } else {
-      next();
-    }
-  });
-});
-
-router.beforeEach((to, from, next) => {
   // Check if the route requires authentication
   const requiresAuth = to.matched.some((record) => record.meta.requiresAuth);
 
@@ -90,15 +75,14 @@ router.beforeEach((to, from, next) => {
     // If the route requires authentication and the user is not authenticated, redirect to login
     if (requiresAuth && !user) {
       next("/login");
-    // If the user is authenticated and trying to access the login or signup page, redirect to home
+      // If the user is authenticated and trying to access the login or signup page, redirect to home
     } else if ((to.path === "/login" || to.path === "/signup") && user) {
       next("/");
-    // Otherwise, allow access to the requested route
+      // Otherwise, allow access to the requested route
     } else {
       next();
     }
   });
 });
-
 
 export default router;
