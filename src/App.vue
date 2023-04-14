@@ -1,12 +1,10 @@
 <template>
   <TheHeader />
   <w-flex grow>
-    <aside v-if="loggedIn">Nav menu</aside>
     <main class="grow">
       <RouterView />
     </main>
   </w-flex>
-  <footer>Footer</footer>
 </template>
 
 <script>
@@ -51,23 +49,8 @@ html {
 body {
   margin: 0;
 }
-footer,
-aside,
-main {
-  margin: 4px;
-  padding: 1rem;
-  color: #666;
-}
-footer {
-  background-color: #e9f8fe;
-  min-height: 60px;
-}
-aside {
-  width: 15vw;
-  background-color: #fef2ff;
-}
 main {
   max-width: 800px;
-  margin: 2rem auto;
+  margin: auto;
 }
 </style>

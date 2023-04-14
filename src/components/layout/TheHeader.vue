@@ -3,20 +3,22 @@
     <h1><RouterLink to="/">Journal</RouterLink></h1>
     <nav>
       <ul>
-        <li>
-          <RouterLink v-if="loggedIn" to="/journal/calendar" @click="setView('calendar')">
+        <li v-if="loggedIn">
+          <RouterLink to="/journal/calendar" @click="setView('calendar')">
             Calendar View
           </RouterLink>
         </li>
-        <li>
-          <RouterLink v-if="loggedIn" to="/journal/list" @click="setView('list')">
+        <li v-if="loggedIn">
+          <RouterLink to="/journal/list" @click="setView('list')">
             List View
           </RouterLink>
         </li>
-        <li><RouterLink v-if="loggedIn" to="/journal/new">+ New Entry</RouterLink></li>
-        <li><RouterLink v-if="!loggedIn" to="/signup">Sign up</RouterLink></li>
-        <li><RouterLink v-if="!loggedIn" to="/login">Log in</RouterLink></li>
-        <li v-if="loggedIn" @click="signOut">Log out</li>
+        <li v-if="loggedIn">
+          <RouterLink to="/journal/new">+ New Entry</RouterLink>
+        </li>
+        <li v-if="!loggedIn"><RouterLink to="/signup">Sign up</RouterLink></li>
+        <li v-if="!loggedIn"><RouterLink to="/login">Log in</RouterLink></li>
+        <li v-if="loggedIn" @click="signOut" class="header-item">Log out</li>
       </ul>
     </nav>
   </header>
@@ -64,7 +66,6 @@ header {
   width: 100%;
   height: 5rem;
   padding: 0 2rem;
-  /* background-color: #3d008d; */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -79,8 +80,10 @@ header a {
 }
 a:active,
 a:hover,
-a.router-link-active {
+a.router-link-active,
+.header-item:hover {
   border: 1px solid #fff;
+  cursor: pointer;
 }
 
 h1 {
@@ -116,7 +119,14 @@ header ul {
 }
 
 li {
-  margin: 0 0.5rem;
+  margin: 0 0.2rem;
   font-size: 1.2rem;
+}
+
+.header-item {
+  color: #fff;
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  border: 1px solid transparent;
 }
 </style>

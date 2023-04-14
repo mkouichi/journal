@@ -41,18 +41,6 @@
         </w-button>
       </w-flex>
     </w-form>
-    <!-- <w-notification
-      v-model="form.sent"
-      success
-      transition="bounce"
-      absolute
-      plain
-      round
-      bottom
-      lg
-    >
-      The entry was sent successfully!
-    </w-notification> -->
   </w-card>
 
   <w-dialog
@@ -67,7 +55,7 @@
     </template>
     <p>Are you sure you want to discard the draft?</p>
     <template #actions>
-      <div class="spacer" />
+      <div class="spacer"></div>
       <w-button
         lg
         @click="discardDraft"
@@ -81,55 +69,6 @@
       </w-button>
     </template>
   </w-dialog>
-
-  <!-- <BaseCard>
-    <form @submit.prevent="submitModifiedData" ref="form">
-      <div class="form-control">
-        <label for="title">Title</label>
-        <input
-          type="text"
-          id="title"
-          name="title"
-          ref="titleInput"
-          @keydown.enter.prevent
-          v-model="entryTitle"
-        />
-      </div>
-      <div class="form-control">
-        <label for="body">Body</label>
-        <textarea
-          name="body"
-          id="body"
-          rows="10"
-          ref="bodyInput"
-          v-model="entryBody"
-        ></textarea>
-      </div>
-      <div class="flex">
-        <BaseButton type="button" @click="showDialog" mode="outline"
-          >CANCEL</BaseButton
-        >
-        <BaseButton type="submit">SAVE</BaseButton>
-      </div>
-
-      <BaseModal
-        v-if="dialogIsVisible"
-        :open="dialogIsVisible"
-        @close="hideDialog"
-      >
-        <template #header>
-          <h2>Cancel</h2>
-        </template>
-        <template #default>
-          <p>Are you sure? Your draft will be lost.</p>
-        </template>
-        <template #actions>
-          <BaseButton @click="discardDraft" mode="outline">Discard</BaseButton>
-          <BaseButton @click="hideDialog">Back to edit</BaseButton>
-        </template>
-      </BaseModal>
-    </form>
-  </BaseCard> -->
 </template>
 
 <script>
@@ -140,16 +79,7 @@ import { db } from "@/firebase";
 
 export default {
   beforeRouteLeave() {
-    console.log("EditEntry beforeRouteLeave");
     this.setEditingToFalse();
-    // const answer = window.confirm(
-    //   "Do you really want to leave? you have unsaved changes!"
-    // );
-    // if (!answer) {
-    //   return false;
-    // } else {
-    //   this.setEditingToFalse();
-    // }
   },
   props: ["id"],
   data() {
@@ -187,7 +117,6 @@ export default {
     },
     // TODO: Only show this when there are unsaved changes
     discardDraft() {
-      // this.$refs.form.reset();
       this.hideDialog();
       this.setEditingToFalse();
       this.$router.push("/journal/" + this.id);
@@ -214,9 +143,6 @@ export default {
       // Send data to Firebase
       await updateDoc(originalRef, modifiedData);
 
-      // Reset the input fields
-      // this.$refs.form.reset();
-
       // Reset states
       this.hideDialog();
       this.setEditingToFalse();
@@ -229,29 +155,4 @@ export default {
 </script>
 
 <style scoped>
-/* textarea {
-  display: block;
-  width: 100%;
-  font: inherit;
-  padding: 1rem;
-  font-size: 1.3rem;
-} */
-/* .w-input--focused,
-textarea:focus {
-  outline: none;
-  border-color: #3a0061;
-  background-color: #f7ebff;
-} */
-/* .form-control {
-  margin: 1rem 0;
-}
-.flex {
-  display: flex;
-  justify-content: end;
-  align-items: center;
-  margin-bottom: 2rem;
-} */
-/* #date {
-  color: #656565;
-} */
 </style>
