@@ -15,7 +15,6 @@
       @cell-dblclick="createNewEntry"
       events-on-month-view="short"
       style="height: 600px"
-
     >
     </vue-cal>
     <w-flex justify-end>
@@ -23,6 +22,13 @@
         + New Entry
       </w-button>
     </w-flex>
+    <div v-if="events && events.length">
+      <div>
+        {{ events[randomIndex].month }} / {{ events[randomIndex].day }} /
+        {{ events[randomIndex].year }}
+      </div>
+      <div>{{ events[randomIndex].event }}</div>
+    </div>
   </section>
 </template>
 
@@ -31,12 +37,39 @@ import { mapActions, mapGetters } from "vuex";
 import { getDataFromDB } from "@/helper-functions";
 import VueCal from "vue-cal";
 import "vue-cal/dist/vuecal.css";
+import axios from "axios";
 
 export default {
   components: { VueCal },
+  data() {
+    return {
+      events: null,
+      randomIndex: null,
+    };
+  },
   mounted() {
     getDataFromDB();
   },
+  async created() {
+    try {
+      const { data } = await axios.get(
+        "http://localhost:3000/historical-events"
+      );
+      // Store the fetched data in the events array
+      this.events = data.data.map((event) => ({
+        ...event,
+        // Change the month property to the three-letter abbreviation
+        month: new Date(event.month + "-01-2000").toLocaleString("default", {
+          month: "short",
+        }),
+      }));
+      // Choose a random index of an event from the events array
+      this.randomIndex = Math.floor(Math.random() * this.events.length);
+    } catch (error) {
+      console.log(error);
+    }
+  },
+
   computed: {
     ...mapGetters({ entries: "journal/getEntries" }),
   },
@@ -56,20 +89,34 @@ export default {
 };
 </script>
 
-<style scoped>
-.vuecal__title-bar .vuecal__flex.vuecal__title {
-  background-color: blue;
-  font-size: 2rem;
+<style>
+.vuecal__title > button {
+  font-weight: bold;
+  font-size: 1.2rem;
 }
-/* Green-theme. */
-.vuecal__menu, .vuecal__cell-events-count {background-color: #9db942;}
-.vuecal__title-bar {background-color: #7d16b9;}
-.vuecal__cell--today, .vuecal__cell--current {background-color: rgba(240, 240, 255, 0.4);}
-.vuecal:not(.vuecal--day-view) .vuecal__cell--selected {background-color: rgba(235, 255, 245, 0.4);}
-.vuecal__cell--selected:before {border-color: rgba(66, 185, 131, 0.5);}
-/* Cells and buttons get highlighted when an event is dragged over it. */
-.vuecal__cell--highlighted:not(.vuecal__cell--has-splits),
-.vuecal__cell-split--highlighted {background-color: rgba(195, 255, 225, 0.5);}
-.vuecal__arrow.vuecal__arrow--highlighted,
-.vuecal__view-btn.vuecal__view-btn--highlighted {background-color: rgba(136, 236, 191, 0.25);}
+.vuecal--month-view {
+  font-weight: bold;
+  font-size: 1.1rem;
+  color: #555;
+}
+.vuecal__event {
+  background-color: #a255a2;
+  color: #fff;
+  border: none;
+  border-radius: 3px;
+  font-weight: bold;
+  font-size: 0.9rem;
+  padding: 3px 6px;
+  margin-top: 3px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+.vuecal__event:hover {
+  background-color: purple;
+  color: #fff;
+}
+.vuecal__today-btn {
+  padding: 5px 10px;
+  margin: 0 2px;
+}
 </style>
