@@ -81,8 +81,11 @@ export default {
       // Prevent navigating to narrower view (default vue-cal behavior).
       e.stopPropagation();
     },
+    // Create a new journal entry with the currently selected date
     createNewEntry(event) {
+      // Set the selected date to the datepicker's selected date
       this.setSelectedDate(event.format());
+      // Redirect to the new journal entry form
       this.$router.push("/journal/new");
     },
   },

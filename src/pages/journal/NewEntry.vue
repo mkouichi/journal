@@ -87,6 +87,7 @@ import { db } from "@/firebase";
 export default {
   // TODO: Only show this when there are unsaved changes
   // TODO: Show a better deagram
+  // Set the selected date to null before leaving the current route
   beforeRouteLeave() {
     this.setSelectedDate(null);
 
@@ -102,10 +103,14 @@ export default {
       dialogIsVisible: "dialog/getDialogVisibility",
     }),
     ...mapGetters("journal", ["getSelectedDate"]),
+
+    // Set the initial date to be displayed in the datepicker
     setInitialDate() {
       const selectedDate = this.getSelectedDate;
-
+      
+      // If there is already a selected date, use it as the initial date
       if (selectedDate) return selectedDate;
+      // If not, use the current date as the initial date
       else {
         const today = moment().format("YYYY-MM-DD");
         return today;

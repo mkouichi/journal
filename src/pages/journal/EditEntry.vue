@@ -78,6 +78,7 @@ import { doc, updateDoc } from "firebase/firestore";
 import { db } from "@/firebase";
 
 export default {
+  // Set the editing state to false before leaving the current route
   beforeRouteLeave() {
     this.setEditingToFalse();
   },
@@ -91,6 +92,7 @@ export default {
         sent: false,
       },
       validators: {
+        // Define validation rules for required fields
         required: (value) => !!value || "This field is required",
       },
     };
@@ -102,6 +104,8 @@ export default {
     ...mapGetters(["getView"]),
     ...mapGetters({ dialogIsVisible: "dialog/getDialogVisibility" }),
     ...mapGetters("journal", ["getTargetEntry"]),
+
+    // Set the initial entry value when the component is mounted
     setEntryValue() {
       const entry = this.getTargetEntry;
 
@@ -117,13 +121,17 @@ export default {
     },
     // TODO: Only show this when there are unsaved changes
     discardDraft() {
+      // Hide the dialog and redirect to the current view
       this.hideDialog();
       this.setEditingToFalse();
       this.$router.push("/journal/" + this.id);
     },
     async submitModifiedData() {
+      // Get the entered values
       const enteredTitle = this.$refs.titleInput.inputValue;
       const enteredBody = this.$refs.bodyInput.inputValue;
+
+      // Create modified data object
       const modifiedData = {
         lastUpdated: moment().format("ddd, MMM D, YYYY, kk:mm"),
         id: this.id,
