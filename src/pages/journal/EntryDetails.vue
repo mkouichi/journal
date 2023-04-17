@@ -10,7 +10,7 @@
     </w-flex>
     <w-flex align-center class="mb7">
       <h1>{{ targetEntry.title }}</h1>
-      <p id="date">{{ targetEntry.date }}</p>
+      <p id="date">{{ targetEntry.lastUpdated }}</p>
     </w-flex>
     <p id="body" class="lh5">{{ targetEntry.body }}</p>
   </w-card>

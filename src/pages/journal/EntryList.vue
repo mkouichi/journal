@@ -31,7 +31,7 @@
         <w-toolbar class="toolbar">
           <h2>{{ entry.title }}</h2>
           <div class="spacer"></div>
-          <span class="ml2 caption">{{ entry.date }}</span>
+          <span class="ml2 caption">{{ entry.lastUpdated }}</span>
         </w-toolbar>
       </template>
       <p class="body-text">{{ entry.body }}</p>

@@ -130,9 +130,9 @@ export default {
       const enteredBody = this.$refs.bodyInput.value.trim();
       const enteredDate = this.$refs.dateInput.value;
       const entryData = {
-        date: moment().format("ddd, MMM D, YYYY, kk:mm"),
         start: enteredDate,
         end: enteredDate,
+        lastUpdated: moment().format("ddd, MMM D, YYYY, kk:mm"),
         title: enteredTitle,
         body: enteredBody,
       };
