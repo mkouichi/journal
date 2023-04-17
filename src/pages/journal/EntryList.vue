@@ -1,8 +1,11 @@
 <template>
   <section>
+    <!-- Loading -->
     <w-flex v-if="loading" id="spinner" justify-center align-center>
       <w-spinner lg />
     </w-flex>
+
+    <!-- Error -->
     <w-dialog
       v-else-if="error"
       width="50vw"
@@ -19,7 +22,11 @@
         <w-button lg outline @click="confirmError">Okay</w-button>
       </template>
     </w-dialog>
+
+    <!-- No entry -->
     <p v-else-if="!entries || entries.length === 0">No entry found</p>
+
+    <!-- Entry found -->
     <w-card
       v-else
       shadow
@@ -54,6 +61,7 @@ import { getDataFromDB } from "@/helper-functions";
 
 export default {
   mounted() {
+    // Fetch data from database and store in Vuex
     getDataFromDB();
   },
   computed: {
@@ -65,7 +73,15 @@ export default {
     ...mapGetters("journal", ["truncateEntryBody"]),
     entries() {
       // Get data from Vuex and show the first 100 characters
-      return this["truncateEntryBody"](100);
+      const entries = this["truncateEntryBody"](100);
+
+      // Filter out entries that do not have a lastUpdated property
+      const validEntries = entries.filter((entry) => entry.lastUpdated);
+
+      // Sort the valid entries by lastUpdated property in descending order
+      return validEntries.sort(
+        (a, b) => new Date(b.lastUpdated) - new Date(a.lastUpdated)
+      );
     },
   },
   methods: {
