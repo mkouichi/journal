@@ -1,7 +1,7 @@
 <template>
   <TheHeader />
   <w-flex grow>
-    <main class="grow">
+    <main class="grow mt8">
       <RouterView />
     </main>
   </w-flex>
