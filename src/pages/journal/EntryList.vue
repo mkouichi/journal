@@ -15,7 +15,7 @@
       </template>
       <p>{{ error }}</p>
       <template #actions>
-        <div class="spacer" />
+        <div class="spacer"></div>
         <w-button lg outline @click="confirmError">Okay</w-button>
       </template>
     </w-dialog>

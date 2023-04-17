@@ -27,7 +27,7 @@
     </template>
     <p>Are you sure you want to delete this entry?</p>
     <template #actions>
-      <div class="spacer" />
+      <div class="spacer"></div>
       <w-button
         lg
         @click="deleteEntry"

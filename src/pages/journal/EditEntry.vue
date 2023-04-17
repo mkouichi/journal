@@ -29,7 +29,7 @@
       >
       </w-textarea>
       <w-flex wrap align-center justify-end class="mt4">
-        <div class="spacer" />
+        <div class="spacer"></div>
         <w-button lg bg-color="warning" type="reset" class="my3 mr5">
           Reset
         </w-button>

@@ -86,7 +86,7 @@
     </template>
     <p>{{ form.error.errorMessage }}</p>
     <template #actions>
-      <div class="spacer" />
+      <div class="spacer"></div>
       <w-button lg @click="resetError" class="white" bg-color="success-dark1">
         Okay
       </w-button>
