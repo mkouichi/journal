@@ -51,10 +51,8 @@ import { mapActions, mapGetters } from "vuex";
 import "vue-cal/dist/vuecal.css";
 
 import { getDataFromDB } from "@/helper-functions";
-import JournalEntry from "@/components/journal/JournalEntry.vue";
 
 export default {
-  components: { JournalEntry },
   mounted() {
     getDataFromDB();
   },
