@@ -1,7 +1,26 @@
 <template>
   <header class="teal-dark3--bg">
     <h1><RouterLink to="/">Journal</RouterLink></h1>
-    <nav>
+
+    <w-flex justify-end>
+      <button class="mdu-hide nav-button" @click="openDrawer = 'left'" outline>
+        <w-icon color="white">mdi mdi-menu</w-icon>
+      </button>
+    </w-flex>
+
+    <w-drawer v-model="openDrawer" :[position]="true">
+      <w-button
+        @click="openDrawer = false"
+        sm
+        outline
+        round
+        absolute
+        icon="wi-cross"
+      >
+      </w-button>
+    </w-drawer>
+
+    <nav class="smd-hide">
       <ul>
         <li v-if="loggedIn">
           <RouterLink to="/journal/calendar" @click="setView('calendar')">
@@ -32,18 +51,28 @@
 import { mapGetters, mapActions } from "vuex";
 import { signOut } from "firebase/auth";
 import { auth } from "@/firebase";
+import "@mdi/font/css/materialdesignicons.min.css";
 
 export default {
   data() {
     return {
       error: null,
+      openDrawer: false,
     };
   },
   computed: {
     ...mapGetters({ loggedIn: "getAuthState" }),
+
+    position() {
+      return this.openDrawer || "left";
+    },
   },
   methods: {
     ...mapActions(["setView"]),
+    toggleNav() {
+      console.log(this.navOpen);
+      this.navOpen = !this.navOpen;
+    },
     signOut() {
       signOut(auth)
         .then(() => {
@@ -123,6 +152,14 @@ li {
   font-size: 1.2rem;
 }
 
+.nav-button {
+  cursor: pointer;
+  padding: 0.75rem;
+  background-color: inherit;
+  border: none;
+  color: #fff;
+  font-size: 2rem;
+}
 .header-item {
   color: #fff;
   display: inline-block;
