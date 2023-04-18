@@ -27,29 +27,35 @@
     <p v-else-if="!entries || entries.length === 0">No entry found</p>
 
     <!-- Entry found -->
-    <w-card
-      v-else
-      shadow
-      v-for="entry in entries"
-      :key="entry.id"
-      class="mb8 pa3"
-    >
-      <template #title>
-        <w-toolbar class="toolbar">
-          <h2>{{ entry.title }}</h2>
+    <div v-else-if="entries.length > 0">
+      <w-flex class="xs6 mla">
+        <span class="pt1">Sorted by: </span>
+        <w-select
+          v-model="selection"
+          :items="sortItems"
+          fit-to-content
+          class="pl3"
+          no-unselect
+        ></w-select>
+      </w-flex>
+      <w-card shadow v-for="entry in entries" :key="entry.id" class="mb8 pa3">
+        <template #title>
+          <w-toolbar class="toolbar">
+            <h2>{{ entry.title }}</h2>
+            <div class="spacer"></div>
+            <span class="ml2 caption">{{ entry.lastUpdated }}</span>
+          </w-toolbar>
+        </template>
+        <p class="body-text">{{ entry.body }}</p>
+        <template #actions>
           <div class="spacer"></div>
-          <span class="ml2 caption">{{ entry.lastUpdated }}</span>
-        </w-toolbar>
-      </template>
-      <p class="body-text">{{ entry.body }}</p>
-      <template #actions>
-        <div class="spacer"></div>
-        <w-button lg class="ma1 teal-dark3--bg" :route="entry.id">
-          View more
-          <w-icon class="ml1">wi-chevron-right</w-icon>
-        </w-button>
-      </template>
-    </w-card>
+          <w-button lg class="ma1 teal-dark3--bg" :route="entry.id">
+            View more
+            <w-icon class="ml1">wi-chevron-right</w-icon>
+          </w-button>
+        </template>
+      </w-card>
+    </div>
   </section>
 </template>
 
@@ -60,34 +66,65 @@ import "vue-cal/dist/vuecal.css";
 import { getDataFromDB } from "@/helper-functions";
 
 export default {
-  mounted() {
-    // Fetch data from database and store in Vuex
-    getDataFromDB();
+  async created() {
+    // Fetch data from database and store it in Vuex
+    await getDataFromDB();
+
+    // Show initial data
+    // Get data from Vuex and store it in data property
+    this.initEntries();
+  },
+  data: () => ({
+    sortItems: [
+      { label: "Newest first (default)", value: "newest" },
+      { label: "Oldest first", value: "oldest" },
+    ],
+    selection: "newest",
+    entries: [],
+  }),
+  watch: {
+    // Watch for changes to the selection property
+    selection(selection) {
+      // Call the method with the new selection value
+      this.sortEntriesByLastUpdated(selection);
+    },
   },
   computed: {
     ...mapGetters({
       loading: "dialog/getLoadingState",
       error: "dialog/getErrorState",
       dialogIsVisible: "dialog/getDialogVisibility",
+      truncateEntryBody: "journal/truncateEntryBody",
     }),
-    ...mapGetters("journal", ["truncateEntryBody"]),
-    entries() {
-      // Get data from Vuex and show the first 100 characters
-      const entries = this["truncateEntryBody"](100);
-
-      // Filter out entries that do not have a lastUpdated property
-      const validEntries = entries.filter((entry) => entry.lastUpdated);
-
-      // Sort the valid entries by lastUpdated property in descending order
-      return validEntries.sort(
-        (a, b) => new Date(b.lastUpdated) - new Date(a.lastUpdated)
-      );
-    },
   },
   methods: {
     ...mapActions("dialog", ["setError"]),
     confirmError() {
       this.setError(null);
+    },
+    async initEntries() {
+      // Get data from Vuex and trim the body to the first 100 characters, then store it in data property
+      this.entries = await this.truncateEntryBody(100);
+
+      // Sort initially by lastUpdated in descending order
+      this.sortEntriesByLastUpdated("newest");
+    },
+    sortEntriesByLastUpdated(selection) {
+      // Sort entries based on selection
+      switch (selection) {
+        case "newest":
+          this.entries.sort(
+            (a, b) => new Date(b.lastUpdated) - new Date(a.lastUpdated)
+          );
+          break;
+        case "oldest":
+          this.entries.sort(
+            (a, b) => new Date(a.lastUpdated) - new Date(b.lastUpdated)
+          );
+          break;
+        default:
+          break;
+      }
     },
   },
 };
@@ -101,6 +138,9 @@ export default {
   padding-top: 1rem;
   padding-bottom: 1rem;
   border: none;
+}
+.w-select {
+  margin: auto 0 2rem auto;
 }
 #spinner {
   height: 65vh;
