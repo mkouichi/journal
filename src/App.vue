@@ -51,7 +51,7 @@ body {
 }
 main {
   max-width: 800px;
-  margin: auto;
+  margin: 32px auto 4rem auto;
 }
 .w-button.size--lg {
   height: 3rem;
@@ -60,7 +60,7 @@ main {
 
 @media (max-width: 835px) {
   main {
-    margin: 0 1rem;
+    margin: 32px 1rem 4rem 1rem;
   }
   .w-button.size--lg {
     height: 2.5rem;
