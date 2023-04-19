@@ -18,8 +18,8 @@
     >
     </vue-cal>
     <w-flex justify-end>
-      <w-button route="/journal/new" xl right class="mt5 teal-dark3--bg">
-        + New Entry
+      <w-button route="/journal/new" lg right class="mt5 teal-dark3--bg">
+        New Entry
       </w-button>
     </w-flex>
     <div v-if="events && events.length">

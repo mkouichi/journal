@@ -53,4 +53,18 @@ main {
   max-width: 800px;
   margin: auto;
 }
+.w-button.size--lg {
+  height: 3rem;
+  padding: 1rem;
+}
+
+@media (max-width: 835px) {
+  main {
+    margin: 0 1rem;
+  }
+  .w-button.size--lg {
+    height: 2.5rem;
+    padding: 0.5rem;
+  }
+}
 </style>
