@@ -28,7 +28,7 @@
 
     <!-- Entry found -->
     <div v-else-if="entries.length > 0">
-      <w-flex class="xs6 mla">
+      <w-flex class="xs12 sm6 mla">
         <span class="pt1">Sorted by: </span>
         <w-select
           v-model="selection"
@@ -38,12 +38,12 @@
           no-unselect
         ></w-select>
       </w-flex>
-      <w-card shadow v-for="entry in entries" :key="entry.id" class="mb8 pa3">
+      <w-card v-for="entry in entries" :key="entry.id" class="mb8 pa3">
         <template #title>
           <w-toolbar class="toolbar">
             <h2>{{ entry.title }}</h2>
             <div class="spacer"></div>
-            <span class="ml2 caption">{{ entry.lastUpdated }}</span>
+            <span class="caption">{{ entry.lastUpdated }}</span>
           </w-toolbar>
         </template>
         <p class="body-text">{{ entry.body }}</p>
@@ -138,11 +138,31 @@ export default {
   padding-top: 1rem;
   padding-bottom: 1rem;
   border: none;
+  display: block;
 }
 .w-select {
   margin: auto 0 2rem auto;
 }
+.w-button.size--lg {
+  padding: 1rem 1rem 1rem 1.5rem;
+}
+
 #spinner {
   height: 65vh;
+}
+
+@media (max-width: 835px) {
+  h2 {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .toolbar {
+    display: block;
+    width: 80vw;
+  }
+  .w-button.size--lg {
+    padding: 0.5rem 0.5rem 0.5rem 1rem;
+  }
 }
 </style>

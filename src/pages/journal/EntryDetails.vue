@@ -1,20 +1,25 @@
 <template>
-  <w-card v-if="targetEntry && !isEditing" shadow class="pa5">
+  <w-card v-if="targetEntry && !isEditing" class="pa5">
     <w-flex class="mt3 mb10">
       <w-button lg @click="goBack" class="teal-dark3--bg">Go Back</w-button>
       <div class="spacer"></div>
       <w-button lg @click="showDialog" class="error--bg mr5">Delete</w-button>
-      <w-button lg @click="setEditingToTrue" class="warning--bg" :route="editLink">
+      <w-button
+        lg
+        @click="setEditingToTrue"
+        class="warning--bg"
+        :route="editLink"
+      >
         Edit
       </w-button>
     </w-flex>
-    <w-flex align-center class="mb7">
+    <w-toolbar align-center class="toolbar mb7">
       <h1>{{ targetEntry.title }}</h1>
-      <p id="date">{{ targetEntry.lastUpdated }}</p>
-    </w-flex>
+      <span id="date" class="caption">{{ targetEntry.lastUpdated }}</span>
+    </w-toolbar>
     <p id="body" class="lh5">{{ targetEntry.body }}</p>
   </w-card>
-
+  
   <w-dialog
     v-if="dialogIsVisible"
     width="50vw"
@@ -120,6 +125,14 @@ textarea:focus {
   border-color: #3a0061;
   background-color: #f7ebff;
 }
+
+.toolbar {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  border: none;
+  display: block;
+}
+
 #body {
   font-size: 1.3rem;
 }
