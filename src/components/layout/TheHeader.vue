@@ -2,13 +2,15 @@
   <header class="teal-dark3--bg">
     <h1><RouterLink to="/">Journal</RouterLink></h1>
 
+    <!-- Menu icon for md (900px) and below -->
     <w-flex justify-end>
       <button class="mdu-hide nav-button" @click="openDrawer = 'left'" outline>
         <w-icon color="white">mdi mdi-menu</w-icon>
       </button>
     </w-flex>
 
-    <w-drawer v-model="openDrawer" :[position]="true">
+    <!-- Drawer for md (900px) and below -->
+    <w-drawer v-model="openDrawer" :[position]="true" class="drawer">
       <w-button
         @click="openDrawer = false"
         sm
@@ -18,10 +20,40 @@
         icon="wi-cross"
       >
       </w-button>
+
+      <!-- Menu items -->
+      <!-- User is logged in -->
+      <w-list
+        v-if="loggedIn"
+        :items="loggedInItems"
+        nav
+        item-class="nav-item w-flex justify-center pa8"
+        @item-click="handleItemClick"
+        class="grow teal-dark3"
+      >
+        <template #item="{ item }">
+          <span>{{ item.label }}</span>
+        </template>
+      </w-list>
+      
+      <!-- User is not logged in -->
+      <w-list
+        v-if="!loggedIn"
+        :items="loggedOutItems"
+        nav
+        item-class="nav-item w-flex justify-center pa8"
+        @item-click="handleItemClick"
+        class="grow teal-dark3"
+      >
+        <template #item="{ item }">
+          <span>{{ item.label }}</span>
+        </template>
+      </w-list>
     </w-drawer>
 
+    <!-- Menu items for md (900px) and above -->
     <nav class="smd-hide">
-      <ul>
+      <ul class="w-flex justify-center align-center">
         <li v-if="loggedIn">
           <RouterLink to="/journal/calendar" @click="setView('calendar')">
             Calendar View
@@ -33,11 +65,11 @@
           </RouterLink>
         </li>
         <li v-if="loggedIn">
-          <RouterLink to="/journal/new">+ New Entry</RouterLink>
+          <RouterLink to="/journal/new">New Entry</RouterLink>
         </li>
-        <li v-if="!loggedIn"><RouterLink to="/signup">Sign up</RouterLink></li>
-        <li v-if="!loggedIn"><RouterLink to="/login">Log in</RouterLink></li>
-        <li v-if="loggedIn" @click="signOut" class="header-item">Log out</li>
+        <li v-if="!loggedIn"><RouterLink to="/signup">Sign Up</RouterLink></li>
+        <li v-if="!loggedIn"><RouterLink to="/login">Log In</RouterLink></li>
+        <li v-if="loggedIn" @click="signOut" class="header-item">Log Out</li>
       </ul>
     </nav>
   </header>
@@ -58,6 +90,40 @@ export default {
     return {
       error: null,
       openDrawer: false,
+      loggedInItems: [
+        {
+          label: "Calendar View",
+          id: "calendar",
+          route: "/journal/calendar",
+        },
+        {
+          label: "List View",
+          id: "entry-list",
+          route: "/journal/list",
+        },
+        {
+          label: "New Entry",
+          id: "new-entry",
+          route: "/journal/new",
+        },
+        {
+          label: "Log out",
+          id: "log-out",
+          route: "/logout",
+        },
+      ],
+      loggedOutItems: [
+        {
+          label: "Sign up",
+          id: "sign-up",
+          route: "/signup",
+        },
+        {
+          label: "Log in",
+          id: "log-in",
+          route: "/login",
+        },
+      ],
     };
   },
   computed: {
@@ -72,6 +138,13 @@ export default {
     toggleNav() {
       console.log(this.navOpen);
       this.navOpen = !this.navOpen;
+    },
+    handleItemClick(item) {
+      // Sign out when logout button is clicked
+      if (item.id === "log-out") this.signOut();
+
+      // Close the drawer
+      this.openDrawer = false;
     },
     signOut() {
       signOut(auth)
@@ -130,28 +203,16 @@ h1 a.router-link-active {
   border-color: transparent;
 }
 
-header nav {
-  width: 90%;
-  margin: auto;
-  display: flex;
-  justify-content: end;
-  align-items: center;
-}
-
 header ul {
   list-style: none;
   margin: 0;
   padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 li {
   margin: 0 0.2rem;
   font-size: 1.2rem;
 }
-
 .nav-button {
   cursor: pointer;
   padding: 0.75rem;
@@ -159,6 +220,9 @@ li {
   border: none;
   color: #fff;
   font-size: 2rem;
+}
+.grow {
+  font-size: 1.2rem;
 }
 .header-item {
   color: #fff;
