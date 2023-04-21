@@ -9,7 +9,7 @@
     <w-dialog
       v-else-if="error"
       width="50vw"
-      title-class="error-dark1--bg white"
+      title-class="error--bg white"
       @close="confirmError"
     >
       <template #title>
@@ -49,7 +49,7 @@
         <p class="body-text">{{ entry.body }}</p>
         <template #actions>
           <div class="spacer"></div>
-          <w-button lg class="ma1 teal-dark3--bg" :route="entry.id">
+          <w-button lg class="ma1 teal-dark2--bg" :route="entry.id">
             View more
             <w-icon class="ml1">wi-chevron-right</w-icon>
           </w-button>

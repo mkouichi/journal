@@ -46,7 +46,7 @@
   <w-dialog
     v-if="dialogIsVisible"
     width="50vw"
-    title-class="warning-dark1--bg white"
+    title-class="warning--bg white"
     @close="hideDialog"
   >
     <template #title>
@@ -60,7 +60,7 @@
         lg
         @click="discardDraft"
         class="mr5 white"
-        bg-color="warning-dark1"
+        bg-color="warning"
       >
         Discard
       </w-button>

@@ -1,5 +1,5 @@
 <template>
-  <header class="teal-dark3--bg">
+  <header class="teal-dark2--bg">
     <h1><RouterLink to="/">Journal</RouterLink></h1>
 
     <!-- Menu icon for md (900px) and below -->
@@ -29,7 +29,7 @@
         nav
         item-class="nav-item w-flex justify-center pa8"
         @item-click="handleItemClick"
-        class="grow teal-dark3"
+        class="grow teal-dark2"
       >
         <template #item="{ item }">
           <span>{{ item.label }}</span>
@@ -43,7 +43,7 @@
         nav
         item-class="nav-item w-flex justify-center pa8"
         @item-click="handleItemClick"
-        class="grow teal-dark3"
+        class="grow teal-dark2"
       >
         <template #item="{ item }">
           <span>{{ item.label }}</span>

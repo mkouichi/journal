@@ -1,7 +1,7 @@
 <template>
   <w-card v-if="targetEntry && !isEditing" class="pa5">
     <w-flex class="mt3 mb10">
-      <w-button lg @click="goBack" class="teal-dark3--bg">Go Back</w-button>
+      <w-button lg @click="goBack" class="teal-dark2--bg">Go Back</w-button>
       <div class="spacer"></div>
       <w-button lg @click="showDialog" class="error--bg mr5">Delete</w-button>
       <w-button
@@ -19,29 +19,25 @@
     </w-toolbar>
     <p id="body" class="lh5">{{ targetEntry.body }}</p>
   </w-card>
-  
+
+  <!-- Delete draft dialog -->
   <w-dialog
     v-if="dialogIsVisible"
     width="50vw"
-    title-class="error-dark1--bg white"
+    title-class="error--bg white"
     @close="hideDialog"
   >
     <template #title>
-      <w-icon class="mr2 title2">mdi mdi-tune</w-icon>
+      <w-icon class="mr2 title2">mdi mdi-delete</w-icon>
       <span class="title2">Delete</span>
     </template>
     <p>Are you sure you want to delete this entry?</p>
     <template #actions>
       <div class="spacer"></div>
-      <w-button
-        lg
-        @click="deleteEntry"
-        class="mr5 white"
-        bg-color="error-dark1"
-      >
+      <w-button lg @click="deleteEntry" class="mr5 white" bg-color="error">
         Delete
       </w-button>
-      <w-button lg @click="hideDialog" class="white" bg-color="success-dark1">
+      <w-button lg @click="hideDialog" class="white" bg-color="success">
         Back to entry
       </w-button>
     </template>
