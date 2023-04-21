@@ -1,31 +1,4 @@
 <template>
-  <!-- TODO: Validation -->
-  <!-- <BaseModal v-if="inputIsInvalid" :open="inputIsInvalid" @close="confirmError">
-    <template #header>
-      <h2>Invalid input</h2>
-    </template>
-    <template #default>
-      <p>
-        At least one input is invalid. Make sure you have a title and body for
-        your journal.
-      </p>
-    </template>
-    <template #actions>
-      <BaseButton @click="confirmError">Okay</BaseButton>
-    </template>
-  </BaseModal>
-  <BaseModal v-else-if="error" :open="error" @close="confirmError">
-    <template #header>
-      <h2>Error</h2>
-    </template>
-    <template #default>
-      <p>{{ error }}</p>
-    </template>
-    <template #actions>
-      <BaseButton @click="confirmError">Okay</BaseButton>
-    </template>
-  </BaseModal> -->
-
   <w-card class="pa5">
     <w-form @submit.prevent="handleSubmit" ref="form">
       <w-input
@@ -67,7 +40,7 @@
       </div>
 
       <div class="text-right mt6">
-        <w-button lg bg-color="warning" @click="showDialog" class="mr5"
+        <w-button lg bg-color="warning" @click="cancelEdit" class="mr5"
           >Cancel</w-button
         >
         <w-button lg type="submit" :disabled="inputIsInvalid">Save</w-button>
@@ -75,51 +48,34 @@
     </w-form>
   </w-card>
 
-  <!-- <BaseCard>
-    <form @submit.prevent="submitEntryData" ref="form">
-      <div class="form-control">
-        <label for="date">Date</label>
-        <input
-          type="date"
-          id="date"
-          name="date"
-          ref="dateInput"
-          :value="setInitialDate"
-          @keydown.enter.prevent
-        />
-      </div>
-      <div class="form-control">
-        <label for="title">Title</label>
-        <input type="text" id="title" name="title" ref="titleInput" />
-      </div>
-      <div class="form-control">
-        <label for="body">Body</label>
-        <textarea name="body" id="body" rows="10" ref="bodyInput"></textarea>
-      </div>
-      <div class="flex">
-        <BaseButton type="button" @click="showDialog" mode="outline"
-          >CANCEL</BaseButton
-        >
-        <BaseButton type="submit">SAVE</BaseButton>
-      </div>
-      <BaseModal
-        v-if="dialogIsVisible"
-        :open="dialogIsVisible"
-        @close="hideDialog"
+  <!-- Discard edit dialog -->
+  <w-dialog
+    v-model="dialog.show"
+    :width="dialog.width"
+    title-class="warning--bg white"
+  >
+    <template #title>
+      <w-icon class="mr2 title2">mdi mdi-tune</w-icon>
+      <span class="title2">Cancel</span>
+    </template>
+    <p>Are you sure? Your draft will be lost.</p>
+
+    <div class="spacer"></div>
+
+    <template #actions>
+      <div class="spacer"></div>
+      <w-button lg @click="discardDraft" class="mr5 white" bg-color="warning">
+        Discard
+      </w-button>
+      <w-button
+        lg
+        @click="dialog.show = false"
+        class="white"
+        bg-color="success-dark1"
+        >Back to entry</w-button
       >
-        <template #header>
-          <h2>Cancel</h2>
-        </template>
-        <template #default>
-          <p>Are you sure? Your draft will be lost.</p>
-        </template>
-        <template #actions>
-          <BaseButton @click="discardDraft" mode="outline">Discard</BaseButton>
-          <BaseButton @click="hideDialog">Back to edit</BaseButton>
-        </template>
-      </BaseModal>
-    </form>
-  </BaseCard> -->
+    </template>
+  </w-dialog>
 </template>
 
 <script>
@@ -147,18 +103,28 @@ export default {
         title: "",
         body: "",
       },
+
+      dialog: {
+        show: false,
+        width: "50vw",
+      },
     };
   },
-  // TODO: Only show this when there are unsaved changes
-  // TODO: Show a better deagram
-  // Set the selected date to null before leaving the current route
-  beforeRouteLeave() {
-    this.setSelectedDate(null);
+  beforeRouteLeave(to, from, next) {
+    // Check if there are unsaved changes
+    if (this.enteredTitle !== "" || this.enteredBody !== "") {
+      // Show dialog
+      this.dialog.show = true;
 
-    // const answer = window.confirm(
-    //   "Do you really want to leave? you have unsaved changes!"
-    // );
-    // if (!answer) return false;
+      // Prevent leaving the page
+      next(false);
+    } else {
+      // Set the selected date to null
+      this.setSelectedDate(null);
+
+      // Allow leaving the page
+      next();
+    }
   },
   mounted() {
     this.setInitialDate();
@@ -166,7 +132,6 @@ export default {
   computed: {
     ...mapGetters({
       getView: "getView",
-      error: "dialog/getErrorState",
       dialogIsVisible: "dialog/getDialogVisibility",
       getSelectedDate: "journal/getSelectedDate",
     }),
@@ -204,9 +169,6 @@ export default {
         // Return to stop the function execution
         return;
       }
-
-      // Set error to null
-      // this.setError(null);
 
       // Send data to Firebase
       this.sendData();
@@ -249,17 +211,22 @@ export default {
       this.$router.push("/journal/" + this.getView);
     },
 
-    // TODO: Only show this when there are unsaved changes
-    discardDraft() {
-      this.$refs.form.reset();
-      this.hideDialog();
-      // Redirect to current view
-      this.$router.push("/journal/" + this.getView);
+    cancelEdit() {
+      // Check if there are unsaved changes
+      if (this.enteredTitle !== "" || this.enteredBody !== "") {
+        // Show dialog
+        this.dialog.show = true;
+      } else {
+        // Redirect to current view
+        this.$router.push("/journal/" + this.getView);
+      }
     },
 
-    confirmError() {
-      this.inputIsInvalid = false;
-      this.setError(null);
+    discardDraft() {
+      this.$refs.form.reset();
+
+      // Redirect to current view
+      this.$router.push("/journal/" + this.getView);
     },
   },
 };
