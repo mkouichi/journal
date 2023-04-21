@@ -55,7 +55,7 @@ main {
 }
 .w-button.size--lg {
   height: 3rem;
-  padding: 1rem;
+  padding: 1.5rem;
 }
 
 @media (max-width: 835px) {
