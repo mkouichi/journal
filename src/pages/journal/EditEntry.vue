@@ -84,39 +84,10 @@ import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "@/firebase";
 
 export default {
-  // beforeRouteLeave(to, from, next) {
-  //   // Set the editing state to false before leaving the current route
-  //   this.setEditingToFalse();
-
-  //   next();
-  // },
-
-  // beforeRouteLeave(to, from, next) {
-  //   // Check if there are unsaved changes
-  //   if (this.hasUnsavedChanges) {
-  //     // Show dialog
-  //     const confirmed = window.confirm("Discard changes?");
-  //     if (confirmed) {
-  //       // Set the editing state to false before leaving the current route
-  //       this.setEditingToFalse();
-
-  //       // Allow leaving the page
-  //       next();
-  //     } else {
-  //       // Disable navigation
-  //       next(false);
-  //     }
-  //   } else {
-  //     // Allow leaving the page
-  //     next();
-  //   }
-  // },
-
   beforeRouteLeave(to, from, next) {
     // Check if there are unsaved changes
     if (this.hasUnsavedChanges) {
       this.destination = to.path;
-      console.log(this.destination);
 
       // Show dialog
       this.dialog.show = true;
@@ -260,10 +231,6 @@ export default {
 
       // Send data to Firebase
       await updateDoc(this.docRef, this.modifiedData);
-
-      // Reset states
-      // this.hideDialog();
-      // this.setEditingToFalse();
 
       // Redirect to current view
       this.$router.push("/journal/" + this.getView);
