@@ -1,5 +1,5 @@
 <template>
-  <w-card class="pa5">
+  <w-card class="white--bg" content-class="px8 py10">
     <w-form @submit.prevent="handleSubmit" ref="form">
       <w-input
         id="date"
@@ -20,7 +20,6 @@
         ref="titleInput"
         v-model="enteredTitle"
         @input="validateForm(), (isTitleValid = null)"
-        @keydown.enter.prevent
       >
       </w-input>
       <div v-if="isTitleValid !== null && !isTitleValid" class="error">
@@ -32,8 +31,8 @@
         label="Body"
         ref="bodyInput"
         v-model="enteredBody"
-        @input="validateForm(), (isBodyValid = null)"
         rows="10"
+        @input="validateForm(), (isBodyValid = null)"
       ></w-textarea>
       <div v-if="isBodyValid !== null && !isBodyValid" class="error">
         Enter body.
@@ -43,7 +42,7 @@
         <w-button lg bg-color="warning" @click="cancelEdit" class="mr5"
           >Cancel</w-button
         >
-        <w-button lg type="submit" :disabled="inputIsInvalid">Save</w-button>
+        <w-button lg type="submit" :disabled="formIsInvalid">Save</w-button>
       </div>
     </w-form>
   </w-card>
@@ -87,7 +86,7 @@ import { db } from "@/firebase";
 export default {
   data() {
     return {
-      inputIsInvalid: true,
+      formIsInvalid: true,
       isDateValid: null,
       isTitleValid: null,
       isBodyValid: null,
@@ -132,13 +131,13 @@ export default {
   computed: {
     ...mapGetters({
       getView: "getView",
-      dialogIsVisible: "dialog/getDialogVisibility",
       getSelectedDate: "journal/getSelectedDate",
     }),
   },
   methods: {
-    ...mapActions("dialog", ["showDialog", "hideDialog", "setError"]),
-    ...mapActions("journal", ["setSelectedDate"]),
+    ...mapActions({
+      setSelectedDate: "journal/setSelectedDate",
+    }),
 
     // Set the initial date to be displayed
     setInitialDate() {
@@ -160,7 +159,7 @@ export default {
       this.setData();
 
       // If there are any empty fields, display error message and stop the process
-      if (this.inputIsInvalid) {
+      if (this.formIsInvalid) {
         // Set the corresponding validation flags to false
         if (this.enteredDate === "") this.isDateValid = false;
         if (this.enteredTitle === "") this.isTitleValid = false;
@@ -191,11 +190,11 @@ export default {
         this.enteredTitle !== "" &&
         this.enteredBody !== "";
 
-      // When all the fields have values, set inputIsInvalid to false
+      // When all the fields have values, set formIsInvalid to false
       if (!isValid) {
-        this.inputIsInvalid = true;
+        this.formIsInvalid = true;
       } else {
-        this.inputIsInvalid = false;
+        this.formIsInvalid = false;
       }
     },
 
