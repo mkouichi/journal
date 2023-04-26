@@ -1,72 +1,78 @@
 <template>
-  <w-card class="white--bg" content-class="pa0">
-    <w-form
-      error-placeholders
-      v-model="form.valid"
-      @keydown.enter.prevent
-      @submit="submitModifiedData"
-      ref="form"
-      class="px8 py10"
-    >
+  <w-card class="white--bg" content-class="px8 py10">
+    <w-form @submit="handleSubmit" ref="form">
       <w-input
-        required
-        label="Title"
+        id="date"
+        label="Date"
+        type="date"
+        ref="dateInput"
+        v-model="entryDate"
+        @input="validateForm(), (isDateValid = null)"
+        @keydown.enter.prevent
+      ></w-input>
+      <div v-if="isDateValid !== null && !isDateValid" class="error">
+        Enter valid date.
+      </div>
+      <w-input
         id="title"
         class="mt5 title3 lh2"
-        :validators="[validators.required]"
+        label="Title"
         ref="titleInput"
-        v-model.trim="entryTitle"
+        v-model="entryTitle"
+        @input="validateForm(), (isTitleValid = null)"
       >
       </w-input>
+      <div v-if="isTitleValid !== null && !isTitleValid" class="error">
+        Enter title.
+      </div>
       <w-textarea
-        required
-        label="Body"
         id="body"
         class="mt5 title3 lh2"
-        :validators="[validators.required]"
+        label="Body"
         ref="bodyInput"
-        v-model.trim="entryBody"
+        v-model="entryBody"
+        @input="validateForm(), (isBodyValid = null)"
       >
       </w-textarea>
-      <w-flex wrap align-center justify-end class="mt4">
-        <div class="spacer"></div>
-        <w-button lg bg-color="warning" type="reset" class="my3 mr5">
-          Reset
-        </w-button>
-        <w-button lg @click="showDialog" bg-color="warning" class="my3 mr5">
-          Cancel
-        </w-button>
-        <w-button lg type="submit" :disabled="form.valid !== true" class="my3">
-          Save
-        </w-button>
-      </w-flex>
+      <div v-if="isBodyValid !== null && !isBodyValid" class="error">
+        Enter body.
+      </div>
+
+      <div class="text-right mt6">
+        <w-button lg bg-color="warning" @click="cancelEdit" class="mr5"
+          >Cancel</w-button
+        >
+        <w-button lg type="submit" :disabled="formIsInvalid">Save</w-button>
+      </div>
     </w-form>
   </w-card>
 
+  <!-- Cancel edit dialog -->
   <w-dialog
-    v-if="dialogIsVisible"
-    width="50vw"
+    v-model="dialog.show"
+    :width="dialog.width"
     title-class="warning--bg white"
-    @close="hideDialog"
   >
     <template #title>
-      <w-icon class="mr2 title2">mdi mdi-tune</w-icon>
-      <span class="title2">Discard</span>
+      <w-icon class="mr2 title2">mdi mdi-cancel</w-icon>
+      <span class="title2">Cancel</span>
     </template>
-    <p>Are you sure you want to discard the draft?</p>
+    <p>Are you sure? Your draft will be lost.</p>
+
+    <div class="spacer"></div>
+
     <template #actions>
       <div class="spacer"></div>
-      <w-button
-        lg
-        @click="discardDraft"
-        class="mr5 white"
-        bg-color="warning"
-      >
+      <w-button lg @click="discardDraft" class="mr5 white" bg-color="warning">
         Discard
       </w-button>
-      <w-button lg @click="hideDialog" class="white" bg-color="success-dark1">
-        Back to entry
-      </w-button>
+      <w-button
+        lg
+        @click="dialog.show = false"
+        class="white"
+        bg-color="success-dark1"
+        >Back to entry</w-button
+      >
     </template>
   </w-dialog>
 </template>
@@ -74,93 +80,236 @@
 <script>
 import { mapGetters, mapActions } from "vuex";
 import moment from "moment";
-import { doc, updateDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "@/firebase";
 
 export default {
-  // Set the editing state to false before leaving the current route
-  beforeRouteLeave() {
-    this.setEditingToFalse();
+  // beforeRouteLeave(to, from, next) {
+  //   // Set the editing state to false before leaving the current route
+  //   this.setEditingToFalse();
+
+  //   next();
+  // },
+
+  // beforeRouteLeave(to, from, next) {
+  //   // Check if there are unsaved changes
+  //   if (this.hasUnsavedChanges) {
+  //     // Show dialog
+  //     const confirmed = window.confirm("Discard changes?");
+  //     if (confirmed) {
+  //       // Set the editing state to false before leaving the current route
+  //       this.setEditingToFalse();
+
+  //       // Allow leaving the page
+  //       next();
+  //     } else {
+  //       // Disable navigation
+  //       next(false);
+  //     }
+  //   } else {
+  //     // Allow leaving the page
+  //     next();
+  //   }
+  // },
+
+  beforeRouteLeave(to, from, next) {
+    // Check if there are unsaved changes
+    if (this.hasUnsavedChanges) {
+      this.destination = to.path;
+      console.log(this.destination);
+
+      // Show dialog
+      this.dialog.show = true;
+
+      // Set the editing state to false before leaving the current route
+      this.setEditingToFalse();
+
+      next(false);
+    } else {
+      // Set the editing state to false before leaving the current route
+      this.setEditingToFalse();
+
+      // Allow leaving the page
+      next();
+    }
   },
   props: ["id"],
   data() {
     return {
+      docRef: null,
+      originalEntry: null,
+      formIsInvalid: false,
+      isDateValid: null,
+      isTitleValid: null,
+      isBodyValid: null,
+
+      entryDate: "",
       entryTitle: "",
       entryBody: "",
-      form: {
-        valid: null,
-        sent: false,
+
+      modifiedData: {},
+
+      dialog: {
+        show: false,
+        width: "50vw",
       },
-      validators: {
-        // Define validation rules for required fields
-        required: (value) => !!value || "This field is required",
-      },
+
+      hasUnsavedChanges: false,
+      destination: null,
     };
   },
   mounted() {
-    this.setEntryValue;
+    // Set the initial entry value when the component is mounted
+    this.setEntryValue();
   },
   computed: {
-    ...mapGetters(["getView"]),
-    ...mapGetters({ dialogIsVisible: "dialog/getDialogVisibility" }),
-    ...mapGetters("journal", ["getTargetEntry"]),
-
-    // Set the initial entry value when the component is mounted
-    setEntryValue() {
-      const entry = this.getTargetEntry;
-
-      // Set the original contents for editing
-      this.entryTitle = entry.title;
-      this.entryBody = entry.body;
-    },
+    ...mapGetters({
+      getView: "getView",
+      dialogIsVisible: "dialog/getDialogVisibility",
+    }),
   },
   methods: {
     ...mapActions("dialog", ["showDialog", "hideDialog", "setEditing"]),
+
     setEditingToFalse() {
       this.setEditing(false);
     },
-    // TODO: Only show this when there are unsaved changes
-    discardDraft() {
-      // Hide the dialog and redirect to the current view
-      this.hideDialog();
-      this.setEditingToFalse();
-      this.$router.push("/journal/" + this.id);
+
+    async getDataFromFirebase() {
+      // Get a reference to the document
+      this.docRef = doc(db, "journal", this.id);
+
+      // Get a snapshot of the document
+      const docSnap = await getDoc(this.docRef);
+
+      // Check if the document exists
+      if (docSnap.exists()) {
+        // Return the document data
+        return docSnap.data();
+      } else {
+        // docSnap.data() will be undefined in this case
+        console.log("No such document!");
+
+        // Return null if the document doesn't exist
+        return null;
+      }
     },
-    async submitModifiedData() {
-      // Get the entered values
-      const enteredTitle = this.$refs.titleInput.inputValue;
-      const enteredBody = this.$refs.bodyInput.inputValue;
 
-      // Create modified data object
-      const modifiedData = {
-        lastUpdated: moment().format("ddd, MMM D, YYYY, kk:mm"),
-        id: this.id,
-        title: enteredTitle,
-        body: enteredBody,
-      };
+    async setEntryValue() {
+      // Get the data for the current entry from Firebase
+      this.originalEntry = await this.getDataFromFirebase();
 
-      // If there's an empty field, stop the process and show error
-      if (enteredTitle === "" || enteredBody === "") {
-        this.inputIsInvalid = true;
+      // If the data could not be obtained, exit the function
+      if (!this.originalEntry) {
+        console.warn("Entry is null.");
         return;
       }
 
-      // Grab the original record from database
-      const originalRef = doc(db, "journal", this.id);
+      // Set the original contents for editing
+      this.entryDate = this.originalEntry.start;
+      this.entryTitle = this.originalEntry.title;
+      this.entryBody = this.originalEntry.body;
+    },
+
+    cancelEdit() {
+      // Check if there are unsaved changes
+      if (this.hasUnsavedChanges) {
+        // Set destination to entry
+        this.destination = "entry";
+
+        // Show dialog
+        this.dialog.show = true;
+      } else {
+        // Redirect to the current entry
+        this.$router.push("/journal/" + this.id);
+      }
+    },
+
+    discardDraft() {
+      // Reset the form
+      this.$refs.form.reset();
+
+      // Set the editing state to false
+      this.hasUnsavedChanges = false;
+
+      // Close the dialog
+      this.dialog.show = false;
+
+      // Navigate to the desired route
+      if (this.destination === "entry") {
+        this.$router.push("/journal/" + this.id);
+      } else {
+        this.$router.push(this.destination);
+      }
+    },
+
+    async handleSubmit() {
+      // Set input values
+      this.setData();
+
+      // If there are any empty fields, display error message and stop the process
+      if (this.formIsInvalid) {
+        // Set the corresponding validation flags to false
+        if (this.entryDate === "") this.isDateValid = false;
+        if (this.entryTitle === "") this.isTitleValid = false;
+        if (this.entryBody === "") this.isBodyValid = false;
+
+        // Return to stop the function execution
+        return;
+      }
 
       // Send data to Firebase
-      await updateDoc(originalRef, modifiedData);
+      await updateDoc(this.docRef, this.modifiedData);
 
       // Reset states
-      this.hideDialog();
-      this.setEditingToFalse();
+      // this.hideDialog();
+      // this.setEditingToFalse();
 
       // Redirect to current view
       this.$router.push("/journal/" + this.getView);
+    },
+
+    // Set data to send
+    setData() {
+      this.modifiedData.start = this.entryDate;
+      this.modifiedData.end = this.entryDate;
+      this.modifiedData.lastUpdated = moment().format(
+        "ddd, MMM D, YYYY, kk:mm"
+      );
+      this.modifiedData.title = this.entryTitle;
+      this.modifiedData.body = this.entryBody;
+    },
+
+    // Validation
+    validateForm() {
+      // Check if all the fields have values
+      const isValid =
+        this.entryDate !== "" &&
+        this.entryTitle !== "" &&
+        this.entryBody !== "";
+
+      // When all the fields have values, set formIsInvalid to false
+      if (!isValid) {
+        this.formIsInvalid = true;
+      } else {
+        this.formIsInvalid = false;
+      }
+
+      // Check if there are unsaved changes
+      if (
+        this.entryTitle !== this.originalEntry.title ||
+        this.entryBody !== this.originalEntry.body
+      ) {
+        this.hasUnsavedChanges = true;
+      }
     },
   },
 };
 </script>
 
 <style scoped>
+.w-input,
+.w-textarea {
+  font-size: 20px;
+}
 </style>
