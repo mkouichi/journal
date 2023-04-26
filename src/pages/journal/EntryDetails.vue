@@ -73,20 +73,26 @@ export default {
   },
   props: ["id"],
   computed: {
-    ...mapGetters(["getView"]),
     ...mapGetters({
+      getView: "getView",
       dialogIsVisible: "dialog/getDialogVisibility",
       isEditing: "dialog/getEditingState",
+      getEntryById: "journal/getEntryById",
+      targetEntry: "journal/getTargetEntry",
     }),
-    ...mapGetters("journal", ["getEntryById"]),
-    ...mapGetters({ targetEntry: "journal/getTargetEntry" }),
+
     editLink() {
       return this.$route.path + "/edit";
     },
   },
   methods: {
-    ...mapActions("dialog", ["showDialog", "hideDialog", "setEditing"]),
-    ...mapActions("journal", ["setTargetEntry"]),
+    ...mapActions({
+      showDialog: "dialog/showDialog",
+      hideDialog: "dialog/hideDialog",
+      setEditing: "dialog/setEditing",
+      setTargetEntry: "journal/setTargetEntry",
+    }),
+
     setEditingToTrue() {
       this.setEditing(true);
     },
