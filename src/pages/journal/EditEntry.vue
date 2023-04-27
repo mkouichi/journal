@@ -208,6 +208,9 @@ export default {
     },
 
     async handleSubmit() {
+      // Set the editing state to false
+      this.hasUnsavedChanges = false;
+
       // Set input values
       this.setData();
 
