@@ -92,13 +92,10 @@ export default {
       // Show dialog
       this.dialog.show = true;
 
-      // Set the editing state to false before leaving the current route
-      this.setEditingToFalse();
-
       next(false);
     } else {
       // Set the editing state to false before leaving the current route
-      this.setEditingToFalse();
+      this.setEditing(false);
 
       // Allow leaving the page
       next();
@@ -141,10 +138,6 @@ export default {
   },
   methods: {
     ...mapActions("dialog", ["showDialog", "hideDialog", "setEditing"]),
-
-    setEditingToFalse() {
-      this.setEditing(false);
-    },
 
     async getDataFromFirebase() {
       // Get a reference to the document
