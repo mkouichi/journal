@@ -137,5 +137,6 @@ textarea:focus {
 
 #body {
   font-size: 1.3rem;
+  white-space: pre-line;
 }
 </style>
