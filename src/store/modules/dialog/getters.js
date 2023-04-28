@@ -5,9 +5,6 @@ export default {
   getErrorState(state) {
     return state.error;
   },
-  getEditingState(state) {
-    return state.isEditing;
-  },
   getDialogVisibility(state) {
     return state.dialogIsVisible;
   },

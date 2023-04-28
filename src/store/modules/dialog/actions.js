@@ -5,9 +5,6 @@ export default {
   setError(context, payload) {
     context.commit("setError", payload);
   },
-  setEditing(context, payload) {
-    context.commit("setEditing", payload);
-  },
   showDialog(context) {
     context.commit("showDialog");
   },

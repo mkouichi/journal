@@ -75,9 +75,6 @@ export default {
 
       next(false);
     } else {
-      // Set the editing state to false before leaving the current route
-      this.setEditing(false);
-
       // Allow leaving the page
       next();
     }
@@ -121,7 +118,6 @@ export default {
     ...mapActions({
       showDialog: "dialog/showDialog",
       hideDialog: "dialog/hideDialog",
-      setEditing: "dialog/setEditing",
       setHasUnsavedChanges: "journal/setHasUnsavedChanges",
     }),
 

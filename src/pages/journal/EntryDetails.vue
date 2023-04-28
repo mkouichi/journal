@@ -1,17 +1,10 @@
 <template>
-  <w-card v-if="targetEntry && !isEditing" class="pa5">
+  <w-card v-if="targetEntry" class="pa5">
     <w-flex class="mt3 mb10">
       <w-button lg @click="goBack" class="teal-dark2--bg">Go Back</w-button>
       <div class="spacer"></div>
       <w-button lg @click="showDialog" class="error--bg mr5">Delete</w-button>
-      <w-button
-        lg
-        @click="setEditingToTrue"
-        class="warning--bg"
-        :route="editLink"
-      >
-        Edit
-      </w-button>
+      <w-button lg class="warning--bg" :route="editLink"> Edit </w-button>
     </w-flex>
     <w-toolbar align-center class="toolbar mb7">
       <h1>{{ targetEntry.title }}</h1>
@@ -76,7 +69,6 @@ export default {
     ...mapGetters({
       getView: "getView",
       dialogIsVisible: "dialog/getDialogVisibility",
-      isEditing: "dialog/getEditingState",
       getEntryById: "journal/getEntryById",
       targetEntry: "journal/getTargetEntry",
     }),
@@ -89,13 +81,8 @@ export default {
     ...mapActions({
       showDialog: "dialog/showDialog",
       hideDialog: "dialog/hideDialog",
-      setEditing: "dialog/setEditing",
       setTargetEntry: "journal/setTargetEntry",
     }),
-
-    setEditingToTrue() {
-      this.setEditing(true);
-    },
     goBack() {
       // Redirect to current view
       this.$router.push("/journal/" + this.getView);

@@ -5,9 +5,6 @@ export default {
   setError(state, payload) {
     state.error = payload;
   },
-  setEditing(state, payload) {
-    state.isEditing = payload;
-  },
   showDialog(state) {
     state.dialogIsVisible = true;
   },

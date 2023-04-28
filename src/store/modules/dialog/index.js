@@ -8,7 +8,6 @@ export default {
     return {
       loading: false,
       error: null,
-      isEditing: false,
       dialogIsVisible: false,
     };
   },
