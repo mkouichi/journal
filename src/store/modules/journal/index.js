@@ -9,6 +9,7 @@ export default {
       entries: [],
       targetEntry: {},
       selectedDate: null,
+      hasUnsavedChanges: false,
     };
   },
   mutations,

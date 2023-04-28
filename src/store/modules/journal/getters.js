@@ -23,4 +23,7 @@ export default {
   getSelectedDate(state) {
     return state.selectedDate;
   },
+  checkUnsavedChanges(state) {
+    return state.hasUnsavedChanges;
+  },
 };

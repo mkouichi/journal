@@ -8,4 +8,7 @@ export default {
   setSelectedDate(context, payload) {
     context.commit("setSelectedDate", payload);
   },
+  setHasUnsavedChanges(context, payload) {
+    context.commit("setHasUnsavedChanges", payload);
+  },
 };

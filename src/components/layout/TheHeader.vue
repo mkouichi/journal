@@ -35,7 +35,7 @@
           <span>{{ item.label }}</span>
         </template>
       </w-list>
-      
+
       <!-- User is not logged in -->
       <w-list
         v-if="!loggedIn"
@@ -77,6 +77,35 @@
   <div v-if="error">
     {{ error.errorMessage }}
   </div>
+
+  <!-- Cancel edit dialog -->
+  <w-dialog
+    v-model="dialog.show"
+    :width="dialog.width"
+    title-class="warning--bg white"
+  >
+    <template #title>
+      <w-icon class="mr2 title2">mdi mdi-cancel</w-icon>
+      <span class="title2">Cancel</span>
+    </template>
+    <p>Are you sure? Your draft will be lost.</p>
+
+    <div class="spacer"></div>
+
+    <template #actions>
+      <div class="spacer"></div>
+      <w-button lg @click="discardDraft" class="mr5 white" bg-color="warning">
+        Discard
+      </w-button>
+      <w-button
+        lg
+        @click="dialog.show = false"
+        class="white"
+        bg-color="success-dark1"
+        >Back to entry</w-button
+      >
+    </template>
+  </w-dialog>
 </template>
 
 <script>
@@ -88,6 +117,10 @@ import "@mdi/font/css/materialdesignicons.min.css";
 export default {
   data() {
     return {
+      dialog: {
+        show: false,
+        width: "50vw",
+      },
       error: null,
       openDrawer: false,
       loggedInItems: [
@@ -127,18 +160,26 @@ export default {
     };
   },
   computed: {
-    ...mapGetters({ loggedIn: "getAuthState" }),
+    ...mapGetters({
+      loggedIn: "getAuthState",
+      hasUnsavedChanges: "journal/checkUnsavedChanges",
+    }),
 
     position() {
       return this.openDrawer || "left";
     },
   },
   methods: {
-    ...mapActions(["setView"]),
+    ...mapActions({
+      setView: "setView",
+      setHasUnsavedChanges: "journal/setHasUnsavedChanges",
+    }),
+
     toggleNav() {
       console.log(this.navOpen);
       this.navOpen = !this.navOpen;
     },
+
     handleItemClick(item) {
       // Sign out when logout button is clicked
       if (item.id === "log-out") this.signOut();
@@ -146,13 +187,33 @@ export default {
       // Close the drawer
       this.openDrawer = false;
     },
+
+    discardDraft() {
+      // Set the state of unsaved changes to false
+      this.setHasUnsavedChanges(false);
+
+      // Close the confirmation dialog
+      this.dialog.show = false;
+
+      // Call the signOut method to log out the user
+      this.signOut();
+    },
+
     signOut() {
+      // If there are unsaved changes, show the confirmation dialog
+      if (this.hasUnsavedChanges) {
+        this.dialog.show = true;
+        return;
+      }
+
+      // If there are no unsaved changes, call the signOut method
       signOut(auth)
         .then(() => {
           // Redirect to the login page
           this.$router.push("/login");
         })
         .catch((error) => {
+          // Set the error message in the form
           this.form.error = {
             errorCode: error.code,
             errorMessage: error.message,

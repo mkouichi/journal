@@ -122,7 +122,6 @@ export default {
         width: "50vw",
       },
 
-      hasUnsavedChanges: false,
       destination: null,
     };
   },
@@ -134,10 +133,16 @@ export default {
     ...mapGetters({
       getView: "getView",
       dialogIsVisible: "dialog/getDialogVisibility",
+      hasUnsavedChanges: "journal/checkUnsavedChanges",
     }),
   },
   methods: {
-    ...mapActions("dialog", ["showDialog", "hideDialog", "setEditing"]),
+    ...mapActions({
+      showDialog: "dialog/showDialog",
+      hideDialog: "dialog/hideDialog",
+      setEditing: "dialog/setEditing",
+      setHasUnsavedChanges: "journal/setHasUnsavedChanges",
+    }),
 
     async getDataFromFirebase() {
       // Get a reference to the document
@@ -194,7 +199,7 @@ export default {
       this.$refs.form.reset();
 
       // Set the editing state to false
-      this.hasUnsavedChanges = false;
+      this.setHasUnsavedChanges(false);
 
       // Close the dialog
       this.dialog.show = false;
@@ -209,7 +214,7 @@ export default {
 
     async handleSubmit() {
       // Set the editing state to false
-      this.hasUnsavedChanges = false;
+      this.setHasUnsavedChanges(false);
 
       // Set input values
       this.setData();
@@ -263,7 +268,7 @@ export default {
         this.entryTitle !== this.originalEntry.title ||
         this.entryBody !== this.originalEntry.body
       ) {
-        this.hasUnsavedChanges = true;
+        this.setHasUnsavedChanges(true);
       }
     },
   },

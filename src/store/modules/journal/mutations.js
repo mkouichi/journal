@@ -17,4 +17,7 @@ export default {
   setSelectedDate(state, payload) {
     state.selectedDate = payload;
   },
+  setHasUnsavedChanges(state, payload) {
+    state.hasUnsavedChanges = payload;
+  },
 };
