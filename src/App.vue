@@ -31,9 +31,6 @@ export default {
       }
     });
   },
-  computed: {
-    ...mapGetters({ loggedIn: "getAuthState" }),
-  },
   methods: {
     ...mapActions(["login", "logout", "setUserId"]),
   },

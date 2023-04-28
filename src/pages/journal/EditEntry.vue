@@ -221,7 +221,6 @@ export default {
     // Set data to send
     setData() {
       this.modifiedData.start = this.entryDate;
-      this.modifiedData.end = this.entryDate;
       this.modifiedData.lastUpdated = moment().format(
         "ddd, MMM D, YYYY, kk:mm"
       );
