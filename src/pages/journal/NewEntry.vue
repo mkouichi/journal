@@ -61,7 +61,7 @@ import moment from "moment";
 import { collection, addDoc } from "firebase/firestore";
 import { db } from "@/firebase";
 
-import ConfirmationDialog from '../../components/journal/ConfirmationDialog.vue';
+import ConfirmationDialog from "../../components/journal/ConfirmationDialog.vue";
 
 export default {
   components: { ConfirmationDialog },
@@ -77,6 +77,7 @@ export default {
       enteredBody: "",
 
       entryData: {
+        userId: "",
         start: "",
         end: "",
         lastUpdated: "",
@@ -111,6 +112,7 @@ export default {
   },
   computed: {
     ...mapGetters({
+      userId: "getUserId",
       getView: "getView",
       getSelectedDate: "journal/getSelectedDate",
       hasUnsavedChanges: "journal/checkUnsavedChanges",
@@ -158,6 +160,7 @@ export default {
 
     // Set data to send
     setData() {
+      this.entryData.userId = this.userId;
       this.entryData.start = this.enteredDate;
       this.entryData.end = this.enteredDate;
       this.entryData.lastUpdated = moment().format("ddd, MMM D, YYYY, kk:mm");
