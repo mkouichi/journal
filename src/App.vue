@@ -21,6 +21,9 @@ export default {
         // User is signed in
         // Set login state to true
         this.login();
+
+        // Set userId
+        this.setUserId(user.uid);
       } else {
         // User is signed out
         // Set login state to false
@@ -32,7 +35,7 @@ export default {
     ...mapGetters({ loggedIn: "getAuthState" }),
   },
   methods: {
-    ...mapActions(["login", "logout"]),
+    ...mapActions(["login", "logout", "setUserId"]),
   },
 };
 </script>
