@@ -48,33 +48,11 @@
   </w-card>
 
   <!-- Cancel edit dialog -->
-  <w-dialog
+  <ConfirmationDialog
     v-model="dialog.show"
-    :width="dialog.width"
-    title-class="warning--bg white"
-  >
-    <template #title>
-      <w-icon class="mr2 title2">mdi mdi-cancel</w-icon>
-      <span class="title2">Cancel</span>
-    </template>
-    <p>Are you sure? Your draft will be lost.</p>
-
-    <div class="spacer"></div>
-
-    <template #actions>
-      <div class="spacer"></div>
-      <w-button lg @click="discardDraft" class="mr5 white" bg-color="warning">
-        Discard
-      </w-button>
-      <w-button
-        lg
-        @click="dialog.show = false"
-        class="white"
-        bg-color="success-dark1"
-        >Back to entry</w-button
-      >
-    </template>
-  </w-dialog>
+    @discardDraft="discardDraft"
+    @closeDialog="dialog.show = false"
+  />
 </template>
 
 <script>
@@ -83,7 +61,10 @@ import moment from "moment";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "@/firebase";
 
+import ConfirmationDialog from "../../components/journal/ConfirmationDialog.vue";
+
 export default {
+  components: { ConfirmationDialog },
   beforeRouteLeave(to, from, next) {
     // Check if there are unsaved changes
     if (this.hasUnsavedChanges) {
