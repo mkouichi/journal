@@ -48,33 +48,11 @@
   </w-card>
 
   <!-- Discard edit dialog -->
-  <w-dialog
+  <ConfirmationDialog
     v-model="dialog.show"
-    :width="dialog.width"
-    title-class="warning--bg white"
-  >
-    <template #title>
-      <w-icon class="mr2 title2">mdi mdi-cancel</w-icon>
-      <span class="title2">Cancel</span>
-    </template>
-    <p>Are you sure? Your draft will be lost.</p>
-
-    <div class="spacer"></div>
-
-    <template #actions>
-      <div class="spacer"></div>
-      <w-button lg @click="discardDraft" class="mr5 white" bg-color="warning">
-        Discard
-      </w-button>
-      <w-button
-        lg
-        @click="dialog.show = false"
-        class="white"
-        bg-color="success-dark1"
-        >Back to entry</w-button
-      >
-    </template>
-  </w-dialog>
+    @discardDraft="discardDraft"
+    @closeDialog="dialog.show = false"
+  />
 </template>
 
 <script>
@@ -83,7 +61,10 @@ import moment from "moment";
 import { collection, addDoc } from "firebase/firestore";
 import { db } from "@/firebase";
 
+import ConfirmationDialog from '../../components/journal/ConfirmationDialog.vue';
+
 export default {
+  components: { ConfirmationDialog },
   data() {
     return {
       formIsInvalid: true,
@@ -111,7 +92,7 @@ export default {
   },
   beforeRouteLeave(to, from, next) {
     // Check if there are unsaved changes
-    if (this.enteredTitle !== "" || this.enteredBody !== "") {
+    if (this.hasUnsavedChanges) {
       // Show dialog
       this.dialog.show = true;
 
@@ -132,11 +113,13 @@ export default {
     ...mapGetters({
       getView: "getView",
       getSelectedDate: "journal/getSelectedDate",
+      hasUnsavedChanges: "journal/checkUnsavedChanges",
     }),
   },
   methods: {
     ...mapActions({
       setSelectedDate: "journal/setSelectedDate",
+      setHasUnsavedChanges: "journal/setHasUnsavedChanges",
     }),
 
     // Set the initial date to be displayed
@@ -184,18 +167,21 @@ export default {
 
     // Validation
     validateForm() {
-      // Check if all the fields have values
-      const isValid =
-        this.enteredDate !== "" &&
-        this.enteredTitle !== "" &&
-        this.enteredBody !== "";
+      // Check if there are unsaved changes
+      const hasUnsavedChanges =
+        this.enteredDate.length > 0 ||
+        this.enteredTitle.length > 0 ||
+        this.enteredBody.length > 0;
+
+      // If there are, set the flag to true
+      this.setHasUnsavedChanges(hasUnsavedChanges);
 
       // When all the fields have values, set formIsInvalid to false
-      if (!isValid) {
-        this.formIsInvalid = true;
-      } else {
-        this.formIsInvalid = false;
-      }
+      this.formIsInvalid = !(
+        this.enteredDate &&
+        this.enteredTitle &&
+        this.enteredBody
+      );
     },
 
     // Send data to Firebase
