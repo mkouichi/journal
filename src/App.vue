@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapActions } from "vuex";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/firebase";
 import TheHeader from "./components/layout/TheHeader.vue";
