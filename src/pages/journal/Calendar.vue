@@ -34,7 +34,7 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-import { getDataFromDB } from "@/helper-functions";
+import { loadJournalEntries } from "@/helper-functions";
 import VueCal from "vue-cal";
 import "vue-cal/dist/vuecal.css";
 import axios from "axios";
@@ -48,7 +48,7 @@ export default {
     };
   },
   mounted() {
-    getDataFromDB();
+    loadJournalEntries();
   },
   async created() {
     try {

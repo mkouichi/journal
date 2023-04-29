@@ -63,12 +63,12 @@
 import { mapActions, mapGetters } from "vuex";
 import "vue-cal/dist/vuecal.css";
 
-import { getDataFromDB } from "@/helper-functions";
+import { loadJournalEntries } from "@/helper-functions";
 
 export default {
   async created() {
     // Fetch data from database and store it in Vuex
-    await getDataFromDB();
+    await loadJournalEntries();
 
     // Show initial data
     // Get data from Vuex and store it in data property
