@@ -110,14 +110,11 @@ export default {
   computed: {
     ...mapGetters({
       getView: "getView",
-      dialogIsVisible: "dialog/getDialogVisibility",
       hasUnsavedChanges: "journal/checkUnsavedChanges",
     }),
   },
   methods: {
     ...mapActions({
-      showDialog: "dialog/showDialog",
-      hideDialog: "dialog/hideDialog",
       setHasUnsavedChanges: "journal/setHasUnsavedChanges",
     }),
 

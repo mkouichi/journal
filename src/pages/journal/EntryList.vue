@@ -93,7 +93,6 @@ export default {
     ...mapGetters({
       loading: "dialog/getLoadingState",
       error: "dialog/getErrorState",
-      dialogIsVisible: "dialog/getDialogVisibility",
       truncateEntryBody: "journal/truncateEntryBody",
     }),
   },

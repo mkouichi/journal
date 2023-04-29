@@ -5,10 +5,4 @@ export default {
   setError(context, payload) {
     context.commit("setError", payload);
   },
-  showDialog(context) {
-    context.commit("showDialog");
-  },
-  hideDialog(context) {
-    context.commit("hideDialog");
-  },
 };

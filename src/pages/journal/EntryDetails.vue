@@ -3,7 +3,9 @@
     <w-flex class="mt3 mb10">
       <w-button lg @click="goBack" class="teal-dark2--bg">Go Back</w-button>
       <div class="spacer"></div>
-      <w-button lg @click="showDialog" class="error--bg mr5">Delete</w-button>
+      <w-button lg @click="dialog.show = true" class="error--bg mr5"
+        >Delete</w-button
+      >
       <w-button lg class="warning--bg" :route="editLink"> Edit </w-button>
     </w-flex>
     <w-toolbar align-center class="toolbar mb7">
@@ -15,10 +17,10 @@
 
   <!-- Delete draft dialog -->
   <w-dialog
-    v-if="dialogIsVisible"
-    width="50vw"
+    v-model="dialog.show"
+    :width="dialog.width"
     title-class="error--bg white"
-    @close="hideDialog"
+    @close="dialog.show = false"
   >
     <template #title>
       <w-icon class="mr2 title2">mdi mdi-delete</w-icon>
@@ -30,7 +32,12 @@
       <w-button lg @click="deleteEntry" class="mr5 white" bg-color="error">
         Delete
       </w-button>
-      <w-button lg @click="hideDialog" class="white" bg-color="success">
+      <w-button
+        lg
+        @click="dialog.show = false"
+        class="white"
+        bg-color="success"
+      >
         Back to entry
       </w-button>
     </template>
@@ -65,10 +72,15 @@ export default {
     this.setTargetEntry(entry);
   },
   props: ["id"],
+  data: () => ({
+    dialog: {
+      show: false,
+      width: "50vw",
+    },
+  }),
   computed: {
     ...mapGetters({
       getView: "getView",
-      dialogIsVisible: "dialog/getDialogVisibility",
       getEntryById: "journal/getEntryById",
       targetEntry: "journal/getTargetEntry",
     }),
@@ -79,8 +91,6 @@ export default {
   },
   methods: {
     ...mapActions({
-      showDialog: "dialog/showDialog",
-      hideDialog: "dialog/hideDialog",
       setTargetEntry: "journal/setTargetEntry",
     }),
     goBack() {
@@ -89,7 +99,7 @@ export default {
     },
     async deleteEntry() {
       await deleteDoc(doc(db, "journal", this.id));
-      this.hideDialog();
+      this.dialog.show = false;
       this.$router.push("/journal/" + this.getView);
     },
   },

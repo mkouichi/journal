@@ -5,7 +5,4 @@ export default {
   getErrorState(state) {
     return state.error;
   },
-  getDialogVisibility(state) {
-    return state.dialogIsVisible;
-  },
 };
