@@ -81,6 +81,7 @@ export default {
     ],
     selection: "newest",
     entries: [],
+    error: null,
   }),
   watch: {
     // Watch for changes to the selection property
@@ -92,14 +93,12 @@ export default {
   computed: {
     ...mapGetters({
       loading: "dialog/getLoadingState",
-      error: "dialog/getErrorState",
       truncateEntryBody: "journal/truncateEntryBody",
     }),
   },
   methods: {
-    ...mapActions("dialog", ["setError"]),
     confirmError() {
-      this.setError(null);
+      this.error = null;
     },
     async initEntries() {
       // Get data from Vuex and trim the body to the first 100 characters, then store it in data property

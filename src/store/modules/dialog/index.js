@@ -7,7 +7,6 @@ export default {
   state() {
     return {
       loading: false,
-      error: null,
     };
   },
   mutations,
