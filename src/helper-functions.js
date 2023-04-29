@@ -34,7 +34,7 @@ const fetchJournalEntries = async () => {
 const loadJournalEntries = async () => {
   try {
     // Set loading state to true
-    store.dispatch("dialog/setLoading", true);
+    store.dispatch("setLoading", true);
 
     // Retrieve data from the Firestore database
     const entries = await fetchJournalEntries();
@@ -46,7 +46,7 @@ const loadJournalEntries = async () => {
     throw new Error("Failed to get data from database");
   } finally {
     // Set loading state to false
-    store.dispatch("dialog/setLoading", false);
+    store.dispatch("setLoading", false);
   }
 };
 

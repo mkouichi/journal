@@ -1,11 +1,9 @@
 import { createStore } from "vuex";
 
-import DialogModule from "./modules/dialog/index.js";
 import JournalModule from "./modules/journal/index.js";
 
 const store = createStore({
   modules: {
-    dialog: DialogModule,
     journal: JournalModule,
   },
   state() {
@@ -13,6 +11,7 @@ const store = createStore({
       userId: "",
       isLoggedIn: false,
       view: "calendar",
+      loading: false,
     };
   },
   mutations: {
@@ -24,6 +23,9 @@ const store = createStore({
     },
     setView(state, payload) {
       state.view = payload;
+    },
+    setLoading(state, payload) {
+      state.loading = payload;
     },
   },
   actions: {
@@ -39,6 +41,9 @@ const store = createStore({
     setView(context, payload) {
       context.commit("setView", payload);
     },
+    setLoading(context, payload) {
+      context.commit("setLoading", payload);
+    },
   },
   getters: {
     getUserId(state) {
@@ -49,6 +54,9 @@ const store = createStore({
     },
     getView(state) {
       return state.view;
+    },
+    getLoadingState(state) {
+      return state.loading;
     },
   },
 });

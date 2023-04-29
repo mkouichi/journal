@@ -92,7 +92,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      loading: "dialog/getLoadingState",
+      loading: "getLoadingState",
       truncateEntryBody: "journal/truncateEntryBody",
     }),
   },
