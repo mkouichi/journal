@@ -57,6 +57,9 @@ main {
   height: 3rem;
   padding: 1.5rem;
 }
+.w-notification-manager {
+  width: 350px;
+}
 
 @media (max-width: 835px) {
   main {

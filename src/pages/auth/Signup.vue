@@ -41,13 +41,10 @@
       >
       </w-input>
       <w-flex wrap align-center justify-end class="mt4">
-        <w-button lg text class="my1 mr2" route="/login">Log in instead</w-button>
-        <w-button
-          lg
-          type="submit"
-          :disabled="!form.valid"
-          class="my1"
+        <w-button lg text class="my1 mr2" route="/login"
+          >Log in instead</w-button
         >
+        <w-button lg type="submit" :disabled="!form.valid" class="my1">
           Sign up
         </w-button>
       </w-flex>
@@ -119,6 +116,7 @@ export default {
     resetError() {
       this.form.error = null;
     },
+    
     createUser() {
       const enteredEmail = this.$refs.emailInput.inputValue;
       const enteredPassword = this.$refs.passwordInput.inputValue;
@@ -132,6 +130,9 @@ export default {
 
           // Redirect to calendar view
           this.$router.push("/journal/calendar");
+
+          // Show notification
+          this.notifySignUp();
         })
         .catch((error) => {
           this.form.error = {
@@ -139,6 +140,20 @@ export default {
             errorMessage: error.message,
           };
         });
+    },
+
+    // Notification
+    notifySignUp() {
+      this.$waveui.notify({
+        lg: true,
+        message: "Account created successfully!",
+        timeout: 3000,
+        success: true,
+        plain: true,
+        shadow: true,
+        dismiss: true,
+        transition: "bounce",
+      });
     },
   },
 };

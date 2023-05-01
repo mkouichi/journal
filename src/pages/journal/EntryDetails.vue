@@ -101,6 +101,20 @@ export default {
       await deleteDoc(doc(db, "journal", this.id));
       this.dialog.show = false;
       this.$router.push("/journal/" + this.getView);
+      this.notifyPostDeleted();
+    },
+    // Notification
+    notifyPostDeleted() {
+      this.$waveui.notify({
+        lg: true,
+        message: "Post deleted successfully!",
+        timeout: 3000,
+        success: true,
+        plain: true,
+        shadow: true,
+        dismiss: true,
+        transition: "bounce",
+      });
     },
   },
 };

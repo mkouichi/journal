@@ -197,6 +197,9 @@ export default {
 
       // Redirect to current view
       this.$router.push("/journal/" + this.getView);
+
+      // Show notification
+      this.notifyNewPostSaved();
     },
 
     cancelEdit() {
@@ -215,6 +218,20 @@ export default {
 
       // Redirect to current view
       this.$router.push("/journal/" + this.getView);
+    },
+
+    // Notification
+    notifyNewPostSaved() {
+      this.$waveui.notify({
+        lg: true,
+        message: "Post saved successfully!",
+        timeout: 3000,
+        success: true,
+        plain: true,
+        shadow: true,
+        dismiss: true,
+        transition: "bounce",
+      });
     },
   },
 };

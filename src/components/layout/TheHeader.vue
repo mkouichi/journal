@@ -157,7 +157,6 @@ export default {
     }),
 
     toggleNav() {
-      console.log(this.navOpen);
       this.navOpen = !this.navOpen;
     },
 
@@ -192,14 +191,32 @@ export default {
         .then(() => {
           // Redirect to the login page
           this.$router.push("/login");
+
+          // Show notification
+          this.notifyLogOut();
         })
         .catch((error) => {
+          console.log(error);
           // Set the error message in the form
-          this.form.error = {
+          this.error = {
             errorCode: error.code,
             errorMessage: error.message,
           };
         });
+    },
+
+    // Notification
+    notifyLogOut() {
+      this.$waveui.notify({
+        lg: true,
+        message: "See you soon!",
+        timeout: 3000,
+        success: true,
+        plain: true,
+        shadow: true,
+        dismiss: true,
+        transition: "bounce",
+      });
     },
   },
 };

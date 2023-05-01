@@ -116,6 +116,7 @@ export default {
     resetError() {
       this.form.error = null;
     },
+
     signIn() {
       const enteredEmail = this.$refs.emailInput.inputValue;
       const enteredPassword = this.$refs.passwordInput.inputValue;
@@ -129,6 +130,9 @@ export default {
 
           // Redirect to calendar view
           this.$router.push("/journal/calendar");
+
+          // Show notification
+          this.notifyLogIn();
         })
         .catch((error) => {
           this.form.error = {
@@ -136,6 +140,20 @@ export default {
             errorMessage: error.message,
           };
         });
+    },
+
+    // Notification
+    notifyLogIn() {
+      this.$waveui.notify({
+        lg: true,
+        message: "Welcome back!",
+        timeout: 3000,
+        success: true,
+        plain: true,
+        shadow: true,
+        dismiss: true,
+        transition: "bounce",
+      });
     },
   },
 };

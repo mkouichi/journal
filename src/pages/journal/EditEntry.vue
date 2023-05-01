@@ -209,6 +209,9 @@ export default {
 
       // Redirect to current view
       this.$router.push("/journal/" + this.getView);
+
+      // Show notification
+      this.notifyEditsSaved();
     },
 
     // Set data to send
@@ -243,6 +246,20 @@ export default {
       ) {
         this.setHasUnsavedChanges(true);
       }
+    },
+
+    // Notification
+    notifyEditsSaved() {
+      this.$waveui.notify({
+        lg: true,
+        message: "Your edits have been saved!",
+        timeout: 3000,
+        success: true,
+        plain: true,
+        shadow: true,
+        dismiss: true,
+        transition: "bounce",
+      });
     },
   },
 };
