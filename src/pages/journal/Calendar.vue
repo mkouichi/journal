@@ -34,10 +34,10 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-import { loadJournalEntries } from "@/helper-functions";
 import VueCal from "vue-cal";
 import "vue-cal/dist/vuecal.css";
 import axios from "axios";
+import { loadJournalEntries } from "@/helper-functions";
 
 export default {
   components: { VueCal },
@@ -47,8 +47,9 @@ export default {
       randomIndex: null,
     };
   },
-  mounted() {
-    loadJournalEntries();
+  async mounted() {
+    // Load entries for the user when the component is mounted
+    await loadJournalEntries(this.userId);
   },
   async created() {
     try {
@@ -69,22 +70,24 @@ export default {
       console.log(error);
     }
   },
-
   computed: {
-    ...mapGetters({ entries: "journal/getEntries" }),
+    ...mapGetters({ entries: "journal/getEntries", userId: "getUserId" }),
   },
   methods: {
     ...mapActions("journal", ["setSelectedDate"]),
+
     onEventClick(event, e) {
       this.$router.push("/journal/" + event.id);
 
       // Prevent navigating to narrower view (default vue-cal behavior).
       e.stopPropagation();
     },
+
     // Create a new journal entry with the currently selected date
     createNewEntry(event) {
       // Set the selected date to the datepicker's selected date
       this.setSelectedDate(event.format());
+
       // Redirect to the new journal entry form
       this.$router.push("/journal/new");
     },

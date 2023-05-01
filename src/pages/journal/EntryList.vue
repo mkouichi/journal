@@ -67,8 +67,8 @@ import { loadJournalEntries } from "@/helper-functions";
 
 export default {
   async created() {
-    // Fetch data from database and store it in Vuex
-    await loadJournalEntries();
+    // Load entries for the user when the component is mounted
+    await loadJournalEntries(this.userId);
 
     // Show initial data
     // Get data from Vuex and store it in data property
@@ -94,6 +94,7 @@ export default {
     ...mapGetters({
       loading: "getLoadingState",
       truncateEntryBody: "journal/truncateEntryBody",
+      userId: "getUserId",
     }),
   },
   methods: {

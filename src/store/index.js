@@ -8,7 +8,7 @@ const store = createStore({
   },
   state() {
     return {
-      userId: "",
+      userId: null,
       isLoggedIn: false,
       view: "calendar",
       loading: false,
