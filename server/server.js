@@ -39,7 +39,6 @@ app.get("/historical-events", async (req, res) => {
   const month = date.getMonth() + 1;
   const day = date.getDate();
   const url = `https://api.api-ninjas.com/v1/historicalevents?month=${month}&day=${day}`;
-  console.log(url);
 
   const options = {
     headers: { "X-Api-Key": apiKey },
