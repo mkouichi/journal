@@ -54,7 +54,7 @@ export default {
   async created() {
     try {
       const { data } = await axios.get(
-        "http://localhost:3000/historical-events"
+        "https://journal-u9ss.onrender.com/historical-events"
       );
       // Store the fetched data in the events array
       this.events = data.data.map((event) => ({
