@@ -18,7 +18,7 @@ const firebaseConfig = {
   appId: process.env.FIREBASE_APP_ID,
 };
 
-// Import the api key from environment variable
+// Import the api key for historical events from environment variable
 const apiKey = process.env.API_KEY;
 
 app.use(express.json());
