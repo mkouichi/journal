@@ -29,15 +29,9 @@
   </w-dialog>
 </template>
 
-<script>
-export default {
-  emits: ["discardDraft", "closeDialog"],
-  data() {
-    return {
-      width: "50vw",
-    };
-  },
-};
+<script setup>
+const width = "50vw";
+const emits = defineEmits(["discardDraft", "closeDialog"]);
 </script>
 
 <style scoped>
