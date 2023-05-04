@@ -69,7 +69,9 @@
         </li>
         <li v-if="!loggedIn"><RouterLink to="/signup">Sign Up</RouterLink></li>
         <li v-if="!loggedIn"><RouterLink to="/login">Log In</RouterLink></li>
-        <li v-if="loggedIn" @click="signOut" class="header-item">Log Out</li>
+        <li v-if="loggedIn" @click="signOutUser" class="header-item">
+          Log Out
+        </li>
       </ul>
     </nav>
   </header>
@@ -86,139 +88,136 @@
   />
 </template>
 
-<script>
-import { mapGetters, mapActions } from "vuex";
+<script setup>
+import { ref, reactive, computed, inject } from "vue";
+import { useRouter } from "vue-router";
+import { useStore } from "vuex";
 import { signOut } from "firebase/auth";
 import { auth } from "@/firebase";
 import "@mdi/font/css/materialdesignicons.min.css";
 
 import ConfirmationDialog from "../journal/ConfirmationDialog.vue";
 
-export default {
-  components: { ConfirmationDialog },
-  data() {
-    return {
-      dialog: {
-        show: false,
-        width: "50vw",
-      },
-      error: null,
-      openDrawer: false,
-      loggedInItems: [
-        {
-          label: "Calendar View",
-          id: "calendar",
-          route: "/journal/calendar",
-        },
-        {
-          label: "List View",
-          id: "entry-list",
-          route: "/journal/list",
-        },
-        {
-          label: "New Entry",
-          id: "new-entry",
-          route: "/journal/new",
-        },
-        {
-          label: "Log out",
-          id: "log-out",
-          route: "/logout",
-        },
-      ],
-      loggedOutItems: [
-        {
-          label: "Sign up",
-          id: "sign-up",
-          route: "/signup",
-        },
-        {
-          label: "Log in",
-          id: "log-in",
-          route: "/login",
-        },
-      ],
-    };
+const store = useStore();
+
+const error = ref(null);
+
+const dialog = reactive({
+  show: false,
+  width: "50vw",
+});
+
+const loggedIn = computed(() => store.getters.getAuthState);
+const loggedInItems = [
+  {
+    label: "Calendar View",
+    id: "calendar",
+    route: "/journal/calendar",
   },
-  computed: {
-    ...mapGetters({
-      loggedIn: "getAuthState",
-      hasUnsavedChanges: "journal/checkUnsavedChanges",
-    }),
-
-    position() {
-      return this.openDrawer || "left";
-    },
+  {
+    label: "List View",
+    id: "entry-list",
+    route: "/journal/list",
   },
-  methods: {
-    ...mapActions({
-      setView: "setView",
-      setHasUnsavedChanges: "journal/setHasUnsavedChanges",
-    }),
-
-    toggleNav() {
-      this.navOpen = !this.navOpen;
-    },
-
-    handleItemClick(item) {
-      // Sign out when logout button is clicked
-      if (item.id === "log-out") this.signOut();
-
-      // Close the drawer
-      this.openDrawer = false;
-    },
-
-    discardDraft() {
-      // Set the state of unsaved changes to false
-      this.setHasUnsavedChanges(false);
-
-      // Close the confirmation dialog
-      this.dialog.show = false;
-
-      // Call the signOut method to log out the user
-      this.signOut();
-    },
-
-    signOut() {
-      // If there are unsaved changes, show the confirmation dialog
-      if (this.hasUnsavedChanges) {
-        this.dialog.show = true;
-        return;
-      }
-
-      // If there are no unsaved changes, call the signOut method
-      signOut(auth)
-        .then(() => {
-          // Redirect to the login page
-          this.$router.push("/login");
-
-          // Show notification
-          this.notifyLogOut();
-        })
-        .catch((error) => {
-          console.log(error);
-          // Set the error message in the form
-          this.error = {
-            errorCode: error.code,
-            errorMessage: error.message,
-          };
-        });
-    },
-
-    // Notification
-    notifyLogOut() {
-      this.$waveui.notify({
-        lg: true,
-        message: "See you soon!",
-        timeout: 3000,
-        success: true,
-        plain: true,
-        shadow: true,
-        dismiss: true,
-        transition: "bounce",
-      });
-    },
+  {
+    label: "New Entry",
+    id: "new-entry",
+    route: "/journal/new",
   },
+  {
+    label: "Log out",
+    id: "log-out",
+    route: "/logout",
+  },
+];
+const loggedOutItems = [
+  {
+    label: "Sign up",
+    id: "sign-up",
+    route: "/signup",
+  },
+  {
+    label: "Log in",
+    id: "log-in",
+    route: "/login",
+  },
+];
+
+const openDrawer = ref(false);
+
+const position = computed(() => {
+  return openDrawer.value || "left";
+});
+
+const setView = (payload) => store.dispatch("setView", payload);
+
+const handleItemClick = (item) => {
+  // Sign out when logout button is clicked
+  if (item.id === "log-out") signOut();
+
+  // Close the drawer
+  openDrawer.value = false;
+};
+
+const discardDraft = () => {
+  const setHasUnsavedChanges = (payload) =>
+    store.dispatch("journal/setHasUnsavedChanges", payload);
+
+  // Set the state of unsaved changes to false
+  setHasUnsavedChanges(false);
+
+  // Close the confirmation dialog
+  dialog.show = false;
+
+  // Call the signOutUser method to log out the user
+  signOutUser();
+};
+
+const router = useRouter();
+const signOutUser = () => {
+  const hasUnsavedChanges = computed(
+    () => store.getters["journal/checkUnsavedChanges"]
+  );
+
+  // If there are unsaved changes, show the confirmation dialog
+  if (hasUnsavedChanges.value) {
+    dialog.show = true;
+    return;
+  }
+
+  // If there are no unsaved changes, call the signOut method
+  signOut(auth)
+    .then(() => {
+      // Redirect to the login page
+      router.push("/login");
+
+      // Show notification
+      notifyLogOut();
+    })
+    .catch((error) => {
+      console.log(error);
+      // Set the error message in the form
+      error.value = {
+        errorCode: error.code,
+        errorMessage: error.message,
+      };
+    });
+};
+
+const $waveui = inject("$waveui");
+
+// Notification
+const notifyLogOut = () => {
+  $waveui.notify({
+    lg: true,
+    message: "See you soon!",
+    timeout: 3000,
+    success: true,
+    plain: true,
+    shadow: true,
+    dismiss: true,
+    transition: "bounce",
+  });
 };
 </script>
 

@@ -55,185 +55,195 @@
   />
 </template>
 
-<script>
-import { mapGetters, mapActions } from "vuex";
-import moment from "moment";
+<script setup>
+import { ref, reactive, inject, computed, onMounted } from "vue";
+import { useRouter, onBeforeRouteLeave } from "vue-router";
+import { useStore } from "vuex";
 import { collection, addDoc } from "firebase/firestore";
 import { db } from "@/firebase";
+import moment from "moment";
 
 import ConfirmationDialog from "../../components/journal/ConfirmationDialog.vue";
 
-export default {
-  components: { ConfirmationDialog },
-  data() {
-    return {
-      formIsInvalid: true,
-      isDateValid: null,
-      isTitleValid: null,
-      isBodyValid: null,
+const store = useStore();
 
-      enteredDate: "",
-      enteredTitle: "",
-      enteredBody: "",
+const dialog = reactive({
+  show: false,
+  width: "50vw",
+});
 
-      entryData: {
-        userId: "",
-        start: "",
-        end: "",
-        lastUpdated: "",
-        title: "",
-        body: "",
-      },
+const enteredDate = ref("");
+const enteredTitle = ref("");
+const enteredBody = ref("");
 
-      dialog: {
-        show: false,
-        width: "50vw",
-      },
-    };
-  },
-  beforeRouteLeave(to, from, next) {
-    // Check if there are unsaved changes
-    if (this.hasUnsavedChanges) {
-      // Show dialog
-      this.dialog.show = true;
+// Set the initial date to be displayed
+const setInitialDate = () => {
+  const getSelectedDate = computed(
+    () => store.getters["journal/getSelectedDate"]
+  );
 
-      // Prevent leaving the page
-      next(false);
-    } else {
-      // Set the selected date to null
-      this.setSelectedDate(null);
+  // Check if user chose a date in the calendar
+  const selectedDate = getSelectedDate;
 
-      // Allow leaving the page
-      next();
-    }
-  },
-  mounted() {
-    this.setInitialDate();
-  },
-  computed: {
-    ...mapGetters({
-      userId: "getUserId",
-      getView: "getView",
-      getSelectedDate: "journal/getSelectedDate",
-      hasUnsavedChanges: "journal/checkUnsavedChanges",
-    }),
-  },
-  methods: {
-    ...mapActions({
-      setSelectedDate: "journal/setSelectedDate",
-      setHasUnsavedChanges: "journal/setHasUnsavedChanges",
-    }),
+  // If there is already a selected date, use it as the initial date
+  if (selectedDate.value) {
+    enteredDate.value = selectedDate;
+  }
+  // If not, use the current date as the initial date
+  else {
+    const today = moment().format("YYYY-MM-DD");
+    enteredDate.value = today;
+  }
+};
 
-    // Set the initial date to be displayed
-    setInitialDate() {
-      // Check if user chose a date in the calendar
-      const selectedDate = this.getSelectedDate;
+onMounted(() => setInitialDate());
 
-      // If there is already a selected date, use it as the initial date
-      if (selectedDate) this.enteredDate = selectedDate;
-      // If not, use the current date as the initial date
-      else {
-        const today = moment().format("YYYY-MM-DD");
-        this.enteredDate = today;
-      }
-    },
+const hasUnsavedChanges = computed(
+  () => store.getters["journal/checkUnsavedChanges"]
+);
+const setSelectedDate = (payload) =>
+  store.dispatch("journal/setSelectedDate", payload);
 
-    // Function on form submission
-    handleSubmit() {
-      // Set input values
-      this.setData();
+onBeforeRouteLeave((to, from, next) => {
+  // Check if there are unsaved changes
+  if (hasUnsavedChanges.value) {
+    // Show dialog
+    dialog.show = true;
 
-      // If there are any empty fields, display error message and stop the process
-      if (this.formIsInvalid) {
-        // Set the corresponding validation flags to false
-        if (this.enteredDate === "") this.isDateValid = false;
-        if (this.enteredTitle === "") this.isTitleValid = false;
-        if (this.enteredBody === "") this.isBodyValid = false;
+    // Prevent leaving the page
+    next(false);
+  } else {
+    // Set the selected date to null
+    setSelectedDate(null);
 
-        // Return to stop the function execution
-        return;
-      }
+    // Allow leaving the page
+    next();
+  }
+});
 
-      // Send data to Firebase
-      this.sendData();
-    },
+const formIsInvalid = ref(true);
+const isDateValid = ref(null);
+const isTitleValid = ref(null);
+const isBodyValid = ref(null);
+const entryData = reactive({
+  userId: "",
+  start: "",
+  end: "",
+  lastUpdated: "",
+  title: "",
+  body: "",
+});
 
-    // Set data to send
-    setData() {
-      this.entryData.userId = this.userId;
-      this.entryData.start = this.enteredDate;
-      this.entryData.end = this.enteredDate;
-      this.entryData.lastUpdated = moment().format("ddd, MMM D, YYYY, kk:mm");
-      this.entryData.title = this.enteredTitle;
-      this.entryData.body = this.enteredBody;
-    },
+// Function on form submission
+const handleSubmit = () => {
+  // Set input values
+  setData();
 
-    // Validation
-    validateForm() {
-      // Check if there are unsaved changes
-      const hasUnsavedChanges =
-        this.enteredDate.length > 0 ||
-        this.enteredTitle.length > 0 ||
-        this.enteredBody.length > 0;
+  // If there are any empty fields, display error message and stop the process
+  if (formIsInvalid.value) {
+    // Set the corresponding validation flags to false
+    if (enteredDate.value === "") isDateValid.value = false;
+    if (enteredTitle.value === "") isTitleValid.value = false;
+    if (enteredBody.value === "") isBodyValid.value = false;
 
-      // If there are, set the flag to true
-      this.setHasUnsavedChanges(hasUnsavedChanges);
+    // Return to stop the function execution
+    return;
+  }
 
-      // When all the fields have values, set formIsInvalid to false
-      this.formIsInvalid = !(
-        this.enteredDate &&
-        this.enteredTitle &&
-        this.enteredBody
-      );
-    },
+  // Send data to Firebase
+  sendData();
+};
 
-    // Send data to Firebase
-    sendData() {
-      // Add a new document with a generated id
-      addDoc(collection(db, "journal"), this.entryData);
+// Set data to send
+const setData = () => {
+  const getUserId = computed(() => store.getters.getUserId);
 
-      // Reset the input fields
-      this.$refs.form.reset();
+  entryData.userId = getUserId.value;
+  entryData.start = enteredDate.value;
+  entryData.end = enteredDate.value;
+  entryData.lastUpdated = moment().format("ddd, MMM D, YYYY, kk:mm");
+  entryData.title = enteredTitle.value;
+  entryData.body = enteredBody.value;
+};
 
-      // Redirect to current view
-      this.$router.push("/journal/" + this.getView);
+// Validation
+const validateForm = () => {
+  const setHasUnsavedChanges = (payload) =>
+    store.dispatch("journal/setHasUnsavedChanges", payload);
 
-      // Show notification
-      this.notifyNewPostSaved();
-    },
+  // Check if there are unsaved changes
+  const unsavedChangesDetected =
+    enteredDate.value.length > 0 ||
+    enteredTitle.value.length > 0 ||
+    enteredBody.value.length > 0;
 
-    cancelEdit() {
-      // Check if there are unsaved changes
-      if (this.enteredTitle !== "" || this.enteredBody !== "") {
-        // Show dialog
-        this.dialog.show = true;
-      } else {
-        // Redirect to current view
-        this.$router.push("/journal/" + this.getView);
-      }
-    },
+  // If there are, set the flag to true
+  setHasUnsavedChanges(unsavedChangesDetected);
 
-    discardDraft() {
-      this.$refs.form.reset();
+  // When all the fields have values, set formIsInvalid to false
+  formIsInvalid.value = !(
+    enteredDate.value &&
+    enteredTitle.value &&
+    enteredBody.value
+  );
+};
 
-      // Redirect to current view
-      this.$router.push("/journal/" + this.getView);
-    },
+const router = useRouter();
+const titleInput = ref("");
+const bodyInput = ref("");
 
-    // Notification
-    notifyNewPostSaved() {
-      this.$waveui.notify({
-        lg: true,
-        message: "Post saved successfully!",
-        timeout: 3000,
-        success: true,
-        plain: true,
-        shadow: true,
-        dismiss: true,
-        transition: "bounce",
-      });
-    },
-  },
+// Send data to Firebase
+const sendData = () => {
+  const getView = computed(() => store.getters.getView.value);
+
+  // Add a new document with a generated id
+  addDoc(collection(db, "journal"), entryData);
+
+  // Reset the input fields
+  titleInput.value = "";
+  bodyInput.value = "";
+
+  // Redirect to current view
+  router.push("/journal/" + getView.value);
+
+  // Show notification
+  notifyNewPostSaved();
+};
+
+const cancelEdit = () => {
+  // Check if there are unsaved changes
+  if (enteredTitle.value !== "" || enteredBody.value !== "") {
+    // Show dialog
+    dialog.show = true;
+  } else {
+    // Redirect to current view
+    router.push("/journal/" + getView.value);
+  }
+};
+
+const discardDraft = () => {
+  // Reset the input fields
+  titleInput.value = "";
+  bodyInput.value = "";
+
+  // Redirect to current view
+  router.push("/journal/" + getView.value);
+};
+
+const $waveui = inject("$waveui");
+
+// Notification
+const notifyNewPostSaved = () => {
+  $waveui.notify({
+    lg: true,
+    message: "Post saved successfully!",
+    timeout: 3000,
+    success: true,
+    plain: true,
+    shadow: true,
+    dismiss: true,
+    transition: "bounce",
+  });
 };
 </script>
 
