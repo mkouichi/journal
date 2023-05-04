@@ -1,11 +1,10 @@
 <template>
   <w-card class="white--bg" content-class="px8 py10">
-    <w-form @submit="handleSubmit" ref="form">
+    <w-form @submit="handleSubmit">
       <w-input
         id="date"
         label="Date"
         type="date"
-        ref="dateInput"
         v-model="entryDate"
         @input="validateForm(), (isDateValid = null)"
         @keydown.enter.prevent
@@ -17,7 +16,6 @@
         id="title"
         class="mt5 title3 lh2"
         label="Title"
-        ref="titleInput"
         v-model="entryTitle"
         @input="validateForm(), (isTitleValid = null)"
       >
@@ -29,7 +27,6 @@
         id="body"
         class="mt5 title3 lh2"
         label="Body"
-        ref="bodyInput"
         v-model="entryBody"
         @input="validateForm(), (isBodyValid = null)"
       >
@@ -55,213 +52,209 @@
   />
 </template>
 
-<script>
-import { mapGetters, mapActions } from "vuex";
+<script setup>
+import { ref, reactive, inject, computed, onMounted } from "vue";
+import { useRouter, onBeforeRouteLeave } from "vue-router";
+import { useStore } from "vuex";
 import moment from "moment";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { db } from "@/firebase";
 
 import ConfirmationDialog from "../../components/journal/ConfirmationDialog.vue";
 
-export default {
-  components: { ConfirmationDialog },
-  beforeRouteLeave(to, from, next) {
-    // Check if there are unsaved changes
-    if (this.hasUnsavedChanges) {
-      this.destination = to.path;
+const store = useStore();
 
-      // Show dialog
-      this.dialog.show = true;
+const dialog = reactive({
+  show: false,
+  width: "50vw",
+});
 
-      next(false);
-    } else {
-      // Allow leaving the page
-      next();
-    }
-  },
-  props: ["id"],
-  data() {
-    return {
-      docRef: null,
-      originalEntry: null,
-      formIsInvalid: false,
-      isDateValid: null,
-      isTitleValid: null,
-      isBodyValid: null,
+const docRef = ref(null);
+const originalEntry = ref(null);
 
-      entryDate: "",
-      entryTitle: "",
-      entryBody: "",
+const entryDate = ref("");
+const entryTitle = ref("");
+const entryBody = ref("");
 
-      modifiedData: {},
+// Set the initial entry value when the component is mounted
+onMounted(() => setEntryValue());
 
-      dialog: {
-        show: false,
-        width: "50vw",
-      },
+const setEntryValue = async () => {
+  // Get the data for the current entry from Firebase
+  originalEntry.value = await getDataFromFirebase();
 
-      destination: null,
-    };
-  },
-  mounted() {
-    // Set the initial entry value when the component is mounted
-    this.setEntryValue();
-  },
-  computed: {
-    ...mapGetters({
-      getView: "getView",
-      hasUnsavedChanges: "journal/checkUnsavedChanges",
-    }),
-  },
-  methods: {
-    ...mapActions({
-      setHasUnsavedChanges: "journal/setHasUnsavedChanges",
-    }),
+  // If the data could not be obtained, exit the function
+  if (!originalEntry.value) {
+    console.warn("Entry is null.");
+    return;
+  }
 
-    async getDataFromFirebase() {
-      // Get a reference to the document
-      this.docRef = doc(db, "journal", this.id);
+  // Set the original contents for editing
+  entryDate.value = originalEntry.value.start;
+  entryTitle.value = originalEntry.value.title;
+  entryBody.value = originalEntry.value.body;
+};
 
-      // Get a snapshot of the document
-      const docSnap = await getDoc(this.docRef);
+// This id prop is passed from the route parameter
+const props = defineProps({ id: String });
 
-      // Check if the document exists
-      if (docSnap.exists()) {
-        // Return the document data
-        return docSnap.data();
-      } else {
-        // docSnap.data() will be undefined in this case
-        console.log("No such document!");
+const getDataFromFirebase = async () => {
+  // Get a reference to the document
+  docRef.value = doc(db, "journal", props.id);
 
-        // Return null if the document doesn't exist
-        return null;
-      }
-    },
+  // Get a snapshot of the document
+  const docSnap = await getDoc(docRef.value);
 
-    async setEntryValue() {
-      // Get the data for the current entry from Firebase
-      this.originalEntry = await this.getDataFromFirebase();
+  // Check if the document exists
+  if (docSnap.exists()) {
+    // Return the document data
+    return docSnap.data();
+  } else {
+    // docSnap.data() will be undefined in this case
+    console.log("No such document!");
 
-      // If the data could not be obtained, exit the function
-      if (!this.originalEntry) {
-        console.warn("Entry is null.");
-        return;
-      }
+    // Return null if the document doesn't exist
+    return null;
+  }
+};
 
-      // Set the original contents for editing
-      this.entryDate = this.originalEntry.start;
-      this.entryTitle = this.originalEntry.title;
-      this.entryBody = this.originalEntry.body;
-    },
+const destination = ref(null);
+const hasUnsavedChanges = computed(
+  () => store.getters["journal/checkUnsavedChanges"]
+);
 
-    cancelEdit() {
-      // Check if there are unsaved changes
-      if (this.hasUnsavedChanges) {
-        // Set destination to entry
-        this.destination = "entry";
+onBeforeRouteLeave((to, from, next) => {
+  // Check if there are unsaved changes
+  if (hasUnsavedChanges.value) {
+    destination.value = to.path;
 
-        // Show dialog
-        this.dialog.show = true;
-      } else {
-        // Redirect to the current entry
-        this.$router.push("/journal/" + this.id);
-      }
-    },
+    // Show dialog
+    dialog.show = true;
 
-    discardDraft() {
-      // Reset the form
-      this.$refs.form.reset();
+    next(false);
+  } else {
+    // Allow leaving the page
+    next();
+  }
+});
 
-      // Set the editing state to false
-      this.setHasUnsavedChanges(false);
+const setHasUnsavedChanges = (payload) =>
+  store.dispatch("journal/setHasUnsavedChanges", payload);
+const router = useRouter();
+const getView = computed(() => store.getters.getView);
 
-      // Close the dialog
-      this.dialog.show = false;
+const formIsInvalid = ref(false);
+const isDateValid = ref(null);
+const isTitleValid = ref(null);
+const isBodyValid = ref(null);
 
-      // Navigate to the desired route
-      if (this.destination === "entry") {
-        this.$router.push("/journal/" + this.id);
-      } else {
-        this.$router.push(this.destination);
-      }
-    },
+const modifiedData = reactive({});
 
-    async handleSubmit() {
-      // Set the editing state to false
-      this.setHasUnsavedChanges(false);
+const handleSubmit = async () => {
+  // Set the editing state to false
+  setHasUnsavedChanges(false);
 
-      // Set input values
-      this.setData();
+  // Set input values
+  setData();
 
-      // If there are any empty fields, display error message and stop the process
-      if (this.formIsInvalid) {
-        // Set the corresponding validation flags to false
-        if (this.entryDate === "") this.isDateValid = false;
-        if (this.entryTitle === "") this.isTitleValid = false;
-        if (this.entryBody === "") this.isBodyValid = false;
+  // If there are any empty fields, display error message and stop the process
+  if (formIsInvalid.value) {
+    // Set the corresponding validation flags to false
+    if (entryDate.value === "") isDateValid.value = false;
+    if (entryTitle.value === "") isTitleValid.value = false;
+    if (entryBody.value === "") isBodyValid.value = false;
 
-        // Return to stop the function execution
-        return;
-      }
+    // Return to stop the function execution
+    return;
+  }
 
-      // Send data to Firebase
-      await updateDoc(this.docRef, this.modifiedData);
+  // Send data to Firebase
+  await updateDoc(docRef.value, modifiedData);
 
-      // Redirect to current view
-      this.$router.push("/journal/" + this.getView);
+  // Redirect to current view
+  router.push("/journal/" + getView.value);
 
-      // Show notification
-      this.notifyEditsSaved();
-    },
+  // Show notification
+  notifyEditsSaved();
+};
 
-    // Set data to send
-    setData() {
-      this.modifiedData.start = this.entryDate;
-      this.modifiedData.lastUpdated = moment().format(
-        "ddd, MMM D, YYYY, kk:mm"
-      );
-      this.modifiedData.title = this.entryTitle;
-      this.modifiedData.body = this.entryBody;
-    },
+// Set data to send
+const setData = () => {
+  modifiedData.start = entryDate.value;
+  modifiedData.lastUpdated = moment().format("ddd, MMM D, YYYY, kk:mm");
+  modifiedData.title = entryTitle.value;
+  modifiedData.body = entryBody.value;
+};
 
-    // Validation
-    validateForm() {
-      // Check if all the fields have values
-      const isValid =
-        this.entryDate !== "" &&
-        this.entryTitle !== "" &&
-        this.entryBody !== "";
+const $waveui = inject("$waveui");
 
-      // When all the fields have values, set formIsInvalid to false
-      if (!isValid) {
-        this.formIsInvalid = true;
-      } else {
-        this.formIsInvalid = false;
-      }
+// Notification
+const notifyEditsSaved = () => {
+  $waveui.notify({
+    lg: true,
+    message: "Your edits have been saved!",
+    timeout: 3000,
+    success: true,
+    plain: true,
+    shadow: true,
+    dismiss: true,
+    transition: "bounce",
+  });
+};
 
-      // Check if there are unsaved changes
-      if (
-        this.entryTitle !== this.originalEntry.title ||
-        this.entryBody !== this.originalEntry.body
-      ) {
-        this.setHasUnsavedChanges(true);
-      }
-    },
+// Validation
+const validateForm = () => {
+  // Check if all the fields have values
+  const isValid =
+    entryDate.value !== "" && entryTitle.value !== "" && entryBody.value !== "";
 
-    // Notification
-    notifyEditsSaved() {
-      this.$waveui.notify({
-        lg: true,
-        message: "Your edits have been saved!",
-        timeout: 3000,
-        success: true,
-        plain: true,
-        shadow: true,
-        dismiss: true,
-        transition: "bounce",
-      });
-    },
-  },
+  // When all the fields have values, set formIsInvalid to false
+  if (!isValid) {
+    formIsInvalid.value = true;
+  } else {
+    formIsInvalid.value = false;
+  }
+
+  // Check if there are unsaved changes
+  if (
+    entryTitle.value !== originalEntry.value.title ||
+    entryBody.value !== originalEntry.value.body
+  ) {
+    setHasUnsavedChanges(true);
+  }
+};
+
+const cancelEdit = () => {
+  // Check if there are unsaved changes
+  if (hasUnsavedChanges.value) {
+    // Set destination to entry
+    destination.value = "entry";
+
+    // Show dialog
+    dialog.show = true;
+  } else {
+    // Redirect to the current entry
+    router.push("/journal/" + props.id);
+  }
+};
+
+const discardDraft = () => {
+  // Reset the input fields
+  entryTitle.value = "";
+  entryBody.value = "";
+
+  // Set the editing state to false
+  setHasUnsavedChanges(false);
+
+  // Close the dialog
+  dialog.show = false;
+
+  // Navigate to the desired route
+  if (destination.value === "entry") {
+    router.push("/journal/" + props.id);
+  } else {
+    router.push(destination.value);
+  }
 };
 </script>
 
