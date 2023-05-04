@@ -1,11 +1,10 @@
 <template>
   <w-card class="white--bg" content-class="px8 py10">
-    <w-form @submit.prevent="handleSubmit" ref="form">
+    <w-form @submit.prevent="handleSubmit">
       <w-input
         id="date"
         label="Date"
         type="date"
-        ref="dateInput"
         v-model="enteredDate"
         @input="validateForm(), (isDateValid = null)"
         @keydown.enter.prevent
@@ -17,7 +16,6 @@
         id="title"
         class="mt5"
         label="Title"
-        ref="titleInput"
         v-model="enteredTitle"
         @input="validateForm(), (isTitleValid = null)"
       >
@@ -29,7 +27,6 @@
         id="body"
         class="mt5"
         label="Body"
-        ref="bodyInput"
         v-model="enteredBody"
         rows="10"
         @input="validateForm(), (isBodyValid = null)"
@@ -134,8 +131,14 @@ const entryData = reactive({
   body: "",
 });
 
+const setHasUnsavedChanges = (payload) =>
+  store.dispatch("journal/setHasUnsavedChanges", payload);
+
 // Function on form submission
 const handleSubmit = () => {
+  // Set the editing state to false
+  setHasUnsavedChanges(false);
+
   // Set input values
   setData();
 
@@ -168,9 +171,6 @@ const setData = () => {
 
 // Validation
 const validateForm = () => {
-  const setHasUnsavedChanges = (payload) =>
-    store.dispatch("journal/setHasUnsavedChanges", payload);
-
   // Check if there are unsaved changes
   const unsavedChangesDetected =
     enteredDate.value.length > 0 ||
@@ -189,19 +189,16 @@ const validateForm = () => {
 };
 
 const router = useRouter();
-const titleInput = ref("");
-const bodyInput = ref("");
+const getView = computed(() => store.getters.getView);
 
 // Send data to Firebase
 const sendData = () => {
-  const getView = computed(() => store.getters.getView.value);
-
   // Add a new document with a generated id
   addDoc(collection(db, "journal"), entryData);
 
   // Reset the input fields
-  titleInput.value = "";
-  bodyInput.value = "";
+  enteredTitle.value = "";
+  enteredBody.value = "";
 
   // Redirect to current view
   router.push("/journal/" + getView.value);
@@ -223,8 +220,11 @@ const cancelEdit = () => {
 
 const discardDraft = () => {
   // Reset the input fields
-  titleInput.value = "";
-  bodyInput.value = "";
+  enteredTitle.value = "";
+  enteredBody.value = "";
+
+  // Set the editing state to false
+  setHasUnsavedChanges(false);
 
   // Redirect to current view
   router.push("/journal/" + getView.value);
