@@ -7,34 +7,36 @@
   </w-flex>
 </template>
 
-<script>
-import { mapActions } from "vuex";
+<script setup>
+import { onMounted } from "vue";
+import { useStore } from "vuex";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/firebase";
+
 import TheHeader from "./components/layout/TheHeader.vue";
 
-export default {
-  components: { TheHeader },
-  mounted() {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        // User is signed in
-        // Set login state to true
-        this.login();
+const store = useStore();
 
-        // Set userId
-        this.setUserId(user.uid);
-      } else {
-        // User is signed out
-        // Set login state to false
-        this.logout();
-      }
-    });
-  },
-  methods: {
-    ...mapActions(["login", "logout", "setUserId"]),
-  },
-};
+const login = () => store.dispatch("login");
+const logout = () => store.dispatch("logout");
+const setUserId = (payload) => store.dispatch("setUserId", payload);
+
+onMounted(() => {
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      // User is signed in
+      // Set login state to true
+      login();
+
+      // Set userId
+      setUserId(user.uid);
+    } else {
+      // User is signed out
+      // Set login state to false
+      logout();
+    }
+  });
+});
 </script>
 
 <style>
