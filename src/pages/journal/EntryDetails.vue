@@ -145,8 +145,7 @@ textarea:focus {
 }
 
 .toolbar {
-  padding-top: 1rem;
-  padding-bottom: 1rem;
+  padding: 1rem 0;
   border: none;
   display: block;
 }
@@ -154,5 +153,11 @@ textarea:focus {
 #body {
   font-size: 1.3rem;
   white-space: pre-line;
+}
+
+@media (max-width: 835px) {
+  .toolbar {
+    padding: 0;
+  }
 }
 </style>
