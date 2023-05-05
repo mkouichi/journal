@@ -153,7 +153,7 @@ const setView = (payload) => store.dispatch("setView", payload);
 
 const handleItemClick = (item) => {
   // Sign out when logout button is clicked
-  if (item.id === "log-out") signOut();
+  if (item.id === "log-out") signOutUser();
 
   // Close the drawer
   openDrawer.value = false;
