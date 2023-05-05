@@ -32,66 +32,65 @@
   </section>
 </template>
 
-<script>
-import { mapActions, mapGetters } from "vuex";
+<script setup>
+import { ref, computed, onMounted, onBeforeMount } from "vue";
+import { useRouter } from "vue-router";
+import { useStore } from "vuex";
 import VueCal from "vue-cal";
 import "vue-cal/dist/vuecal.css";
 import axios from "axios";
+
 import { loadJournalEntries } from "@/helper-functions";
 
-export default {
-  components: { VueCal },
-  data() {
-    return {
-      events: null,
-      randomIndex: null,
-    };
-  },
-  async mounted() {
-    // Load entries for the user when the component is mounted
-    await loadJournalEntries(this.userId);
-  },
-  async created() {
-    try {
-      const { data } = await axios.get(
-        "https://journal-u9ss.onrender.com/historical-events"
-      );
-      // Store the fetched data in the events array
-      this.events = data.data.map((event) => ({
-        ...event,
-        // Change the month property to the three-letter abbreviation
-        month: new Date(event.month + "-01-2000").toLocaleString("default", {
-          month: "short",
-        }),
-      }));
-      // Choose a random index of an event from the events array
-      this.randomIndex = Math.floor(Math.random() * this.events.length);
-    } catch (error) {
-      console.log(error);
-    }
-  },
-  computed: {
-    ...mapGetters({ entries: "journal/getEntries", userId: "getUserId" }),
-  },
-  methods: {
-    ...mapActions("journal", ["setSelectedDate"]),
+const store = useStore();
+const entries = computed(() => store.getters["journal/getEntries"]);
 
-    onEventClick(event, e) {
-      this.$router.push("/journal/" + event.id);
+const events = ref(null);
+const randomIndex = ref(null);
 
-      // Prevent navigating to narrower view (default vue-cal behavior).
-      e.stopPropagation();
-    },
+onBeforeMount(async () => {
+  try {
+    const { data } = await axios.get(
+      "https://journal-u9ss.onrender.com/historical-events"
+    );
+    // Store the fetched data in the events array
+    events.value = data.data.map((event) => ({
+      ...event,
+      // Change the month property to the three-letter abbreviation
+      month: new Date(event.month + "-01-2000").toLocaleString("default", {
+        month: "short",
+      }),
+    }));
+    // Choose a random index of an event from the events array
+    randomIndex.value = Math.floor(Math.random() * events.value.length);
+  } catch (error) {
+    console.log(error);
+  }
+});
 
-    // Create a new journal entry with the currently selected date
-    createNewEntry(event) {
-      // Set the selected date to the datepicker's selected date
-      this.setSelectedDate(event.format());
+const userId = computed(() => store.getters.getUserId);
 
-      // Redirect to the new journal entry form
-      this.$router.push("/journal/new");
-    },
-  },
+// Load entries for the user when the component is mounted
+onMounted(() => loadJournalEntries(userId.value));
+
+const router = useRouter();
+const setSelectedDate = (payload) =>
+  store.dispatch("journal/setSelectedDate", payload);
+
+// Create a new journal entry with the currently selected date
+const createNewEntry = (event) => {
+  // Set the selected date to the datepicker's selected date
+  setSelectedDate(event.format());
+
+  // Redirect to the new journal entry form
+  router.push("/journal/new");
+};
+
+const onEventClick = (event, e) => {
+  router.push("/journal/" + event.id);
+
+  // Prevent navigating to narrower view (default vue-cal behavior).
+  e.stopPropagation();
 };
 </script>
 
