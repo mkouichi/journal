@@ -1,20 +1,5 @@
 <template>
   <w-card class="white--bg" content-class="pa0">
-    <div v-if="form.error" class="message-box">
-      <w-transition-fade>
-        <!-- <w-alert
-          v-if="form.valid === false"
-          error
-          no-border
-          class="my0 text-light"
-        >
-          The form has {{ form.errorsCount }} errors.
-        </w-alert> -->
-        <w-alert error no-border class="my0 text-light">
-          {{ form.error.errorMessage }}
-        </w-alert>
-      </w-transition-fade>
-    </div>
     <w-form
       v-model="form.valid"
       v-model:errors-count="form.errorsCount"
@@ -28,7 +13,7 @@
         label="Email address"
         :validators="[validators.required]"
         class="mt5 title3"
-        ref="emailInput"
+        v-model="emailInput"
       >
       </w-input>
       <w-input
@@ -37,7 +22,7 @@
         label="Password"
         :validators="[validators.required]"
         class="mt5 title3"
-        ref="passwordInput"
+        v-model="passwordInput"
       >
       </w-input>
       <w-flex wrap align-center justify-end class="mt4">
@@ -49,118 +34,88 @@
         </w-button>
       </w-flex>
     </w-form>
-
-    <!-- <w-notification
-        v-model="form.sent"
-        success
-        transition="bounce"
-        absolute
-        plain
-        round
-        top
-      >
-        The form was sent successfully!
-      </w-notification> -->
-    <!-- <w-notification
-      v-if="form.error"
-      transition="bounce"
-      absolute
-      plain
-      round
-      bottom
-    >
-      {{ form.error.errorCode }}
-      {{ form.error.errorMessage }}
-    </w-notification> -->
   </w-card>
 
-  <!-- <w-dialog
+  <!-- Error dialog -->
+  <w-dialog
     v-if="form.error"
     width="50vw"
-    title-class="error-dark1--bg white"
+    title-class="error--bg white"
     @close="resetError"
   >
     <template #title>
-      <w-icon class="mr2 title2">mdi mdi-tune</w-icon>
+      <w-icon class="mr2 title2">mdi mdi-alert-circle</w-icon>
       <span class="title2">{{ form.error.errorCode }}</span>
     </template>
     <p>{{ form.error.errorMessage }}</p>
     <template #actions>
       <div class="spacer"></div>
-      <w-button lg @click="resetError" class="white" bg-color="success-dark1">
-        Okay
-      </w-button>
+      <w-button lg outline @click="resetError">Okay</w-button>
     </template>
-  </w-dialog> -->
+  </w-dialog>
 </template>
 
-<script>
+<script setup>
+import { ref, reactive, inject } from "vue";
+import { useRouter } from "vue-router";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/firebase";
 
-export default {
-  data: () => ({
-    form: {
-      valid: null,
-      // submitted: false,
-      // sent: false,
-      // errorsCount: 0,
-      error: null,
-    },
-    validators: {
-      required: (value) => !!value || "This field is required",
-      // consent: (value) => !!value || "You must agree",
-    },
-  }),
-  methods: {
-    resetError() {
-      this.form.error = null;
-    },
-    
-    createUser() {
-      const enteredEmail = this.$refs.emailInput.inputValue;
-      const enteredPassword = this.$refs.passwordInput.inputValue;
+const form = reactive({
+  valid: null,
+  error: null,
+});
 
-      this.resetError();
+const validators = {
+  required: (value) => !!value || "This field is required",
+};
 
-      createUserWithEmailAndPassword(auth, enteredEmail, enteredPassword)
-        .then((userCredential) => {
-          // Signed in
-          // const user = userCredential.user;
+const emailInput = ref("");
+const passwordInput = ref("");
+const router = useRouter();
 
-          // Redirect to calendar view
-          this.$router.push("/journal/calendar");
+const createUser = () => {
+  resetError();
 
-          // Show notification
-          this.notifySignUp();
-        })
-        .catch((error) => {
-          this.form.error = {
-            errorCode: error.code,
-            errorMessage: error.message,
-          };
-        });
-    },
+  createUserWithEmailAndPassword(auth, emailInput.value, passwordInput.value)
+    .then((userCredential) => {
+      // Signed in
+      // const user = userCredential.user;
 
-    // Notification
-    notifySignUp() {
-      this.$waveui.notify({
-        lg: true,
-        message: "Account created successfully!",
-        timeout: 3000,
-        success: true,
-        plain: true,
-        shadow: true,
-        dismiss: true,
-        transition: "bounce",
-      });
-    },
-  },
+      // Redirect to calendar view
+      router.push("/journal/calendar");
+
+      // Show notification
+      notifySignUp();
+    })
+    .catch((error) => {
+      form.error = {
+        errorCode: error.code,
+        errorMessage: error.message,
+      };
+    });
+};
+
+const resetError = () => {
+  form.error = null;
+};
+
+// Notification
+const $waveui = inject("$waveui");
+
+const notifySignUp = () => {
+  $waveui.notify({
+    lg: true,
+    message: "Account created successfully!",
+    timeout: 3000,
+    success: true,
+    plain: true,
+    shadow: true,
+    dismiss: true,
+    transition: "bounce",
+  });
 };
 </script>
 
 <style scoped>
-.message-box {
-  min-height: 35px;
-}
 </style>
