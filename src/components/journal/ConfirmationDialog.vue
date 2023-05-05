@@ -1,5 +1,5 @@
 <template>
-  <w-dialog :width="width" title-class="warning--bg white">
+  <w-dialog title-class="warning--bg white dialog">
     <template #title>
       <w-icon class="mr2 title2">mdi mdi-cancel</w-icon>
       <span class="title2">Cancel</span>
@@ -22,7 +22,7 @@
         lg
         @click="$emit('closeDialog')"
         class="white"
-        bg-color="success-dark1"
+        bg-color="success"
         >Back to entry</w-button
       >
     </template>
@@ -30,9 +30,18 @@
 </template>
 
 <script setup>
-const width = "50vw";
 const emits = defineEmits(["discardDraft", "closeDialog"]);
 </script>
 
-<style scoped>
+<style>
+/* Dialog width */
+.w-card.w-card--no-border.w-dialog__content {
+  max-width: 500px;
+}
+
+@media (max-width: 600px) {
+  .w-card.w-card--no-border.w-dialog__content {
+    max-width: 90vw;
+  }
+}
 </style>
