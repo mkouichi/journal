@@ -2,7 +2,14 @@
   <TheHeader />
   <w-flex grow>
     <main class="grow mt8">
-      <RouterView />
+      <Suspense>
+        <template #default>
+          <RouterView />
+        </template>
+        <template #fallback>
+          <p>Loading...</p>
+        </template>
+      </Suspense>
     </main>
   </w-flex>
 </template>

@@ -59,74 +59,71 @@
   </section>
 </template>
 
-<script>
-import { mapActions, mapGetters } from "vuex";
+<script setup>
+import { ref, computed, watch } from "vue";
+import { useStore } from "vuex";
 import "vue-cal/dist/vuecal.css";
 
 import { loadJournalEntries } from "@/helper-functions";
 
-export default {
-  async created() {
-    // Load entries for the user when the component is mounted
-    await loadJournalEntries(this.userId);
+const store = useStore();
 
-    // Show initial data
-    // Get data from Vuex and store it in data property
-    this.initEntries();
-  },
-  data: () => ({
-    sortItems: [
-      { label: "Newest first (default)", value: "newest" },
-      { label: "Oldest first", value: "oldest" },
-    ],
-    selection: "newest",
-    entries: [],
-    error: null,
-  }),
-  watch: {
-    // Watch for changes to the selection property
-    selection(selection) {
-      // Call the method with the new selection value
-      this.sortEntriesByLastUpdated(selection);
-    },
-  },
-  computed: {
-    ...mapGetters({
-      loading: "getLoadingState",
-      truncateEntryBody: "journal/truncateEntryBody",
-      userId: "getUserId",
-    }),
-  },
-  methods: {
-    confirmError() {
-      this.error = null;
-    },
-    async initEntries() {
-      // Get data from Vuex and trim the body to the first 100 characters, then store it in data property
-      this.entries = await this.truncateEntryBody(100);
+const sortItems = [
+  { label: "Newest first (default)", value: "newest" },
+  { label: "Oldest first", value: "oldest" },
+];
 
-      // Sort initially by lastUpdated in descending order
-      this.sortEntriesByLastUpdated("newest");
-    },
-    sortEntriesByLastUpdated(selection) {
-      // Sort entries based on selection
-      switch (selection) {
-        case "newest":
-          this.entries.sort(
-            (a, b) => new Date(b.lastUpdated) - new Date(a.lastUpdated)
-          );
-          break;
-        case "oldest":
-          this.entries.sort(
-            (a, b) => new Date(a.lastUpdated) - new Date(b.lastUpdated)
-          );
-          break;
-        default:
-          break;
-      }
-    },
-  },
+const loading = computed(() => store.getters.getLoadingState);
+const userId = computed(() => store.getters.getUserId);
+const entries = ref([]);
+
+// Load entries for the user when the component is mounted
+await loadJournalEntries(userId.value);
+
+const truncateEntryBody = computed(() =>
+  store.getters["journal/truncateEntryBody"](100)
+);
+
+const initEntries = async () => {
+  // Get data from Vuex and trim the body to the first 100 characters, then store it in data property
+  entries.value = await truncateEntryBody.value;
+
+  // Sort initially by lastUpdated in descending order
+  sortEntriesByLastUpdated("newest");
 };
+
+// Show initial data
+// Get data from Vuex and store it in data property
+initEntries();
+
+const selection = ref("newest");
+
+const sortEntriesByLastUpdated = (selection) => {
+  // Sort entries based on selection
+  switch (selection) {
+    case "newest":
+      entries.value.sort(
+        (a, b) => new Date(b.lastUpdated) - new Date(a.lastUpdated)
+      );
+      break;
+    case "oldest":
+      entries.value.sort(
+        (a, b) => new Date(a.lastUpdated) - new Date(b.lastUpdated)
+      );
+      break;
+    default:
+      break;
+  }
+};
+
+// Watch for changes to the selection property
+watch(selection, (newVal, oldVal) => {
+  // Call the method with the new selection value
+  sortEntriesByLastUpdated(newVal);
+});
+
+const error = ref(null);
+const confirmError = () => (error.value = null);
 </script>
 
 <style scoped>
