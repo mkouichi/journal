@@ -69,13 +69,16 @@ main {
 .w-notification-manager {
   width: 350px;
 }
+/* Dialog width */
+.w-card.w-card--no-border.w-dialog__content {
+  max-width: 500px;
+}
 
 @media (max-width: 1200px) {
   main {
     margin: 32px 3rem 4rem 3rem;
   }
 }
-
 @media (max-width: 835px) {
   main {
     margin: 32px 1rem 4rem 1rem;
@@ -83,6 +86,12 @@ main {
   .w-button.size--lg {
     height: 2.5rem;
     padding: 0.5rem;
+  }
+}
+@media (max-width: 600px) {
+  /* Dialog width */
+  .w-card.w-card--no-border.w-dialog__content {
+    max-width: 90vw;
   }
 }
 </style>

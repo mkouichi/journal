@@ -33,15 +33,5 @@
 const emits = defineEmits(["discardDraft", "closeDialog"]);
 </script>
 
-<style>
-/* Dialog width */
-.w-card.w-card--no-border.w-dialog__content {
-  max-width: 500px;
-}
-
-@media (max-width: 600px) {
-  .w-card.w-card--no-border.w-dialog__content {
-    max-width: 90vw;
-  }
-}
+<style scoped>
 </style>
