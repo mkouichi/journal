@@ -37,22 +37,11 @@
   </w-card>
 
   <!-- Error dialog -->
-  <w-dialog
+  <ErrorDialog
     v-if="form.error"
-    width="50vw"
-    title-class="error--bg white"
-    @close="resetError"
-  >
-    <template #title>
-      <w-icon class="mr2 title2">mdi mdi-alert-circle</w-icon>
-      <span class="title2">{{ form.error.errorCode }}</span>
-    </template>
-    <p>{{ form.error.errorMessage }}</p>
-    <template #actions>
-      <div class="spacer"></div>
-      <w-button lg outline @click="resetError">Okay</w-button>
-    </template>
-  </w-dialog>
+    :error="form.error"
+    @reset-error="resetError"
+  />
 </template>
 
 <script setup>
@@ -60,6 +49,8 @@ import { ref, reactive, inject } from "vue";
 import { useRouter } from "vue-router";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "@/firebase";
+
+import ErrorDialog from "../../components/journal/ErrorDialog.vue";
 
 const form = reactive({
   valid: null,
