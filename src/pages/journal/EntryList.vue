@@ -13,7 +13,7 @@
       @close="confirmError"
     >
       <template #title>
-        <w-icon class="mr2">mdi mdi-tune</w-icon>
+        <w-icon class="mr2">mdi mdi-alert-circle</w-icon>
         <span class="title2">Error</span>
       </template>
       <p>{{ error }}</p>
