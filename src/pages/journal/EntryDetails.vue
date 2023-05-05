@@ -55,7 +55,7 @@ const store = useStore();
 
 const route = useRoute();
 const editLink = computed(() => route.path + "/edit");
-const targetEntry = computed(() => store.getters["journal/targetEntry"]);
+const targetEntry = computed(() => store.getters["journal/getTargetEntry"]);
 
 const dialog = reactive({
   show: false,
