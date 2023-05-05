@@ -59,7 +59,7 @@ body {
   margin: 0;
 }
 main {
-  max-width: 800px;
+  max-width: 1100px;
   margin: 32px auto 4rem auto;
 }
 .w-button.size--lg {
@@ -68,6 +68,12 @@ main {
 }
 .w-notification-manager {
   width: 350px;
+}
+
+@media (max-width: 1200px) {
+  main {
+    margin: 32px 3rem 4rem 3rem;
+  }
 }
 
 @media (max-width: 835px) {
