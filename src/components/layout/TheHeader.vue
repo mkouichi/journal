@@ -113,11 +113,13 @@ const loggedInItems = [
     label: "Calendar View",
     id: "calendar",
     route: "/journal/calendar",
+    view: "calendar",
   },
   {
     label: "List View",
     id: "entry-list",
     route: "/journal/list",
+    view: "list",
   },
   {
     label: "New Entry",
@@ -152,8 +154,19 @@ const position = computed(() => {
 const setView = (payload) => store.dispatch("setView", payload);
 
 const handleItemClick = (item) => {
+  // Set view when calendar or list view button is clicked
   // Sign out when logout button is clicked
-  if (item.id === "log-out") signOutUser();
+  switch (item.id) {
+    case "calendar":
+    case "entry-list":
+      setView(item.view);
+      break;
+    case "log-out":
+      signOutUser();
+      break;
+    default:
+      break;
+  }
 
   // Close the drawer
   openDrawer.value = false;
