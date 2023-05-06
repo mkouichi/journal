@@ -1,5 +1,5 @@
 <template>
-  <w-dialog title-class="warning--bg white dialog">
+  <w-dialog title-class="warning--bg white">
     <template #title>
       <w-icon class="mr2 title2">mdi mdi-cancel</w-icon>
       <span class="title2">Cancel</span>
