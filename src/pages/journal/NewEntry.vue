@@ -47,8 +47,8 @@
   <!-- Discard edit dialog -->
   <ConfirmationDialog
     v-model="dialog.show"
-    @discardDraft="discardDraft"
-    @closeDialog="dialog.show = false"
+    @discard-draft="discardDraft"
+    @close-dialog="dialog.show = false"
   />
 </template>
 
