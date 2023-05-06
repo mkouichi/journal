@@ -12,7 +12,7 @@
       active-view="month"
       :on-event-click="onEventClick"
       click-to-navigate
-      @cell-dblclick="createNewEntry"
+      @cell-click="createNewEntry"
       events-on-month-view="short"
       style="height: 600px"
     >
