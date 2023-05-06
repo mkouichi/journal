@@ -2,7 +2,6 @@
   <w-card class="white--bg" content-class="pa0">
     <w-form
       v-model="form.valid"
-      v-model:errors-count="form.errorsCount"
       class="px8 py10"
       @keydown.enter.prevent
       @submit="createUser"
