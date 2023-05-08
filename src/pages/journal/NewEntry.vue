@@ -164,7 +164,7 @@ const setData = () => {
   entryData.userId = getUserId.value;
   entryData.start = enteredDate.value;
   entryData.end = enteredDate.value;
-  entryData.lastUpdated = moment().format("ddd, MMM D, YYYY, kk:mm");
+  entryData.lastUpdated = moment().format("YYYY-MM-DD HH:mm");
   entryData.title = enteredTitle.value;
   entryData.body = enteredBody.value;
 };

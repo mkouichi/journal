@@ -181,7 +181,7 @@ const handleSubmit = async () => {
 // Set data to send
 const setData = () => {
   modifiedData.start = entryDate.value;
-  modifiedData.lastUpdated = moment().format("ddd, MMM D, YYYY, kk:mm");
+  modifiedData.lastUpdated = moment().format("YYYY-MM-DD HH:mm");
   modifiedData.title = entryTitle.value;
   modifiedData.body = entryBody.value;
 };
