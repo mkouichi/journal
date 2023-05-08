@@ -1,79 +1,84 @@
 <template>
   <header class="teal-dark2--bg">
-    <h1><RouterLink to="/">Journal</RouterLink></h1>
+    <div id="header-container" class="d-flex grow">
+      <h1><RouterLink to="/">Journal</RouterLink></h1>
+      <div class="spacer"></div>
 
-    <!-- Menu icon for md (900px) and below -->
-    <w-flex justify-end>
-      <button class="mdu-hide nav-button" @click="openDrawer = 'left'" outline>
-        <w-icon color="white">mdi mdi-menu</w-icon>
-      </button>
-    </w-flex>
+      <!-- Menu icon for md (900px) and below -->
+      <w-flex justify-end class="mdu-hide">
+        <button class="nav-button" @click="openDrawer = 'left'" outline>
+          <w-icon color="white">mdi mdi-menu</w-icon>
+        </button>
+      </w-flex>
 
-    <!-- Drawer for md (900px) and below -->
-    <w-drawer v-model="openDrawer" :[position]="true" class="drawer">
-      <w-button
-        @click="openDrawer = false"
-        sm
-        outline
-        round
-        absolute
-        icon="wi-cross"
-      >
-      </w-button>
+      <!-- Drawer for md (900px) and below -->
+      <w-drawer v-model="openDrawer" :[position]="true" class="drawer">
+        <w-button
+          @click="openDrawer = false"
+          lg
+          outline
+          round
+          absolute
+          icon="wi-cross"
+        >
+        </w-button>
 
-      <!-- Menu items -->
-      <!-- User is logged in -->
-      <w-list
-        v-if="loggedIn"
-        :items="loggedInItems"
-        nav
-        item-class="nav-item w-flex justify-center pa8"
-        @item-click="handleItemClick"
-        class="grow teal-dark2"
-      >
-        <template #item="{ item }">
-          <span>{{ item.label }}</span>
-        </template>
-      </w-list>
+        <!-- Menu items -->
+        <!-- User is logged in -->
+        <w-list
+          v-if="loggedIn"
+          :items="loggedInItems"
+          nav
+          item-class="nav-item w-flex justify-center pa8"
+          @item-click="handleItemClick"
+          class="grow teal-dark2"
+        >
+          <template #item="{ item }">
+            <span>{{ item.label }}</span>
+          </template>
+        </w-list>
 
-      <!-- User is not logged in -->
-      <w-list
-        v-if="!loggedIn"
-        :items="loggedOutItems"
-        nav
-        item-class="nav-item w-flex justify-center pa8"
-        @item-click="handleItemClick"
-        class="grow teal-dark2"
-      >
-        <template #item="{ item }">
-          <span>{{ item.label }}</span>
-        </template>
-      </w-list>
-    </w-drawer>
+        <!-- User is not logged in -->
+        <w-list
+          v-if="!loggedIn"
+          :items="loggedOutItems"
+          nav
+          item-class="nav-item w-flex justify-center pa8"
+          @item-click="handleItemClick"
+          class="grow teal-dark2"
+        >
+          <template #item="{ item }">
+            <span>{{ item.label }}</span>
+          </template>
+        </w-list>
+      </w-drawer>
 
-    <!-- Menu items for md (900px) and above -->
-    <nav class="smd-hide">
-      <ul class="w-flex justify-center align-center">
-        <li v-if="loggedIn">
-          <RouterLink to="/journal/calendar" @click="setView('calendar')">
-            Calendar View
-          </RouterLink>
-        </li>
-        <li v-if="loggedIn">
-          <RouterLink to="/journal/list" @click="setView('list')">
-            List View
-          </RouterLink>
-        </li>
-        <li v-if="loggedIn">
-          <RouterLink to="/journal/new">New Entry</RouterLink>
-        </li>
-        <li v-if="!loggedIn"><RouterLink to="/signup">Sign Up</RouterLink></li>
-        <li v-if="!loggedIn"><RouterLink to="/login">Log In</RouterLink></li>
-        <li v-if="loggedIn" @click="signOutUser" class="header-item">
-          Log Out
-        </li>
-      </ul>
-    </nav>
+      <!-- Menu items for md (900px) and above -->
+      <nav class="smd-hide mdu-d-flex">
+        <ul class="w-flex justify-center align-center">
+          <li v-if="loggedIn">
+            <RouterLink to="/journal/calendar" @click="setView('calendar')">
+              Calendar View
+            </RouterLink>
+          </li>
+          <li v-if="loggedIn">
+            <RouterLink to="/journal/list" @click="setView('list')">
+              List View
+            </RouterLink>
+          </li>
+          <li v-if="loggedIn">
+            <RouterLink to="/journal/new">New Entry</RouterLink>
+          </li>
+          <li v-if="!loggedIn">
+            <RouterLink to="/signup">Sign Up</RouterLink>
+          </li>
+          <li v-if="!loggedIn"><RouterLink to="/login">Log In</RouterLink></li>
+          <li v-if="loggedIn" @click="signOutUser" class="header-item">
+            Log Out
+          </li>
+        </ul>
+      </nav>
+    </div>
   </header>
   <!-- TODO: Show a better error -->
   <div v-if="error">
@@ -236,14 +241,11 @@ const notifyLogOut = () => {
 
 <style scoped>
 header {
-  width: 100%;
   height: 5rem;
-  padding: 0 2rem;
   display: flex;
   justify-content: center;
   align-items: center;
 }
-
 header a {
   text-decoration: none;
   color: #fff;
@@ -258,28 +260,23 @@ a.router-link-active,
   border: 1px solid #fff;
   cursor: pointer;
 }
-
 h1 {
   margin: 0;
 }
-
 h1 a {
   color: white;
   margin: 0;
 }
-
 h1 a:hover,
 h1 a:active,
 h1 a.router-link-active {
   border-color: transparent;
 }
-
 header ul {
   list-style: none;
   margin: 0;
   padding: 0;
 }
-
 li {
   margin: 0 0.2rem;
   font-size: 1.2rem;
@@ -300,5 +297,19 @@ li {
   display: inline-block;
   padding: 0.75rem 1.5rem;
   border: 1px solid transparent;
+}
+#header-container {
+  max-width: 1100px;
+}
+
+@media (max-width: 1200px) {
+  #header-container {
+    margin: 0 3rem;
+  }
+}
+@media (max-width: 835px) {
+  #header-container {
+    margin: 0 1rem;
+  }
 }
 </style>
