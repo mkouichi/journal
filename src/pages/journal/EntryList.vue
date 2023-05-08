@@ -43,7 +43,8 @@
           <w-toolbar class="toolbar">
             <h2>{{ entry.title }}</h2>
             <div class="spacer"></div>
-            <span class="caption">{{ entry.lastUpdated }}</span>
+            <div class="caption mt2">Created: {{ entry.start }}</div>
+            <div class="caption mt2">Updated: {{ entry.lastUpdated }}</div>
           </w-toolbar>
         </template>
         <p class="body-text">{{ entry.body }}</p>
@@ -141,6 +142,9 @@ const confirmError = () => (error.value = null);
 }
 .w-button.size--lg {
   padding: 1rem 1rem 1rem 1.5rem;
+}
+.caption.mt2 {
+  font-size: 0.8rem;
 }
 
 #spinner {

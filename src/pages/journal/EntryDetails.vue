@@ -10,7 +10,8 @@
     </w-flex>
     <w-toolbar align-center class="toolbar mb7">
       <h1>{{ targetEntry.title }}</h1>
-      <span id="date" class="caption">{{ targetEntry.lastUpdated }}</span>
+      <div class="caption mt2">Created: {{ targetEntry.start }}</div>
+      <div class="caption mt2">Updated: {{ targetEntry.lastUpdated }}</div>
     </w-toolbar>
     <p id="body" class="lh5">{{ targetEntry.body }}</p>
   </w-card>
@@ -148,6 +149,9 @@ textarea:focus {
   padding: 1rem 0;
   border: none;
   display: block;
+}
+.caption.mt2 {
+  font-size: 0.8rem;
 }
 
 #body {
