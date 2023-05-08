@@ -22,12 +22,19 @@
         New Entry
       </w-button>
     </w-flex>
-    <div v-if="events && events.length">
-      <div>
-        {{ events[randomIndex].month }} / {{ events[randomIndex].day }} /
-        {{ events[randomIndex].year }}
-      </div>
-      <div>{{ events[randomIndex].event }}</div>
+    <div>
+      <div ref="cardTitle" class="mt5 mb5 title2 text-bold"></div>
+      <w-card
+        v-if="events && events.length"
+        no-border
+        :title="`
+          ${events[randomIndex].year} -
+          ${events[randomIndex].month} -
+          ${events[randomIndex].day}
+          `"
+      >
+        <p>{{ events[randomIndex].event }}</p>
+      </w-card>
     </div>
   </section>
 </template>
@@ -53,14 +60,18 @@ onBeforeMount(async () => {
     const { data } = await axios.get(
       "https://journal-u9ss.onrender.com/historical-events"
     );
+
     // Store the fetched data in the events array
-    events.value = data.data.map((event) => ({
-      ...event,
-      // Change the month property to the three-letter abbreviation
-      month: new Date(event.month + "-01-2000").toLocaleString("default", {
-        month: "short",
-      }),
-    }));
+    events.value = data.data.map((event) => {
+      // If a negative integer exists in the year property, format it with BC
+      const year = event.year < 0 ? `${Math.abs(event.year)} BC` : event.year;
+
+      return {
+        ...event,
+        year,
+      };
+    });
+
     // Choose a random index of an event from the events array
     randomIndex.value = Math.floor(Math.random() * events.value.length);
   } catch (error) {
@@ -69,9 +80,27 @@ onBeforeMount(async () => {
 });
 
 const userId = computed(() => store.getters.getUserId);
+const cardTitle = ref(null);
 
-// Load entries for the user when the component is mounted
-onMounted(() => loadJournalEntries(userId.value));
+onMounted(() => {
+  // Load entries for the user when the component is mounted
+  loadJournalEntries(userId.value);
+
+  // Pick a card title for historical events randomly from below
+  const cardTitles = [
+    "On this day in history...",
+    "Remembering what happened on this day...",
+    "Today in history...",
+    "Looking back on this day...",
+    "Did you know?",
+  ];
+
+  // Choose a random index from the titles array
+  const randomIn = Math.floor(Math.random() * cardTitles.length);
+
+  // Set the text content of the title element to the randomly chosen title
+  cardTitle.value.textContent = cardTitles[randomIn];
+});
 
 const router = useRouter();
 const setSelectedDate = (payload) =>
