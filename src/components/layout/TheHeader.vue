@@ -1,7 +1,7 @@
 <template>
   <header class="teal-dark2--bg">
     <div id="header-container" class="d-flex grow">
-      <h1><RouterLink to="/">Journal</RouterLink></h1>
+      <h1 id="logo"><RouterLink to="/">Journal</RouterLink></h1>
       <div class="spacer"></div>
 
       <!-- Menu icon for md (900px) and below -->
@@ -297,6 +297,9 @@ li {
   display: inline-block;
   padding: 0.75rem 1.5rem;
   border: 1px solid transparent;
+}
+#logo > a {
+  padding: 0.75rem;
 }
 #header-container {
   max-width: 1100px;
