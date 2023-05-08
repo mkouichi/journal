@@ -43,7 +43,7 @@
           <w-toolbar class="toolbar">
             <h2>{{ entry.title }}</h2>
             <div class="spacer"></div>
-            <div class="caption mt2">Created: {{ entry.start }}</div>
+            <div class="caption mt2">Date: {{ entry.start }}</div>
             <div class="caption mt2">Updated: {{ entry.lastUpdated }}</div>
           </w-toolbar>
         </template>
@@ -70,8 +70,10 @@ import { loadJournalEntries } from "@/helper-functions";
 const store = useStore();
 
 const sortItems = [
-  { label: "Newest first (default)", value: "newest" },
-  { label: "Oldest first", value: "oldest" },
+  { label: "Date (Descending) (default)", value: "date descending" },
+  { label: "Date (Ascending)", value: "date ascending" },
+  { label: "Date updated (Descending)", value: "updated descending" },
+  { label: "Date updated (Ascending)", value: "updated ascending" },
 ];
 
 const loading = computed(() => store.getters.getLoadingState);
@@ -89,25 +91,31 @@ const initEntries = async () => {
   // Get data from Vuex and trim the body to the first 100 characters, then store it in data property
   entries.value = await truncateEntryBody.value;
 
-  // Sort initially by lastUpdated in descending order
-  sortEntriesByLastUpdated("newest");
+  // Sort initially by date in descending order
+  sortEntriesByLastUpdated("date descending");
 };
 
 // Show initial data
 // Get data from Vuex and store it in data property
 initEntries();
 
-const selection = ref("newest");
+const selection = ref("date descending");
 
 const sortEntriesByLastUpdated = (selection) => {
   // Sort entries based on selection
   switch (selection) {
-    case "newest":
+    case "date descending":
+      entries.value.sort((a, b) => new Date(b.start) - new Date(a.start));
+      break;
+    case "date ascending":
+      entries.value.sort((a, b) => new Date(a.start) - new Date(b.start));
+      break;
+    case "updated descending":
       entries.value.sort(
         (a, b) => new Date(b.lastUpdated) - new Date(a.lastUpdated)
       );
       break;
-    case "oldest":
+    case "updated ascending":
       entries.value.sort(
         (a, b) => new Date(a.lastUpdated) - new Date(b.lastUpdated)
       );
