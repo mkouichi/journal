@@ -17,32 +17,34 @@
   </w-card>
 
   <!-- Delete draft dialog -->
-  <w-dialog
-    v-model="dialog.show"
-    :width="dialog.width"
-    title-class="error--bg white"
-    @close="dialog.show = false"
-  >
-    <template #title>
-      <w-icon class="mr2 title2">mdi mdi-delete</w-icon>
-      <span class="title2">Delete</span>
-    </template>
-    <p>Are you sure you want to delete this entry?</p>
-    <template #actions>
-      <div class="spacer"></div>
-      <w-button lg @click="deleteEntry" class="mr5 white" bg-color="error">
-        Delete
-      </w-button>
-      <w-button
-        lg
-        @click="dialog.show = false"
-        class="white"
-        bg-color="success"
-      >
-        Back to entry
-      </w-button>
-    </template>
-  </w-dialog>
+  <Teleport to="body">
+    <w-dialog
+      v-model="dialog.show"
+      :width="dialog.width"
+      title-class="error--bg white"
+      @close="dialog.show = false"
+    >
+      <template #title>
+        <w-icon class="mr2 title2">mdi mdi-delete</w-icon>
+        <span class="title2">Delete</span>
+      </template>
+      <p>Are you sure you want to delete this entry?</p>
+      <template #actions>
+        <div class="spacer"></div>
+        <w-button lg @click="deleteEntry" class="mr5 white" bg-color="error">
+          Delete
+        </w-button>
+        <w-button
+          lg
+          @click="dialog.show = false"
+          class="white"
+          bg-color="success"
+        >
+          Back to entry
+        </w-button>
+      </template>
+    </w-dialog>
+  </Teleport>
 </template>
 
 <script setup>

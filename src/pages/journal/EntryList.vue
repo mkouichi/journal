@@ -6,28 +6,30 @@
     </w-flex>
 
     <!-- Error -->
-    <w-dialog
-      v-else-if="error"
-      width="50vw"
-      title-class="error--bg white"
-      @close="confirmError"
-    >
-      <template #title>
-        <w-icon class="mr2">mdi mdi-alert-circle</w-icon>
-        <span class="title2">Error</span>
-      </template>
-      <p>{{ error }}</p>
-      <template #actions>
-        <div class="spacer"></div>
-        <w-button lg outline @click="confirmError">Okay</w-button>
-      </template>
-    </w-dialog>
+    <Teleport to="body">
+      <w-dialog
+        v-if="error"
+        width="50vw"
+        title-class="error--bg white"
+        @close="confirmError"
+      >
+        <template #title>
+          <w-icon class="mr2">mdi mdi-alert-circle</w-icon>
+          <span class="title2">Error</span>
+        </template>
+        <p>{{ error }}</p>
+        <template #actions>
+          <div class="spacer"></div>
+          <w-button lg outline @click="confirmError">Okay</w-button>
+        </template>
+      </w-dialog>
+    </Teleport>
 
     <!-- No entry -->
-    <p v-else-if="!entries || entries.length === 0">No entry found</p>
+    <p v-if="!entries || entries.length === 0">No entry found</p>
 
     <!-- Entry found -->
-    <div v-else-if="entries.length > 0">
+    <div v-if="entries.length > 0">
       <w-flex class="xs12 sm6 mla">
         <span class="pt1">Sorted by: </span>
         <w-select
@@ -102,6 +104,9 @@ initEntries();
 const selection = ref("date descending");
 
 const sortEntriesByLastUpdated = (selection) => {
+  // TODO: Copy the array first (avoid mutating the array)
+  // const sortedEntries = [...entries].sort/* ... */
+
   // Sort entries based on selection
   switch (selection) {
     case "date descending":

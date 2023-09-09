@@ -86,11 +86,13 @@
   </div>
 
   <!-- Cancel edit dialog -->
-  <ConfirmationDialog
-    v-model="dialog.show"
-    @discard-draft="discardDraft"
-    @close-dialog="dialog.show = false"
-  />
+  <Teleport to="body">
+    <ConfirmationDialog
+      v-model="dialog.show"
+      @discard-draft="discardDraft"
+      @close-dialog="dialog.show = false"
+    />
+  </Teleport>
 </template>
 
 <script setup>

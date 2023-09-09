@@ -36,11 +36,13 @@
   </w-card>
 
   <!-- Error dialog -->
-  <ErrorDialog
-    v-if="form.error"
-    :error="form.error"
-    @reset-error="resetError"
-  />
+  <Teleport to="body">
+    <ErrorDialog
+      v-if="form.error"
+      :error="form.error"
+      @reset-error="resetError"
+    />
+  </Teleport>
 </template>
 
 <script setup>
