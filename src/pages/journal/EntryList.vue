@@ -30,7 +30,7 @@
 
     <!-- Entry found -->
     <div v-if="entries.length > 0">
-      <w-flex class="xs12 sm6 mla">
+      <w-flex class="xs10 sm6 mla">
         <span class="pt1">Sorted by: </span>
         <w-select
           v-model="selection"

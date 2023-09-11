@@ -1,7 +1,7 @@
 <template>
   <TheHeader />
   <w-flex grow>
-    <main class="grow mt8">
+    <main class="grow mt8 mxa">
       <Suspense>
         <template #default>
           <RouterView />
@@ -61,6 +61,7 @@ body {
 main {
   max-width: 1100px;
   margin: 32px auto 4rem auto;
+  overflow-wrap: anywhere;
 }
 .w-button.size--lg {
   height: 3rem;
@@ -89,6 +90,9 @@ main {
   }
 }
 @media (max-width: 600px) {
+  main {
+    max-width: 95vw;
+  }
   /* Dialog width */
   .w-card.w-card--no-border.w-dialog__content {
     max-width: 90vw;
