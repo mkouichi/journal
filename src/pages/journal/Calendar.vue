@@ -152,5 +152,9 @@ const onEventClick = (event, e) => {
 .vuecal__today-btn {
   padding: 5px 10px;
   margin: 0 2px;
+  min-width: fit-content;
+}
+.vuecal__arrow {
+  font-size: 1.2rem;
 }
 </style>
