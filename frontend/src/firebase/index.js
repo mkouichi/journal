@@ -8,7 +8,7 @@ let auth;
 // Fetch the Firebase configuration data from the server-side '/firebase-config' endpoint
 // Define a constant that stores the URL used to retrieve Firebase configuration so that the request can be cached
 const FIREBASE_CONFIG_URL =
-  'https://journal-lake.vercel.app/firebase-config';
+  'https://journal-lake.vercel.app/api/firebase-config';
 
 // Define a variable to store the cached Firebase configuration
 let cachedFirebaseConfig;

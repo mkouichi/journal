@@ -29,12 +29,12 @@ app.get('/', (req, res) => {
 });
 
 // Set up an endpoint that returns the firebase configuration object
-app.get('/firebase-config', (req, res) => {
+app.get('/api/firebase-config', (req, res) => {
   res.json(firebaseConfig);
 });
 
 // Set up an endpoint that returns historical events
-app.get('/historical-events', async (req, res) => {
+app.get('/api/historical-events', async (req, res) => {
   const date = new Date();
   const month = date.getMonth() + 1;
   const day = date.getDate();

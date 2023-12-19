@@ -58,7 +58,7 @@ const randomIndex = ref(null);
 onBeforeMount(async () => {
   try {
     const { data } = await axios.get(
-      "https://journal-lake.vercel.app//historical-events"
+      "https://journal-lake.vercel.app/api/historical-events"
     );
 
     // Store the fetched data in the events array
